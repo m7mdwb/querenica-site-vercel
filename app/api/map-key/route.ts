@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server"
 
 export async function GET() {
-  // In a real application, you would validate the request
-  // and potentially check for authentication
+  try {
+    // Get the API key from environment variables
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY
 
-  // Return the API key from environment variables
-  return NextResponse.json({
-    apiKey: process.env.GOOGLE_MAPS_API_KEY || "YOUR_API_KEY_HERE",
-  })
+    // Check if API key exists
+    if (!apiKey) {
+      console.warn("Google Maps API key not found in environment variables")
+      return NextResponse.json({ error: "API key not configured" }, { status: 500 })
+    }
+
+    // Return the API key
+    return NextResponse.json({ apiKey })
+  } catch (error) {
+    console.error("Error retrieving API key:", error)
+    return NextResponse.json({ error: "Failed to retrieve API key" }, { status: 500 })
+  }
 }
