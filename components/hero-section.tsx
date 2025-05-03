@@ -28,7 +28,7 @@ export default function HeroSection() {
             "url('https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Querencia-hero-section-6WTGyZrkUr6n5wiZLlFncacMdO1e8H')",
         }}
       >
-        <div className="absolute inset-0 bg-[#0a1a2a]/40"></div>
+        <div className="absolute inset-0 bg-[#2c4051]/40"></div>
       </div>
 
       {/* Content */}

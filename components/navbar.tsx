@@ -13,8 +13,7 @@ export default function Navbar() {
   // Navigation items
   const navItems = [
     { label: "Home", href: "#home" },
-    { label: "Project Details", href: "#project-details" },
-    { label: "About", href: "#about" },
+    { label: "About", href: "#about" }, // Keep this as the main link
     { label: "Location", href: "#location" },
     { label: "Residences", href: "#residences" },
     { label: "Amenities", href: "#amenities" },
@@ -68,8 +67,10 @@ export default function Navbar() {
     <nav
       className={cn(
         "fixed left-0 right-0 top-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent",
-        isMobileMenuOpen ? "bg-white/90 backdrop-blur-md" : "",
+        isScrolled
+          ? "bg-white/60 backdrop-blur-md backdrop-saturate-150 border-b border-white/20 shadow-lg"
+          : "bg-transparent",
+        isMobileMenuOpen ? "bg-white/80 backdrop-blur-md backdrop-saturate-150" : "",
       )}
     >
       <div className="container mx-auto px-4">
@@ -113,7 +114,7 @@ export default function Navbar() {
                     onClick={(e) => scrollToSection(e, item.href)}
                     className={cn(
                       "text-sm font-light tracking-wide transition-colors hover:text-[#c9a77c]",
-                      isScrolled ? "text-[#0a1a2a]" : "text-white",
+                      isScrolled ? "text-[#2c4051]" : "text-white",
                     )}
                   >
                     {item.label}
@@ -123,11 +124,13 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Only visible on mobile */}
           <button
             className={cn(
-              "z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[#0a1a2a]/10 md:hidden",
-              isScrolled || isMobileMenuOpen ? "text-[#0a1a2a]" : "text-white bg-white/20",
+              "z-10 flex h-10 w-10 items-center justify-center rounded-full transition-all md:hidden",
+              isScrolled || isMobileMenuOpen
+                ? "text-[#2c4051] bg-[#2c4051]/5 backdrop-blur-sm"
+                : "text-white bg-white/20 backdrop-blur-sm",
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
@@ -138,9 +141,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation - Full Screen Overlay */}
+      {/* Mobile Navigation - Full Screen Overlay with Improved Opacity */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-0 bg-white pt-16 md:hidden">
+      <div className="fixed inset-0 z-0 bg-white/95 backdrop-blur-md backdrop-saturate-150 pt-16 md:hidden">
           <div className="container mx-auto px-4 py-4">
             <ul className="flex flex-col space-y-4">
               {navItems.map((item) => (
@@ -148,7 +151,7 @@ export default function Navbar() {
                   <a
                     href={item.href}
                     onClick={(e) => scrollToSection(e, item.href)}
-                    className="flex h-12 items-center border-b border-gray-100 text-lg font-light text-[#0a1a2a] hover:text-[#c9a77c]"
+                    className="flex h-12 items-center border-b border-gray-100 text-lg font-light text-[#2c4051] hover:text-[#c9a77c]"
                   >
                     {item.label}
                   </a>

@@ -49,7 +49,7 @@ export default function InteractiveMap() {
   // Show loading state
   if (!isClient || isLoading) {
     return (
-      <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-[#132639]">
+      <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-[#3a526a]">
         <div className="text-center text-[#8a9bae]">
           <p className="text-lg">Loading Map...</p>
         </div>
@@ -60,7 +60,7 @@ export default function InteractiveMap() {
   // Show error state
   if (error || !apiKey) {
     return (
-      <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-[#132639]">
+      <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-[#3a526a]">
         <div className="text-center text-[#8a9bae]">
           <p className="text-lg">{error || "Unable to load map"}</p>
           <p className="mt-2 text-sm">Please check your API key configuration</p>
