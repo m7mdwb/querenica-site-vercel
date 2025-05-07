@@ -4,30 +4,44 @@ import { useEffect, useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+// Primary image path with fallback
+const HERO_IMAGE =
+  "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Querencia-hero-section-6WTGyZrkUr6n5wiZLlFncacMdO1e8H"
+const FALLBACK_IMAGE = "/placeholder.svg?key=kncmj"
+
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageSrc, setImageSrc] = useState(HERO_IMAGE)
 
+  // Handle animations and image loading
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
+  const handleImageError = () => {
+    console.error("Hero image failed to load, using fallback")
+    setImageSrc(FALLBACK_IMAGE)
+  }
+
   const scrollToNextSection = () => {
-    const projectDetailsSection = document.getElementById("project-details")
-    if (projectDetailsSection) {
-      projectDetailsSection.scrollIntoView({ behavior: "smooth" })
-    }
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })
   }
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section id="home" className="relative h-screen w-full overflow-hidden">
       {/* Background image with overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url('https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Querencia-hero-section-6WTGyZrkUr6n5wiZLlFncacMdO1e8H')",
-        }}
-      >
+      <div className="absolute inset-0">
+        <img
+          src={imageSrc || "/placeholder.svg"}
+          alt="Querencia hero background"
+          className={cn(
+            "h-full w-full object-cover transition-opacity duration-1000",
+            imageLoaded ? "opacity-100" : "opacity-0",
+          )}
+          onLoad={() => setImageLoaded(true)}
+          onError={handleImageError}
+        />
         <div className="absolute inset-0 bg-[#2c4051]/40"></div>
       </div>
 
@@ -35,19 +49,19 @@ export default function HeroSection() {
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">
         <h1
           className={cn(
-            "mb-4 font-serif text-4xl font-light tracking-wider transition-all duration-1000 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl",
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
+            "mb-4 font-serif text-5xl font-light tracking-wider transition-all duration-1000 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl",
+            isVisible ? "translate-y-0 opacity-100 text-white" : "translate-y-10 opacity-0 text-[#2c4051]",
           )}
         >
           Querencia
         </h1>
         <p
           className={cn(
-            "max-w-2xl text-base font-light tracking-wide text-white/90 transition-all delay-300 duration-1000 sm:text-lg md:text-xl lg:text-2xl",
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
+            "max-w-2xl text-lg font-light tracking-wide transition-all delay-300 duration-1000 sm:text-xl md:text-2xl lg:text-2xl",
+            isVisible ? "translate-y-0 opacity-100 text-white/90" : "translate-y-10 opacity-0 text-[#2c4051]",
           )}
         >
-          Experience Unrivaled Luxury Living in North Cyprus
+          In Harmony With Luxury in North Cyprus
         </p>
 
         {/* Scroll indicator */}

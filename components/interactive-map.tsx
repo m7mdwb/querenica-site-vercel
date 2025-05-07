@@ -3,41 +3,32 @@
 import { useEffect, useState } from "react"
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
 
+// Location coordinates for Querencia in North Cyprus (Trikomo)
+const QUERENCIA_LOCATION = { lat: 35.2901, lng: 33.9138 }
+const FALLBACK_IMAGE =
+  "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/map-fallback-image-Yx9Ij9Yd0Yd0Yd0Yd0Yd0.jpg"
+
 export default function InteractiveMap() {
-  const [isClient, setIsClient] = useState(false)
   const [apiKey, setApiKey] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Location coordinates for Querencia in North Cyprus (Trikomo)
-  const querenciaLocation = { lat: 35.2901, lng: 33.9138 }
-
-  // Fetch API key from server and ensure client-side rendering
+  // Fetch API key from server
   useEffect(() => {
-    setIsClient(true)
-
     const fetchApiKey = async () => {
       try {
         const response = await fetch("/api/map-key")
 
         if (!response.ok) {
-          throw new Error(`API returned ${response.status}: ${response.statusText}`)
+          const data = await response.json()
+          throw new Error(data.error || `API returned ${response.status}`)
         }
 
         const data = await response.json()
-
-        if (data.error) {
-          throw new Error(data.error)
-        }
-
-        if (!data.apiKey) {
-          throw new Error("No API key returned")
-        }
-
         setApiKey(data.apiKey)
       } catch (error) {
         console.error("Failed to fetch API key:", error)
-        setError("Unable to load map: API key not available")
+        setError(error instanceof Error ? error.message : "Unable to load map")
       } finally {
         setIsLoading(false)
       }
@@ -47,7 +38,7 @@ export default function InteractiveMap() {
   }, [])
 
   // Show loading state
-  if (!isClient || isLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-[#3a526a]">
         <div className="text-center text-[#8a9bae]">
@@ -57,13 +48,23 @@ export default function InteractiveMap() {
     )
   }
 
-  // Show error state
+  // Show error state with fallback image
   if (error || !apiKey) {
     return (
       <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-[#3a526a]">
-        <div className="text-center text-[#8a9bae]">
-          <p className="text-lg">{error || "Unable to load map"}</p>
-          <p className="mt-2 text-sm">Please check your API key configuration</p>
+        <div className="text-center text-[#8a9bae] px-4">
+          <p className="text-lg mb-2">Unable to load map</p>
+          <p className="text-sm max-w-md mx-auto">{error || "The Google Maps API key is missing or invalid."}</p>
+          <div className="mt-4 opacity-60 hover:opacity-100 transition-opacity">
+            <img
+              src={FALLBACK_IMAGE || "/placeholder.svg"}
+              alt="Map of Querencia location"
+              className="max-w-full h-auto rounded-lg mx-auto"
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
+            />
+          </div>
         </div>
       </div>
     )
@@ -74,14 +75,14 @@ export default function InteractiveMap() {
     <div className="h-[400px] w-full overflow-hidden rounded-lg">
       <APIProvider apiKey={apiKey}>
         <Map
-          defaultCenter={querenciaLocation}
+          defaultCenter={QUERENCIA_LOCATION}
           defaultZoom={15}
           gestureHandling={"greedy"}
           mapId="querencia-map"
           className="h-full w-full"
           mapTypeId="satellite"
         >
-          <Marker position={querenciaLocation} title="Querencia Hotel & Residence" />
+          <Marker position={QUERENCIA_LOCATION} title="Querencia Hotel & Residence" />
         </Map>
       </APIProvider>
     </div>

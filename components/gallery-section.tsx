@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useInView } from "react-intersection-observer"
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -20,53 +20,52 @@ export default function GallerySection() {
   // Expanded gallery with 12 images
   const galleryImages = [
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/exterior%20view-MfjGE2pZN89bK7ozKCkjQZWCWmsmUj.webp",
-      alt: "Querencia exterior view",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior1-vq7FaLshWuWErUhIJIAeeBUC06lIFw.jpg",
+      alt: "Querencia exterior 1",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/living-room-N0hRhMkJjQ4CTI9MN0VXqmQi0IfJw4.webp",
-      alt: "Luxury living room",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior2-ey2d6AB8XMYGytjOYWnG0Zgg3nLVh7.jpg",
+      alt: "Querencia exterior 2",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/bedroom-smOngHdljNfnV8npcW3hwajC6Oa7uS.webp",
-      alt: "Master bedroom suite",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior3-2Orxcjsht7yvpr9hFdccEq68nxOYO9.jpg",
+      alt: "Querencia exterior 3",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/view-from-room-VdU7zWk0Cy1HT1ZpUxMtRzdoHMb3r0.webp",
-      alt: "Terrace view",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom1-L3Gs2zSf3y3YkibIWf77C5gMNbOi3K.jpg",
+      alt: "Bedroom 1",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Querencia_exterior-XJNF8W4Nyw6RxGAnPQFQUb30WYv5oT.webp",
-      alt: "Exterior view",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Beroom2-V2nNtU8BbZ33aBgqv3yhpuT8Qih84d.jpg",
+      alt: "Bedroom 2",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Pool%20Infinity-OxIpoHHrIic4noMzkM1NkXvyZgQvDv.webp",
-      alt: "Infinity pool",
-    },
-    // Additional 6 images from the residences
-    {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/2-%20A%20Block%201%2B1/A%20Blok%201%2B1%201-G0mes18sTWOZ2cWwd6FM2eYbgfGL3y.jpg",
-      alt: "A Block 1+1 Residence",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom3-o5sThkaYxGiZVS4cpU9qDpDKy5GqSs.jpg",
+      alt: "Bedroom 3",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/3-%20A%20Block%202%2B1/A%20Blok%202%2B1%201-32NbplBa3pvC5dJqzWeUHJjRLVo6LO.jpg",
-      alt: "A Block 2+1 Residence",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom4-epCGRoCiYLoA1yt8iSK2ZTwZOe1yV0.jpg",
+      alt: "Bedroom 4",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/5-%20B-C-D%201%2B1/B-C-D%201%2B1%201-bOw6UNwHAhltzoz9CfaZGJUqh3iCzj.jpg",
-      alt: "BCD Block 1+1 Residence",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom1-W8eJYwmVfczHVxEdklFivqQRFScgGB.jpg",
+      alt: "Livingroom 1",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/7-%20B-C-D%203%2B1/B-C-D%203%2B1%201-8wK1VD3e6L1ZKnGmxYPvCUIbOzPMym.jpg",
-      alt: "BCD Block 3+1 Residence",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom2-iIc1Wjhmnr9wnCx8Vw8r2vUIUwZllm.jpg",
+      alt: "Livingroom 2",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/8-%20B-C-D%20Penthouse%205%2B1/B-C-D%20Penthouse%205%2B1%201-caHXCusQdfcEwumVxTZS3AUvCCEbgE.jpg",
-      alt: "BCD Penthouse",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom3-iI74unTRzHuPxfDMvgqD1QOFqVp1gS.jpg",
+      alt: "Livingroom 3",
     },
     {
-      src: "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/1-KiWU4sf87peOI7snfLf14kBGEfFbqQ.jpg",
-      alt: "BCD Duplex",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom4-U6NEIWpgOjfU2UOmyrUtfn2ex4wU0s.jpg",
+      alt: "Livingroom 4",
+    },
+    {
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/DiningArea1-eJNjp0Rmzb3GoczNhi9R9wAv6xPG6L.jpg",
+      alt: "Dining 1",
     },
   ]
 
@@ -77,15 +76,15 @@ export default function GallerySection() {
   }
 
   // Functions to navigate between images in the lightbox
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length)
     setSelectedImage(galleryImages[(currentImageIndex + 1) % galleryImages.length].src)
-  }
+  }, [currentImageIndex, galleryImages])
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)
     setSelectedImage(galleryImages[(currentImageIndex - 1 + galleryImages.length) % galleryImages.length].src)
-  }
+  }, [currentImageIndex, galleryImages])
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -103,7 +102,7 @@ export default function GallerySection() {
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [selectedImage, currentImageIndex])
+  }, [selectedImage, nextImage, prevImage])
 
   // Function to scroll to contact form and set catalog flag
   const scrollToContactForm = () => {

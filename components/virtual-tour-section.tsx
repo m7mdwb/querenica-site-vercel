@@ -13,7 +13,7 @@ export default function VirtualTourSection() {
   })
 
   // Define the Google Site URL
-  const virtualTourUrl = "https://sites.google.com/view/querencia360/"
+  const virtualTourUrl = "https://360.dovecconstruction.com/querencia/"
 
   return (
     // The ref is now on the main section for the fade-in effect

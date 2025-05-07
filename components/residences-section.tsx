@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { useInView } from "react-intersection-observer"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -336,17 +336,17 @@ export default function ResidencesSection() {
   }
 
   // Handle navigation in the gallery dialog
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (selectedResidence) {
       setGalleryIndex((prev) => (prev + 1) % selectedResidence.images.length)
     }
-  }
+  }, [selectedResidence])
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (selectedResidence) {
       setGalleryIndex((prev) => (prev - 1 + selectedResidence.images.length) % selectedResidence.images.length)
     }
-  }
+  }, [selectedResidence])
 
   // Function to scroll to contact form and set catalog flag
   const scrollToContactForm = () => {

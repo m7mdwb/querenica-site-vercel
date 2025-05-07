@@ -13,30 +13,14 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-[#1a1a1a]">
       <Navbar />
-      <div id="home">
-        <HeroSection />
-      </div>
-      <div id="about">
-        <AboutSection />
-      </div>
-      <div id="location">
-        <LocationSection />
-      </div>
-      <div id="residences">
-        <ResidencesSection />
-      </div>
-      <div id="amenities">
-        <AmenitiesSection />
-      </div>
-      <div id="gallery">
-        <GallerySection />
-      </div>
-      <div id="virtual-tour">
-        <VirtualTourSection />
-      </div>
-      <div id="contact">
-        <ContactSection />
-      </div>
+      <HeroSection />
+      <AboutSection />
+      <LocationSection />
+      <ResidencesSection />
+      <AmenitiesSection />
+      <GallerySection />
+      <VirtualTourSection />
+      <ContactSection />
       <Footer />
     </main>
   )
