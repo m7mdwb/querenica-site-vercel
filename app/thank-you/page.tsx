@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, Home, ArrowLeft, Download, Phone, Mail, ExternalLink } from "lucide-react"
@@ -7,6 +8,11 @@ import Link from "next/link"
 import "./thank-you.css"
 
 export default function ThankYouPage() {
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // Integrated catalog download functionality directly
   const handleCatalogDownload = () => {
     const catalogUrl = "https://sites.google.com/u/0/d/1PzQEUZsWPXnQcYaQlyJBHIElD5tv0kpS/preview"
@@ -51,23 +57,17 @@ export default function ThankYouPage() {
 
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-[#1a1a1a]">
-      {/* Custom header with dark logo in top-left */}
-      <header className="bg-white py-4 px-6 shadow-sm">
-        <div className="container mx-auto">
-          <div className="w-40 md:w-48">
-            <img
-              src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Dark_logo-JYIL3AdIqeQgQe7UEUSUsl3ZMvuj1Y.png"
-              alt="Querencia Hotel & Residence"
-              className="w-full"
-            />
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-20 md:py-32">
+      <div className="container mx-auto px-4 py-12 md:py-20">
         <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md fade-in">
           <div className="mb-8 flex flex-col items-center justify-center text-center">
-            {/* Dark Logo */}
+            {/* Logo integrated within the card */}
+            <div className="mb-6 w-40 md:w-48">
+              <img
+                src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Dark_logo-JYIL3AdIqeQgQe7UEUSUsl3ZMvuj1Y.png"
+                alt="Querencia Hotel & Residence"
+                className="w-full"
+              />
+            </div>
 
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#c9a77c]/20 text-[#c9a77c]">
               <CheckCircle className="h-10 w-10" />

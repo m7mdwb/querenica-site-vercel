@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { X, ChevronLeft, ChevronRight, Download, Eye } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { ZoomableImage } from "./ui/zoomable-image"
 
 export default function GallerySection() {
   const { ref, inView } = useInView({
@@ -23,7 +24,7 @@ export default function GallerySection() {
   const [imagesLoaded, setImagesLoaded] = useState(0)
   const [totalImages, setTotalImages] = useState(0)
   const galleryRef = useRef<HTMLDivElement>(null)
-  const [isTouchActive, setIsTouchActive] = useState(false) // Define isTouchActive here
+  const [isTouchActive, setIsTouchActive] = useState(false)
 
   // Expanded gallery with 12 images - now with width and height information
   const galleryImages = [
@@ -358,10 +359,12 @@ export default function GallerySection() {
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
               >
-                <img
-                  src={selectedImage || "/placeholder.svg"}
+                {/* Replace the standard img with our ZoomableImage component */}
+                <ZoomableImage
+                  src={selectedImage}
                   alt={galleryImages[currentImageIndex].alt}
-                  className="h-auto w-full rounded-lg object-contain"
+                  className="h-auto w-full rounded-lg"
+                  maxZoom={3}
                 />
 
                 {/* Navigation Controls */}
@@ -370,7 +373,7 @@ export default function GallerySection() {
                     e.stopPropagation()
                     prevImage()
                   }}
-                  className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 md:h-12 md:w-12"
+                  className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white md:h-12 md:w-12 gallery-nav-btn"
                   aria-label="Previous image"
                   style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
                 >
@@ -382,7 +385,7 @@ export default function GallerySection() {
                     e.stopPropagation()
                     nextImage()
                   }}
-                  className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 md:h-12 md:w-12"
+                  className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white md:h-12 md:w-12 gallery-nav-btn"
                   aria-label="Next image"
                   style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
                 >

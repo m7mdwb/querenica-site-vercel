@@ -275,3 +275,120 @@ button {
     min-height: 44px;
   }
 }
+
+/* Fix for navigation buttons in residences and gallery sections */
+.residence-nav-btn,
+.gallery-nav-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transform: translateY(0); /* Prevent bouncing */
+}
+
+/* Fix for residences navigation buttons that stay in 'clicked' state */
+.residence-nav-btn {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.residence-nav-btn:active {
+  transform: scale(0.95);
+  background-color: #f8f8f8 !important; /* Force original background color */
+  color: #666 !important; /* Force original text color */
+}
+
+/* Fix for gallery navigation buttons that bounce and change color */
+.gallery-nav-btn {
+  transition: transform 0.2s ease;
+  background-color: rgba(0, 0, 0, 0.5) !important; /* Force consistent background */
+  color: white !important; /* Force consistent text color */
+}
+
+.gallery-nav-btn:active {
+  transform: scale(0.95);
+  background-color: rgba(0, 0, 0, 0.5) !important; /* Keep same background on active */
+  color: white !important; /* Keep same text color on active */
+}
+
+/* Prevent hover states from sticking on touch devices */
+@media (hover: none) {
+  .residence-nav-btn:hover,
+  .gallery-nav-btn:hover {
+    background-color: inherit !important;
+    color: inherit !important;
+    transform: translateY(0) !important; /* Prevent any vertical movement */
+  }
+
+  /* Restore specific colors for gallery buttons */
+  .gallery-nav-btn:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+  }
+
+  /* Restore specific colors for residence buttons */
+  .residence-nav-btn:hover {
+    background-color: #f8f8f8 !important;
+    color: #666 !important;
+  }
+}
+
+/* Fix for iOS Safari specific issues */
+@supports (-webkit-touch-callout: none) {
+  .residence-nav-btn,
+  .gallery-nav-btn {
+    /* Additional iOS-specific fixes */
+    -webkit-touch-callout: none; /* Disable callout */
+    -webkit-user-select: none; /* Disable selection */
+  }
+}
+
+/* Zoom functionality styles */
+.zoom-controls {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 9999px;
+  padding: 0.25rem;
+  z-index: 50;
+}
+
+.zoom-indicator {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  z-index: 50;
+}
+
+/* Cursor styles for zoomable images */
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+
+.cursor-zoom-out {
+  cursor: zoom-out;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+/* Prevent text selection during drag operations */
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Improve touch handling for zoom controls */
+@media (hover: none) {
+  .zoom-controls button {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+}

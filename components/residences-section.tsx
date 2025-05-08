@@ -10,6 +10,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Download } from "lucide-react"
 import Link from "next/link"
+import { ZoomableImage } from "./ui/zoomable-image"
 
 // Define property types with proper TypeScript interfaces
 interface PropertyDetail {
@@ -298,19 +299,19 @@ function ResidenceImageCarousel({ images, name }: { images: string[]; name: stri
       {/* Carousel Controls */}
       {images.length > 1 && (
         <>
-          {/* Previous Button - Fixed hover state for touch devices */}
+          {/* Previous Button - Fixed for mobile */}
           <button
             onClick={prevImage}
-            className="absolute left-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] shadow-md transition-all hover:bg-[#2c4051] hover:text-white active:bg-[#2c4051] active:text-white md:h-10 md:w-10"
+            className="absolute left-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] shadow-md transition-transform md:h-10 md:w-10 residence-nav-btn"
             aria-label="Previous image"
             style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
           >
             <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
           </button>
-          {/* Next Button - Fixed hover state for touch devices */}
+          {/* Next Button - Fixed for mobile */}
           <button
             onClick={nextImage}
-            className="absolute right-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] shadow-md transition-all hover:bg-[#2c4051] hover:text-white active:bg-[#2c4051] active:text-white md:h-10 md:w-10"
+            className="absolute right-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] shadow-md transition-transform md:h-10 md:w-10 residence-nav-btn"
             aria-label="Next image"
             style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
           >
@@ -512,20 +513,21 @@ export default function ResidencesSection() {
         <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto overflow-x-hidden p-0 sm:rounded-lg">
           {selectedResidence && (
             <>
-              {/* Image Gallery */}
+              {/* Image Gallery with Zoomable Image */}
               <div className="relative aspect-video w-full">
-                <img
+                <ZoomableImage
                   src={selectedResidence.images[galleryIndex] || "/images/placeholder.jpg"}
                   alt={selectedResidence.name}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
+                  className="h-full w-full"
+                  maxZoom={3}
                 />
+
                 {selectedResidence.images.length > 1 && (
                   <>
                     {/* Previous Button */}
                     <button
                       onClick={prevImage}
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#2c4051] hover:text-white absolute left-4 top-1/2  -translate-y-1/2 shadow-md transition-all hover:bg-white active:scale-95"
+                      className="absolute left-4 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#2c4051] hover:text-white shadow-md transition-all hover:bg-white active:scale-95"
                       aria-label="Previous image"
                     >
                       <ChevronLeft className="h-6 w-6" />
@@ -533,13 +535,13 @@ export default function ResidencesSection() {
                     {/* Next Button */}
                     <button
                       onClick={nextImage}
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#2c4051] hover:text-white absolute right-4 top-1/2  -translate-y-1/2 shadow-md transition-all hover:bg-white active:scale-95"
+                      className="absolute right-4 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#2c4051] hover:text-white shadow-md transition-all hover:bg-white active:scale-95"
                       aria-label="Next image"
                     >
                       <ChevronRight className="h-6 w-6" />
                     </button>
                     {/* Indicator Dots */}
-                    <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+                    <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center space-x-2">
                       {selectedResidence.images.map((_, index) => (
                         <button
                           key={index}
