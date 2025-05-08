@@ -209,8 +209,8 @@ export default function Navbar() {
             <a href="tel:+905488370015" className="block text-lg text-[#2c4051] hover:text-[#c9a77c]">
               +90 548 837 0015
             </a>
-            <a href="mailto:info@dovecconstruction.com" className="text-lg text-[#2c4051] hover:text-[#c9a77c]">
-              info@dovecconstruction.com
+            <a href="mailto:info@dovecgroup.com" className="text-lg text-[#2c4051] hover:text-[#c9a77c]">
+              info@dovecgroup.com
             </a>
           </div>
         </div>

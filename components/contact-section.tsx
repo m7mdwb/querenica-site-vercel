@@ -182,11 +182,8 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <p className="text-sm text-[#666]">Email Us</p>
-                      <a
-                        href="mailto:info@dovecconstruction.com"
-                        className="text-lg text-[#2c4051] hover:text-[#c9a77c]"
-                      >
-                        info@dovecconstruction.com
+                      <a href="mailto:info@dovecgroup.com" className="text-lg text-[#2c4051] hover:text-[#c9a77c]">
+                        info@dovecgroup.com
                       </a>
                     </div>
                   </div>

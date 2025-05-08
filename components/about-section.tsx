@@ -2,7 +2,8 @@
 import { cn } from "@/lib/utils"
 import { useInView } from "react-intersection-observer"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, PoundSterling, Download } from "lucide-react"
+import { Download } from "lucide-react"
+import ProjectDetailsShowcase, { type ProjectPhase } from "./project-details-showcase"
 
 export default function AboutSection() {
   const { ref, inView } = useInView({
@@ -10,21 +11,28 @@ export default function AboutSection() {
     triggerOnce: true,
   })
 
-  const details = [
+  // Project phases data with block information
+  const projectPhases: ProjectPhase[] = [
     {
-      icon: MapPin,
-      title: "CITY",
-      value: "TRIKOMO",
+      id: 1,
+      name: "Phase 1",
+      completionDate: "April 2026",
+      description: "First Signature Homes",
+      blocks: "Block A",
     },
     {
-      icon: Calendar,
-      title: "COMPLETION",
-      value: "April 2026 (Phase 1)",
+      id: 2,
+      name: "Phase 2",
+      completionDate: "December 2026",
+      description: "New Homes & Amenities",
+      blocks: "Block B",
     },
     {
-      icon: PoundSterling,
-      title: "STARTING PRICE",
-      value: "£ 145.000",
+      id: 3,
+      name: "Phase 3",
+      completionDate: "June 2027",
+      description: "The Vision Perfected",
+      blocks: "Block C & D",
     },
   ]
 
@@ -35,26 +43,14 @@ export default function AboutSection() {
           Discover Querencia
         </h2>
 
-        {/* Project Details Cards */}
-        <div className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-8">
-          {details.map((detail, index) => (
-            <div
-              key={index}
-              className={cn(
-                "flex flex-col items-center justify-center rounded-lg bg-white p-6 text-center shadow-md transition-all duration-700 sm:p-8",
-                inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                { "delay-[200ms]": index === 0 },
-                { "delay-[400ms]": index === 1 },
-                { "delay-[600ms]": index === 2 },
-              )}
-            >
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] sm:h-16 sm:w-16">
-                <detail.icon className="h-7 w-7 sm:h-8 sm:w-8" />
-              </div>
-              <h3 className="mb-1 text-sm font-medium tracking-wider text-[#666] sm:mb-2">{detail.title}</h3>
-              <p className="text-xl font-light text-[#2c4051] sm:text-2xl">{detail.value}</p>
-            </div>
-          ))}
+        {/* Integrated Project Details Showcase */}
+        <div
+          className={cn(
+            "mb-16 transition-all duration-700",
+            inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
+          )}
+        >
+          <ProjectDetailsShowcase city="TRIKOMO" startingPrice="£ 145.000" phases={projectPhases} />
         </div>
 
         {/* About Content */}
@@ -79,6 +75,7 @@ export default function AboutSection() {
               Querencia isn't merely a residence—it's a statement of discernment and achievement, offering a lifestyle
               that few will experience but many will aspire to.
             </p>
+
             <div className="mt-6">
               <Button
                 onClick={() => {

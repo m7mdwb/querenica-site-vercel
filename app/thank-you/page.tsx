@@ -122,11 +122,8 @@ export default function ThankYouPage() {
                   </div>
                   <div>
                     <p className="text-xs text-[#666]">Email Us</p>
-                    <a
-                      href="mailto:info@dovecconstruction.com"
-                      className="text-base text-[#2c4051] hover:text-[#c9a77c]"
-                    >
-                      info@dovecconstruction.com
+                    <a href="mailto:info@dovecgroup.com" className="text-base text-[#2c4051] hover:text-[#c9a77c]">
+                      info@dovecgroup.com
                     </a>
                   </div>
                 </div>

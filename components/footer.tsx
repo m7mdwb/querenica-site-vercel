@@ -1,11 +1,13 @@
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react"
+import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react"
+import { X } from "lucide-react"
 
 // Social media links
 const SOCIAL_LINKS = [
-  { name: "Facebook", icon: Facebook, href: "#" },
-  { name: "Instagram", icon: Instagram, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
+  { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/DovecConstruction" },
+  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/dovec_group" },
+  { name: "X", icon: X, href: "https://x.com/Dovec_Group" },
+  { name: "Youtube", icon: Youtube, href: "https://www.youtube.com/channel/UC8fZUDwu15NR7JTrWu-ihoA" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/18814152" },
 ]
 
 export default function Footer() {
@@ -24,6 +26,8 @@ export default function Footer() {
                 href={social.href}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#0a1a2a] hover:text-white"
                 aria-label={social.name}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <social.icon className="h-4 w-4" />
               </a>

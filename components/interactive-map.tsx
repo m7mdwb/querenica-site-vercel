@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
 
 // Location coordinates for Querencia in North Cyprus (Trikomo)
-const QUERENCIA_LOCATION = { lat: 35.2901, lng: 33.9138 }
+const QUERENCIA_LOCATION = { lat: 35.26575033733829, lng: 33.90919369796316 }
 const FALLBACK_IMAGE =
   "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/map-fallback-image-Yx9Ij9Yd0Yd0Yd0Yd0Yd0.jpg"
 

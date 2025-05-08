@@ -96,6 +96,53 @@
   }
 }
 
+/* Project Timeline Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-phase {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.timeline-phase:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.timeline-phase:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.timeline-phase:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.timeline-phase:nth-child(4) {
+  animation-delay: 0.7s;
+}
+
+.timeline-phase:nth-child(5) {
+  animation-delay: 0.9s;
+}
+
+/* Timeline hover effects */
+.timeline-dot {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px rgba(201, 167, 124, 0.2);
+}
+
 /* Gallery Styles */
 .gallery-thumbnail-scroll {
   -webkit-overflow-scrolling: touch;
@@ -184,6 +231,11 @@
     50% {
       opacity: 1;
     }
+  }
+
+  .timeline-phase {
+    animation: none;
+    opacity: 1;
   }
 }
 
@@ -408,5 +460,113 @@ section[id] {
 @media (max-width: 768px) {
   section[id] {
     scroll-margin-top: 64px;
+  }
+}
+
+/* Elegant timeline animations */
+@keyframes pulseDot {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+.timeline-dot-pulse {
+  animation: pulseDot 3s infinite ease-in-out;
+}
+
+/* Staggered animation for timeline items */
+.timeline-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.timeline-item-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-item:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.timeline-item:nth-child(2) {
+  transition-delay: 0.3s;
+}
+
+.timeline-item:nth-child(3) {
+  transition-delay: 0.5s;
+}
+
+.timeline-item:nth-child(4) {
+  transition-delay: 0.7s;
+}
+
+.timeline-item:nth-child(5) {
+  transition-delay: 0.9s;
+}
+
+/* Add these styles to your existing globals.css file */
+
+/* Project Details Showcase animations and styling */
+.project-details-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-details-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.timeline-dot {
+  position: relative;
+}
+
+.timeline-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(201, 167, 124, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments for the showcase */
+@media (max-width: 768px) {
+  .project-details-showcase {
+    padding: 1.5rem;
+  }
+
+  .project-details-showcase .timeline-section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 }
