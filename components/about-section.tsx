@@ -114,7 +114,7 @@ export default function AboutSection() {
             )}
           >
             <img
-              src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Querencia%20Outside-night-Ninsee9pXTQh3zaUkshRPYtwse34GA.webp"
+              src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/About%20Section/Querencia%20Outside-night%20%281%29-gHK4SqDKTsiKN2MUoLDfG7ZDocS9CG.webp"
               alt="Querencia luxury living"
               className="h-full w-full object-cover"
             />

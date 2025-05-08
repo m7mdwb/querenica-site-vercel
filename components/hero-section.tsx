@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 
 // Primary image path with fallback
 const HERO_IMAGE =
-  "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Querencia-hero-section-6WTGyZrkUr6n5wiZLlFncacMdO1e8H"
+  "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Hero%20Section/querencia-hero-section-PSfKHchhEjIfGpDkXDJBFkE6boXMqE.webp"
 const FALLBACK_IMAGE = "/placeholder.svg?key=kncmj"
 
 export default function HeroSection() {

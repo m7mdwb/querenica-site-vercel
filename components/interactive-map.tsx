@@ -17,15 +17,25 @@ export default function InteractiveMap() {
   useEffect(() => {
     const fetchApiKey = async () => {
       try {
+        setIsLoading(true)
         const response = await fetch("/api/map-key")
 
+        // Check if the response is ok before trying to parse JSON
         if (!response.ok) {
-          const data = await response.json()
-          throw new Error(data.error || `API returned ${response.status}`)
+          const errorText = await response.text()
+          throw new Error(`API returned ${response.status}: ${errorText}`)
         }
 
+        // Parse the JSON response safely
         const data = await response.json()
+
+        // Check if the response contains the expected data
+        if (!data.success || !data.apiKey) {
+          throw new Error(data.error || "Invalid API key response")
+        }
+
         setApiKey(data.apiKey)
+        setError(null)
       } catch (error) {
         console.error("Failed to fetch API key:", error)
         setError(error instanceof Error ? error.message : "Unable to load map")

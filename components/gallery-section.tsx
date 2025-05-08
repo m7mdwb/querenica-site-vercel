@@ -27,8 +27,8 @@ export default function GallerySection() {
   // Expanded gallery with 12 images - now with width and height information
   const galleryImages = [
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior1-vq7FaLshWuWErUhIJIAeeBUC06lIFw.jpg",
-      alt: "Querencia exterior 1",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-1-2KGar18rZ8kKbe4VwFivhnCUSGkbMU.webp",
+      alt: "Querencia Exterior 1",
       width: 1200,
       height: 900,
       blurDataURL:
@@ -36,8 +36,8 @@ export default function GallerySection() {
       category: "Exterior",
     },
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior2-ey2d6AB8XMYGytjOYWnG0Zgg3nLVh7.jpg",
-      alt: "Querencia exterior 2",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-2-AfHnMYCOrV23nqcfRW1ncq3c0B8ey1.webp",
+      alt: "Querencia Exterior 2",
       width: 1200,
       height: 900,
       blurDataURL:
@@ -45,8 +45,8 @@ export default function GallerySection() {
       category: "Exterior",
     },
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior3-2Orxcjsht7yvpr9hFdccEq68nxOYO9.jpg",
-      alt: "Querencia exterior 3",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-3-wEuk0Z9SqDRJNEfRPjUrLqN61y3Lue.webp",
+      alt: "Querencia Exterior 3",
       width: 1200,
       height: 900,
       blurDataURL:
@@ -54,44 +54,8 @@ export default function GallerySection() {
       category: "Exterior",
     },
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom1-L3Gs2zSf3y3YkibIWf77C5gMNbOi3K.jpg",
-      alt: "Bedroom 1",
-      width: 1200,
-      height: 900,
-      blurDataURL:
-        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
-      category: "Bedroom",
-    },
-    {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Beroom2-V2nNtU8BbZ33aBgqv3yhpuT8Qih84d.jpg",
-      alt: "Bedroom 2",
-      width: 1200,
-      height: 900,
-      blurDataURL:
-        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
-      category: "Bedroom",
-    },
-    {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom3-o5sThkaYxGiZVS4cpU9qDpDKy5GqSs.jpg",
-      alt: "Bedroom 3",
-      width: 1200,
-      height: 900,
-      blurDataURL:
-        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
-      category: "Bedroom",
-    },
-    {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom4-epCGRoCiYLoA1yt8iSK2ZTwZOe1yV0.jpg",
-      alt: "Bedroom 4",
-      width: 1200,
-      height: 900,
-      blurDataURL:
-        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
-      category: "Bedroom",
-    },
-    {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom1-W8eJYwmVfczHVxEdklFivqQRFScgGB.jpg",
-      alt: "Livingroom 1",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-livingroom-3-hBcApxu4RbcuWLu55EycdoR0ffidyk.webp",
+      alt: "Querencia Living Room 1",
       width: 1200,
       height: 900,
       blurDataURL:
@@ -99,8 +63,8 @@ export default function GallerySection() {
       category: "Living Room",
     },
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom2-iIc1Wjhmnr9wnCx8Vw8r2vUIUwZllm.jpg",
-      alt: "Livingroom 2",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-livingroom-2-BZpbRkT4JjiHNees59GwH9nRBI1Osf.webp",
+      alt: "Querencia Living Room 2",
       width: 1200,
       height: 900,
       blurDataURL:
@@ -108,8 +72,8 @@ export default function GallerySection() {
       category: "Living Room",
     },
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom3-iI74unTRzHuPxfDMvgqD1QOFqVp1gS.jpg",
-      alt: "Livingroom 3",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-livingroom-1-oSUhmiVU6aCYQr1ONrLGWVnH5hMIDc.webp",
+      alt: "Querencia Living Room 3",
       width: 1200,
       height: 900,
       blurDataURL:
@@ -117,22 +81,58 @@ export default function GallerySection() {
       category: "Living Room",
     },
     {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom4-U6NEIWpgOjfU2UOmyrUtfn2ex4wU0s.jpg",
-      alt: "Livingroom 4",
-      width: 1200,
-      height: 900,
-      blurDataURL:
-        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
-      category: "Living Room",
-    },
-    {
-      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/DiningArea1-eJNjp0Rmzb3GoczNhi9R9wAv6xPG6L.jpg",
-      alt: "Dining 1",
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-dindingroom-1-YNHfShN6hkDT5YN5vjhyvCl5GwjwGd.webp",
+      alt: "Querencia Dining Area 1",
       width: 1200,
       height: 900,
       blurDataURL:
         "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
       category: "Dining",
+    },
+    {
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-diningroom-2-BtJPABFQYgbL1xHSh1PfT8I9X0RIQU.webp",
+      alt: "Querencia Dining Area 2",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Dining",
+    },
+    {
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-bedroom-1-C8AtmfwGpd18x6sZVGE2g3HeOvkI2x.webp",
+      alt: "Querencia Bedroom 1",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom ",
+    },
+    {
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-bedroom-2-K6KuymuDSP1abh3eZOJo6MwgeHOsyB.webp",
+      alt: "Querencia Bedroom 2",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
+    },
+    {
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-bedroom-3-UqoxI9WrnaXWMZLaGvQwymFmik28j9.webp",
+      alt: "Querencia Bedroom 3",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
+    },
+    {
+      src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/querencia-bedroom-4-Cumu8CsD12p09Zu5HXKXqz97qEONzQ.webp",
+      alt: "Querencia Bedroom 4",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
     },
   ]
 
