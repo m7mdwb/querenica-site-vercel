@@ -374,8 +374,8 @@ export default function GallerySection() {
                 </button>
 
                 {/* Horizontal Thumbnail Navigation */}
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center overflow-x-auto px-4 py-2 gallery-thumbnail-scroll">
-                  <div className="flex space-x-2">
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center px-4 py-2 gallery-thumbnail-scroll">
+                  <div className="flex space-x-2 max-w-full overflow-x-auto pb-2">
                     {galleryImages.map((image, index) => (
                       <button
                         key={index}

@@ -485,7 +485,7 @@ export default function ResidencesSection() {
 
       {/* Residence Detail Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[90vh] max-w-4xl overflow-auto p-0 sm:rounded-lg">
+        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto overflow-x-hidden p-0 sm:rounded-lg">
           {selectedResidence && (
             <>
               {/* Image Gallery */}
