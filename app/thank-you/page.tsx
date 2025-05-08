@@ -1,9 +1,8 @@
 "use client"
 
-import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, Home, ArrowLeft, Download, Phone, Mail } from "lucide-react"
+import { CheckCircle, Home, ArrowLeft, Download, Phone, Mail, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import "./thank-you.css"
 
@@ -14,13 +13,62 @@ export default function ThankYouPage() {
     window.open(catalogUrl, "_blank")
   }
 
+  // Project data
+  const projects = [
+    {
+      id: "la-casalia",
+      name: "La Casalia",
+      description: "Luxury villas with private pools and panoramic sea views",
+      image:
+        "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/2-%20A%20Block%201%2B1/A%20Blok%201%2B1%201-G0mes18sTWOZ2cWwd6FM2eYbgfGL3y.jpg",
+      location: "Kyrenia, North Cyprus",
+    },
+    {
+      id: "natalux",
+      name: "Natalux",
+      description: "Modern apartments in the heart of the city",
+      image:
+        "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/3-%20A%20Block%202%2B1/A%20Blok%202%2B1%201-32NbplBa3pvC5dJqzWeUHJjRLVo6LO.jpg",
+      location: "Famagusta, North Cyprus",
+    },
+    {
+      id: "la-isla",
+      name: "La Isla",
+      description: "Beachfront residences with exclusive amenities",
+      image:
+        "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/6-%20B-C-D%202%2B1/B-C-D%202%2B1%201-pSGOjrRyvS0wWb9aPMmoGMGsQmskUP.jpg",
+      location: "Bafra, North Cyprus",
+    },
+    {
+      id: "panorama",
+      name: "Panorama",
+      description: "Elevated living with 360° mountain and sea views",
+      image:
+        "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/7-%20B-C-D%203%2B1/B-C-D%203%2B1%201-8wK1VD3e6L1ZKnGmxYPvCUIbOzPMym.jpg",
+      location: "Iskele, North Cyprus",
+    },
+  ]
+
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-[#1a1a1a]">
-      <Navbar />
+      {/* Custom header with dark logo in top-left */}
+      <header className="bg-white py-4 px-6 shadow-sm">
+        <div className="container mx-auto">
+          <div className="w-40 md:w-48">
+            <img
+              src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Dark_logo-JYIL3AdIqeQgQe7UEUSUsl3ZMvuj1Y.png"
+              alt="Querencia Hotel & Residence"
+              className="w-full"
+            />
+          </div>
+        </div>
+      </header>
 
       <div className="container mx-auto px-4 py-20 md:py-32">
         <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md fade-in">
           <div className="mb-8 flex flex-col items-center justify-center text-center">
+            {/* Dark Logo */}
+
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#c9a77c]/20 text-[#c9a77c]">
               <CheckCircle className="h-10 w-10" />
             </div>
@@ -101,6 +149,61 @@ export default function ThankYouPage() {
                 Download Catalog
               </Button>
             </div>
+          </div>
+        </div>
+
+        {/* Project Cards Section */}
+        <div className="mx-auto mt-16 max-w-5xl fade-in-delay-3">
+          <h2 className="mb-8 text-center text-2xl font-light tracking-wider text-[#1a1a1a]">
+            Explore More Dovec Group Projects
+          </h2>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {projects.map((project, index) => (
+              <a
+                key={project.id}
+                href={`https://dovecgroup.com/projects/${project.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`group overflow-hidden rounded-lg bg-white shadow-md transition-all duration-500 hover:-translate-y-1 hover:shadow-lg`}
+                style={{ animationDelay: `${(index + 1) * 200}ms` }}
+              >
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={project.image || "/placeholder.svg"}
+                    alt={project.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                </div>
+                <div className="p-4">
+                  <h3 className="mb-1 text-lg font-medium text-[#2c4051] group-hover:text-[#c9a77c]">{project.name}</h3>
+                  <p className="mb-2 text-sm text-[#666]">{project.description}</p>
+                  <div className="flex items-center text-xs text-[#999]">
+                    <span>{project.location}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* Dovec Group Website Button */}
+          <div className="mt-12 flex justify-center">
+            <Button
+              size="lg"
+              className="bg-[#2c4051] text-white hover:bg-[#3a526a] transition-all duration-300 transform hover:scale-105"
+              asChild
+            >
+              <a
+                href="https://dovecgroup.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <ExternalLink className="h-5 w-5" />
+                Visit Dovec Group Website
+              </a>
+            </Button>
           </div>
         </div>
 

@@ -96,6 +96,26 @@
   }
 }
 
+/* Gallery Styles */
+.gallery-thumbnail-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 167, 124, 0.5) transparent;
+}
+
+.gallery-thumbnail-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-thumbnail-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gallery-thumbnail-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(201, 167, 124, 0.5);
+  border-radius: 6px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .highlight-form {
     animation: none;

@@ -1,12 +1,15 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import type React from "react"
+
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useInView } from "react-intersection-observer"
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { X, ChevronLeft, ChevronRight, Download } from "lucide-react"
+import { X, ChevronLeft, ChevronRight, Download, Eye } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function GallerySection() {
   const { ref, inView } = useInView({
@@ -16,56 +19,120 @@ export default function GallerySection() {
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(0)
+  const [totalImages, setTotalImages] = useState(0)
+  const galleryRef = useRef<HTMLDivElement>(null)
 
-  // Expanded gallery with 12 images
+  // Expanded gallery with 12 images - now with width and height information
   const galleryImages = [
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior1-vq7FaLshWuWErUhIJIAeeBUC06lIFw.jpg",
       alt: "Querencia exterior 1",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Exterior",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior2-ey2d6AB8XMYGytjOYWnG0Zgg3nLVh7.jpg",
       alt: "Querencia exterior 2",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Exterior",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/Exterior3-2Orxcjsht7yvpr9hFdccEq68nxOYO9.jpg",
       alt: "Querencia exterior 3",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Exterior",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom1-L3Gs2zSf3y3YkibIWf77C5gMNbOi3K.jpg",
       alt: "Bedroom 1",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Beroom2-V2nNtU8BbZ33aBgqv3yhpuT8Qih84d.jpg",
       alt: "Bedroom 2",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom3-o5sThkaYxGiZVS4cpU9qDpDKy5GqSs.jpg",
       alt: "Bedroom 3",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Bedroom4-epCGRoCiYLoA1yt8iSK2ZTwZOe1yV0.jpg",
       alt: "Bedroom 4",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Bedroom",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom1-W8eJYwmVfczHVxEdklFivqQRFScgGB.jpg",
       alt: "Livingroom 1",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Living Room",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom2-iIc1Wjhmnr9wnCx8Vw8r2vUIUwZllm.jpg",
       alt: "Livingroom 2",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Living Room",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom3-iI74unTRzHuPxfDMvgqD1QOFqVp1gS.jpg",
       alt: "Livingroom 3",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Living Room",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/Livingroom4-U6NEIWpgOjfU2UOmyrUtfn2ex4wU0s.jpg",
       alt: "Livingroom 4",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Living Room",
     },
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Interior%20Images/DiningArea1-eJNjp0Rmzb3GoczNhi9R9wAv6xPG6L.jpg",
       alt: "Dining 1",
+      width: 1200,
+      height: 900,
+      blurDataURL:
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQIGAwAAAAAAAAAAAAABAgMABAUGESEHEhMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AmeMOKNtbXF3ZWEk11KkZWOKJCdyAST9AAkk+gCToNUVB0AoIqL//2Q==",
+      category: "Dining",
     },
   ]
 
@@ -73,6 +140,7 @@ export default function GallerySection() {
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index)
     setSelectedImage(galleryImages[index].src)
+    setIsGalleryOpen(true)
   }
 
   // Functions to navigate between images in the lightbox
@@ -89,20 +157,21 @@ export default function GallerySection() {
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selectedImage) return
+      if (!isGalleryOpen) return
 
       if (e.key === "ArrowRight") {
         nextImage()
       } else if (e.key === "ArrowLeft") {
         prevImage()
       } else if (e.key === "Escape") {
+        setIsGalleryOpen(false)
         setSelectedImage(null)
       }
     }
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [selectedImage, nextImage, prevImage])
+  }, [isGalleryOpen, nextImage, prevImage])
 
   // Function to scroll to contact form and set catalog flag
   const scrollToContactForm = () => {
@@ -110,7 +179,8 @@ export default function GallerySection() {
     window.localStorage.setItem("requestCatalog", "true")
 
     // Close the lightbox if it's open
-    if (selectedImage) {
+    if (isGalleryOpen) {
+      setIsGalleryOpen(false)
       setSelectedImage(null)
     }
 
@@ -132,6 +202,46 @@ export default function GallerySection() {
     }
   }
 
+  // Handle touch events for swiping in the gallery
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = () => {
+    if (!isGalleryOpen) return
+
+    const difference = touchStartX.current - touchEndX.current
+    const threshold = 50 // Minimum swipe distance
+
+    if (difference > threshold) {
+      // Swiped left, go to next image
+      nextImage()
+    } else if (difference < -threshold) {
+      // Swiped right, go to previous image
+      prevImage()
+    }
+  }
+
+  // Track image loading progress
+  useEffect(() => {
+    setTotalImages(galleryImages.length)
+  }, [galleryImages.length])
+
+  const handleImageLoad = () => {
+    setImagesLoaded((prev) => prev + 1)
+  }
+
+  // Determine how many images to show initially (4 on desktop, 2 on mobile)
+  const initialImageCount = 4
+  const visibleImages = galleryImages.slice(0, initialImageCount)
+
   return (
     <section ref={ref} id="gallery" className="bg-[#f8f8f8] py-20 md:py-32">
       <div className="container mx-auto px-4">
@@ -139,33 +249,56 @@ export default function GallerySection() {
           Explore Querencia
         </h2>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-4">
-          {galleryImages.map((image, index) => (
-            <div
-              key={index}
-              className={cn(
-                "group cursor-pointer overflow-hidden rounded-lg transition-all duration-700",
-                inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                { "delay-[200ms]": index % 4 === 0 },
-                { "delay-[300ms]": index % 4 === 1 },
-                { "delay-[400ms]": index % 4 === 2 },
-                { "delay-[500ms]": index % 4 === 3 },
-              )}
-              onClick={() => openLightbox(index)}
-            >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={image.src || "/images/placeholder.jpg"}
-                  alt={image.alt}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+        {/* Gallery Grid with optimized images */}
+        <div ref={galleryRef} className="mb-8">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-2 xl:grid-cols-4">
+            {visibleImages.map((image, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "group relative cursor-pointer overflow-hidden rounded-lg transition-all duration-700",
+                  inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
+                  { "delay-[200ms]": index % 4 === 0 },
+                  { "delay-[300ms]": index % 4 === 1 },
+                  { "delay-[400ms]": index % 4 === 2 },
+                  { "delay-[500ms]": index % 4 === 3 },
+                )}
+                onClick={() => openLightbox(index)}
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={image.src || "/placeholder.svg"}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    placeholder="blur"
+                    blurDataURL={image.blurDataURL}
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    priority={index < 4}
+                    onLoad={handleImageLoad}
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/30 group-hover:opacity-100">
+                  <div className="rounded-full bg-white/80 p-2">
+                    <Eye className="h-6 w-6 text-[#2c4051]" />
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* View More Button */}
+        <div className="mb-12 flex justify-center">
+          <Button onClick={() => openLightbox(0)} className="group bg-[#2c4051] text-white hover:bg-[#3a526a]">
+            <Eye className="mr-2 h-4 w-4" />
+            View Gallery
+          </Button>
         </div>
 
         {/* Catalog Download CTA */}
-        <div className="mt-16 flex flex-col items-center justify-center space-y-4">
+        <div className="mt-8 flex flex-col items-center justify-center space-y-4">
           <h3 className="text-center text-2xl font-light tracking-wider text-[#1a1a1a] sm:text-3xl">
             Want to See More?
           </h3>
@@ -181,19 +314,36 @@ export default function GallerySection() {
           </Button>
         </div>
 
-        {/* Image Lightbox Dialog */}
-        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="max-w-5xl border-none bg-transparent p-0 shadow-none">
+        {/* Gallery Modal Dialog */}
+        <Dialog
+          open={isGalleryOpen}
+          onOpenChange={(open) => {
+            setIsGalleryOpen(open)
+            if (!open) {
+              setSelectedImage(null)
+              setCurrentImageIndex(0)
+            }
+          }}
+        >
+          <DialogContent className="max-h-[90vh] max-w-5xl border-none bg-transparent p-0 shadow-none [&>button]:hidden">
             <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
-              aria-label="Close dialog"
+              onClick={() => {
+                setIsGalleryOpen(false)
+                setSelectedImage(null)
+              }}
+              className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 p-2 text-white shadow-md transition-all hover:bg-black/80 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
+              aria-label="Close gallery"
             >
               <X className="h-6 w-6" />
             </button>
 
             {selectedImage && (
-              <div className="relative">
+              <div
+                className="relative"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
                 <img
                   src={selectedImage || "/placeholder.svg"}
                   alt={galleryImages[currentImageIndex].alt}
@@ -206,10 +356,10 @@ export default function GallerySection() {
                     e.stopPropagation()
                     prevImage()
                   }}
-                  className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
+                  className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 md:h-12 md:w-12"
                   aria-label="Previous image"
                 >
-                  <ChevronLeft className="h-6 w-6" />
+                  <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
                 </button>
 
                 <button
@@ -217,14 +367,46 @@ export default function GallerySection() {
                     e.stopPropagation()
                     nextImage()
                   }}
-                  className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
+                  className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 md:h-12 md:w-12"
                   aria-label="Next image"
                 >
-                  <ChevronRight className="h-6 w-6" />
+                  <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
                 </button>
 
+                {/* Horizontal Thumbnail Navigation */}
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center overflow-x-auto px-4 py-2 gallery-thumbnail-scroll">
+                  <div className="flex space-x-2">
+                    {galleryImages.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setCurrentImageIndex(index)
+                          setSelectedImage(image.src)
+                        }}
+                        className={cn(
+                          "h-12 w-16 flex-shrink-0 overflow-hidden rounded border-2 transition-all md:h-16 md:w-24",
+                          currentImageIndex === index
+                            ? "border-[#c9a77c] opacity-100"
+                            : "border-transparent opacity-60 hover:opacity-100",
+                        )}
+                        aria-label={`View ${image.alt}`}
+                      >
+                        <Image
+                          src={image.src || "/placeholder.svg"}
+                          alt={image.alt}
+                          width={120}
+                          height={90}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Image Counter */}
-                <div className="absolute bottom-4 left-0 right-0 text-center text-white">
+                <div className="absolute bottom-24 left-0 right-0 text-center text-white md:bottom-28">
                   <span className="rounded-full bg-black/50 px-3 py-1 text-sm">
                     {currentImageIndex + 1} / {galleryImages.length}
                   </span>
