@@ -19,12 +19,12 @@ export default function AboutSection() {
     {
       icon: Calendar,
       title: "COMPLETION",
-      value: "2024",
+      value: "April 2026 (Phase 1)",
     },
     {
       icon: PoundSterling,
       title: "STARTING PRICE",
-      value: "£ 144.000",
+      value: "£ 145.000",
     },
   ]
 
