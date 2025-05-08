@@ -29,7 +29,7 @@ export default function AboutSection() {
   ]
 
   return (
-    <section id="about" ref={ref} className="py-5 md:py-10">
+    <section id="about" ref={ref} className="py-5 md:py-10 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-16 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:text-5xl">
           Discover Querencia

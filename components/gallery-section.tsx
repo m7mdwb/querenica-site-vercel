@@ -258,7 +258,7 @@ export default function GallerySection() {
   const visibleImages = galleryImages.slice(0, initialImageCount)
 
   return (
-    <section ref={ref} id="gallery" className="bg-[#f8f8f8] py-20 md:py-32">
+    <section ref={ref} id="gallery" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:mb-16 md:text-5xl">
           Explore Querencia

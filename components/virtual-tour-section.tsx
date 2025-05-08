@@ -17,7 +17,7 @@ export default function VirtualTourSection() {
 
   return (
     // The ref is now on the main section for the fade-in effect
-    <section ref={ref} className="bg-[#2c4051] py-24 text-white md:py-32">
+    <section ref={ref} id="virtual-tour" className="bg-[#2c4051] py-24 text-white md:py-32 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-16 text-center text-3xl font-light tracking-wider sm:text-4xl md:text-5xl">
           Immerse Yourself

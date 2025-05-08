@@ -19,7 +19,7 @@ export default function LocationSection() {
   ]
 
   return (
-    <section ref={ref} id="location" className="bg-[#2c4051] py-20 text-white md:py-32">
+    <section ref={ref} id="location" className="bg-[#2c4051] py-20 text-white md:py-32 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-4 text-center text-3xl font-light tracking-wider sm:text-4xl md:text-5xl">
           An Enviable Location

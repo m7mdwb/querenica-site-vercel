@@ -25,7 +25,21 @@ export default function HeroSection() {
   }
 
   const scrollToNextSection = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })
+    const aboutSection = document.getElementById("about")
+    if (aboutSection) {
+      // Get the navbar height to use as offset
+      const navbar = document.querySelector("nav")
+      const navbarHeight = navbar ? navbar.offsetHeight : 0
+
+      // Calculate the element's position relative to the document
+      const elementPosition = aboutSection.getBoundingClientRect().top + window.scrollY
+
+      // Scroll to the element with offset for the navbar
+      window.scrollTo({
+        top: elementPosition - navbarHeight - 16, // Additional 16px buffer for spacing
+        behavior: "smooth",
+      })
+    }
   }
 
   return (

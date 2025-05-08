@@ -392,3 +392,21 @@ button {
     min-height: 2.5rem;
   }
 }
+
+/* Scroll behavior improvements */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Fallback for browsers that don't support scroll-margin */
+}
+
+/* Default scroll margin for all sections */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  section[id] {
+    scroll-margin-top: 64px;
+  }
+}

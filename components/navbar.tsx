@@ -55,14 +55,28 @@ export default function Navbar() {
     }
   }, [isMobileMenuOpen])
 
-  // Handle smooth scrolling
+  // Handle smooth scrolling with proper offset
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     setIsMobileMenuOpen(false)
 
     const targetId = href.replace("#", "")
     const element = document.getElementById(targetId)
-    element?.scrollIntoView({ behavior: "smooth" })
+
+    if (element) {
+      // Get the navbar height to use as offset
+      const navbar = document.querySelector("nav")
+      const navbarHeight = navbar ? navbar.offsetHeight : 0
+
+      // Calculate the element's position relative to the document
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY
+
+      // Scroll to the element with offset for the navbar
+      window.scrollTo({
+        top: elementPosition - navbarHeight - 16, // Additional 16px buffer for spacing
+        behavior: "smooth",
+      })
+    }
   }
 
   return (
