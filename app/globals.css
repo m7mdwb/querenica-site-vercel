@@ -237,3 +237,41 @@ body {
 .max-w-5xl {
   max-width: min(5xl, 100vw - 2rem);
 }
+
+/* Add these styles at the end of your globals.css file */
+
+/* Fix for touch device button states */
+@media (hover: none) {
+  button:hover {
+    /* Reset hover states on touch devices */
+    background-color: inherit;
+    color: inherit;
+  }
+
+  /* Specific overrides for navigation buttons */
+  .gallery-navigation-button:hover,
+  .residence-navigation-button:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+  }
+
+  /* Apply active styles only during actual press */
+  button:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Prevent double-tap zoom on buttons */
+button {
+  touch-action: manipulation;
+}
+
+/* Improve touch area for small buttons */
+@media (max-width: 768px) {
+  .gallery-thumbnail-button,
+  .residence-navigation-button,
+  .gallery-navigation-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

@@ -248,20 +248,39 @@ const propertyTypes: PropertyBlock[] = [
 // Image carousel component for residence cards
 function ResidenceImageCarousel({ images, name }: { images: string[]; name: string }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation()
+    if (isTransitioning) return // Prevent rapid clicks during transition
+
+    setIsTransitioning(true)
     setCurrentImageIndex((prev) => (prev + 1) % images.length)
+
+    // Reset transitioning state after animation completes
+    setTimeout(() => setIsTransitioning(false), 300)
   }
 
   const prevImage = (e: React.MouseEvent) => {
     e.stopPropagation()
+    if (isTransitioning) return // Prevent rapid clicks during transition
+
+    setIsTransitioning(true)
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
+
+    // Reset transitioning state after animation completes
+    setTimeout(() => setIsTransitioning(false), 300)
   }
 
   const goToImage = (e: React.MouseEvent, index: number) => {
     e.stopPropagation()
+    if (isTransitioning) return // Prevent rapid clicks during transition
+
+    setIsTransitioning(true)
     setCurrentImageIndex(index)
+
+    // Reset transitioning state after animation completes
+    setTimeout(() => setIsTransitioning(false), 300)
   }
 
   return (
@@ -279,19 +298,21 @@ function ResidenceImageCarousel({ images, name }: { images: string[]; name: stri
       {/* Carousel Controls */}
       {images.length > 1 && (
         <>
-          {/* Previous Button */}
+          {/* Previous Button - Fixed hover state for touch devices */}
           <button
             onClick={prevImage}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#2c4051] hover:text-white absolute left-2 top-1/2 z-20  -translate-y-1/2 shadow-md transition-all hover:bg-white active:scale-95 md:h-10 md:w-10"
+            className="absolute left-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] shadow-md transition-all hover:bg-[#2c4051] hover:text-white active:bg-[#2c4051] active:text-white md:h-10 md:w-10"
             aria-label="Previous image"
+            style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
           >
             <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
           </button>
-          {/* Next Button */}
+          {/* Next Button - Fixed hover state for touch devices */}
           <button
             onClick={nextImage}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] transition-colors hover:bg-[#2c4051] hover:text-white absolute right-2 top-1/2 z-20  -translate-y-1/2 shadow-md transition-all hover:bg-white active:scale-95 md:h-10 md:w-10"
+            className="absolute right-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#f8f8f8] text-[#666] shadow-md transition-all hover:bg-[#2c4051] hover:text-white active:bg-[#2c4051] active:text-white md:h-10 md:w-10"
             aria-label="Next image"
+            style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
           >
             <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
           </button>
@@ -306,6 +327,7 @@ function ResidenceImageCarousel({ images, name }: { images: string[]; name: stri
                   currentImageIndex === index ? "bg-white" : "bg-white/50 hover:bg-white/75",
                 )}
                 aria-label={`Go to image ${index + 1}`}
+                style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
               />
             ))}
           </div>

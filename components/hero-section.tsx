@@ -64,11 +64,13 @@ export default function HeroSection() {
           In Harmony With Luxury in North Cyprus
         </p>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator - Adjusted positioning for mobile */}
         <button
           onClick={scrollToNextSection}
           className={cn(
-            "absolute bottom-8 flex animate-bounce flex-col items-center justify-center transition-all delay-700 duration-1000 sm:bottom-12",
+            "absolute flex animate-bounce flex-col items-center justify-center transition-all delay-700 duration-1000",
+            // Adjusted positioning for better mobile visibility
+            "bottom-16 sm:bottom-12",
             isVisible ? "opacity-100" : "opacity-0",
           )}
           aria-label="Scroll down"

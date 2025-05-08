@@ -23,6 +23,7 @@ export default function GallerySection() {
   const [imagesLoaded, setImagesLoaded] = useState(0)
   const [totalImages, setTotalImages] = useState(0)
   const galleryRef = useRef<HTMLDivElement>(null)
+  const [isTouchActive, setIsTouchActive] = useState(false) // Define isTouchActive here
 
   // Expanded gallery with 12 images - now with width and height information
   const galleryImages = [
@@ -145,14 +146,24 @@ export default function GallerySection() {
 
   // Functions to navigate between images in the lightbox
   const nextImage = useCallback(() => {
-    setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length)
-    setSelectedImage(galleryImages[(currentImageIndex + 1) % galleryImages.length].src)
-  }, [currentImageIndex, galleryImages])
+    if (isTouchActive) return // Prevent duplicate triggers on touch devices
+
+    setCurrentImageIndex((prev) => {
+      const next = (prev + 1) % galleryImages.length
+      setSelectedImage(galleryImages[next].src)
+      return next
+    })
+  }, [galleryImages, isTouchActive])
 
   const prevImage = useCallback(() => {
-    setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)
-    setSelectedImage(galleryImages[(currentImageIndex - 1 + galleryImages.length) % galleryImages.length].src)
-  }, [currentImageIndex, galleryImages])
+    if (isTouchActive) return // Prevent duplicate triggers on touch devices
+
+    setCurrentImageIndex((prev) => {
+      const next = (prev - 1 + galleryImages.length) % galleryImages.length
+      setSelectedImage(galleryImages[next].src)
+      return next
+    })
+  }, [galleryImages, isTouchActive])
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -208,6 +219,7 @@ export default function GallerySection() {
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
+    setIsTouchActive(true)
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -215,7 +227,7 @@ export default function GallerySection() {
   }
 
   const handleTouchEnd = () => {
-    if (!isGalleryOpen) return
+    if (!isGalleryOpen || !isTouchActive) return
 
     const difference = touchStartX.current - touchEndX.current
     const threshold = 50 // Minimum swipe distance
@@ -227,6 +239,8 @@ export default function GallerySection() {
       // Swiped right, go to previous image
       prevImage()
     }
+
+    setIsTouchActive(false)
   }
 
   // Track image loading progress
@@ -358,6 +372,7 @@ export default function GallerySection() {
                   }}
                   className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 md:h-12 md:w-12"
                   aria-label="Previous image"
+                  style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
                 >
                   <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
                 </button>
@@ -369,6 +384,7 @@ export default function GallerySection() {
                   }}
                   className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 md:h-12 md:w-12"
                   aria-label="Next image"
+                  style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
                 >
                   <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
                 </button>
