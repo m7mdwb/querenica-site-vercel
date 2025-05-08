@@ -108,82 +108,80 @@
   }
 }
 
-.timeline-phase {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
+/* Timeline pulse animation */
+@keyframes pulseDot {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
 }
 
-.timeline-phase:nth-child(1) {
-  animation-delay: 0.1s;
+/* Scroll behavior improvements */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Fallback for browsers that don't support scroll-margin */
 }
 
-.timeline-phase:nth-child(2) {
-  animation-delay: 0.3s;
+/* Default scroll margin for all sections */
+section[id] {
+  scroll-margin-top: 80px;
 }
 
-.timeline-phase:nth-child(3) {
-  animation-delay: 0.5s;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  section[id] {
+    scroll-margin-top: 64px;
+  }
 }
 
-.timeline-phase:nth-child(4) {
-  animation-delay: 0.7s;
+/* Prevent horizontal scrolling on all devices */
+html,
+body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
 }
 
-.timeline-phase:nth-child(5) {
-  animation-delay: 0.9s;
+/* Additional mobile-specific fixes */
+@media (max-width: 767px) {
+  /* Ensure all elements respect container boundaries */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Fix for potential issues with absolute positioned elements */
+  .container {
+    max-width: 100vw;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Ensure images don't cause overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
-/* Timeline hover effects */
-.timeline-dot {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Fix for iOS Safari momentum scrolling while maintaining smooth scrolling */
+@supports (-webkit-overflow-scrolling: touch) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
-.timeline-item:hover .timeline-dot {
-  transform: scale(1.2);
-  box-shadow: 0 0 0 4px rgba(201, 167, 124, 0.2);
-}
-
-/* Gallery Styles */
-.gallery-thumbnail-scroll {
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(201, 167, 124, 0.5) transparent;
-}
-
-.gallery-thumbnail-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-
-.gallery-thumbnail-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.gallery-thumbnail-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(201, 167, 124, 0.5);
-  border-radius: 6px;
-}
-
-/* Add the following CSS to the gallery-thumbnail-scroll styles */
-
-.gallery-thumbnail-scroll .flex {
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(201, 167, 124, 0.5) transparent;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.gallery-thumbnail-scroll .flex::-webkit-scrollbar {
-  height: 6px;
-}
-
-.gallery-thumbnail-scroll .flex::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.gallery-thumbnail-scroll .flex::-webkit-scrollbar-thumb {
-  background-color: rgba(201, 167, 124, 0.5);
-  border-radius: 6px;
+/* Prevent double-tap zoom on buttons */
+button {
+  touch-action: manipulation;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -240,14 +238,6 @@
 }
 
 /* Add the following CSS at the end of the file to prevent horizontal scrolling */
-
-/* Prevent horizontal scrolling on all devices */
-html,
-body {
-  overflow-x: hidden;
-  position: relative;
-  width: 100%;
-}
 
 /* Additional mobile-specific fixes */
 @media (max-width: 767px) {
@@ -445,24 +435,6 @@ button {
   }
 }
 
-/* Scroll behavior improvements */
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Fallback for browsers that don't support scroll-margin */
-}
-
-/* Default scroll margin for all sections */
-section[id] {
-  scroll-margin-top: 80px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  section[id] {
-    scroll-margin-top: 64px;
-  }
-}
-
 /* Elegant timeline animations */
 @keyframes pulseDot {
   0% {
@@ -527,8 +499,10 @@ section[id] {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
+/* Enhanced timeline styling */
 .timeline-dot {
   position: relative;
+  z-index: 10;
 }
 
 .timeline-dot::before {
@@ -536,11 +510,11 @@ section[id] {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background-color: rgba(201, 167, 124, 0.2);
+  transform: translate(-50%, -50%);
   animation: pulse 2s infinite;
 }
 
@@ -559,14 +533,21 @@ section[id] {
   }
 }
 
-/* Responsive adjustments for the showcase */
-@media (max-width: 768px) {
-  .project-details-showcase {
-    padding: 1.5rem;
+/* Mobile timeline specific styles */
+@media (max-width: 767px) {
+  .timeline-section {
+    padding: 1rem 0;
   }
 
-  .project-details-showcase .timeline-section {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+  /* Ensure the vertical line extends properly */
+  .timeline-section .relative {
+    min-height: 120px;
+  }
+
+  /* Center content in mobile view */
+  .timeline-section .text-center {
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

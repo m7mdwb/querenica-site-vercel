@@ -2,8 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Thank You | Querencia Hotel & Residence",
-  description: "Thank you for your inquiry. Our team will contact you shortly.",
+  title: "Thank You - Querencia",
+  description: "Thank you for your interest in Querencia luxury residences.",
 }
 
 export default function ThankYouLayout({
@@ -11,5 +11,5 @@ export default function ThankYouLayout({
 }: {
   children: React.ReactNode
 }) {
-  return children
+  return <div className="thank-you-container">{children}</div>
 }

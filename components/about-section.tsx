@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 import { useInView } from "react-intersection-observer"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
-import ProjectDetailsShowcase, { type ProjectPhase } from "./project-details-showcase"
+import ProjectTimeline from "./project-timeline"
 
 export default function AboutSection() {
   const { ref, inView } = useInView({
@@ -11,26 +11,26 @@ export default function AboutSection() {
     triggerOnce: true,
   })
 
-  // Project phases data with block information
-  const projectPhases: ProjectPhase[] = [
+  // Project phases data
+  const projectPhases = [
     {
       id: 1,
       name: "Phase 1",
-      completionDate: "April 2026",
+      date: "April 2026",
       description: "First Signature Homes",
       blocks: "Block A",
     },
     {
       id: 2,
       name: "Phase 2",
-      completionDate: "December 2026",
+      date: "December 2026",
       description: "New Homes & Amenities",
       blocks: "Block B",
     },
     {
       id: 3,
       name: "Phase 3",
-      completionDate: "June 2027",
+      date: "June 2027",
       description: "The Vision Perfected",
       blocks: "Block C & D",
     },
@@ -43,14 +43,14 @@ export default function AboutSection() {
           Discover Querencia
         </h2>
 
-        {/* Integrated Project Details Showcase */}
+        {/* Project Timeline */}
         <div
           className={cn(
-            "mb-16 transition-all duration-700",
+            "transition-all duration-700",
             inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
           )}
         >
-          <ProjectDetailsShowcase city="TRIKOMO" startingPrice="£ 145.000" phases={projectPhases} />
+          <ProjectTimeline city="TRIKOMO" startingPrice="£ 145,000" phases={projectPhases} />
         </div>
 
         {/* About Content */}

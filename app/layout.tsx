@@ -1,15 +1,14 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import ClientLayout from "./client-layout"
+import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Querencia Hotel & Residence | Luxury Living in North Cyprus",
+  title: "Querencia - Luxury Residences in North Cyprus",
   description:
-    "Discover Querencia, a luxury hotel and residence development in North Cyprus offering unparalleled amenities and breathtaking views.",
-  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
+    "Discover luxury living at Querencia, featuring premium residences with panoramic sea views in North Cyprus.",
     generator: 'v0.dev'
 }
 
@@ -18,8 +17,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <ClientLayout>{children}</ClientLayout>
+  return (
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
+    </html>
+  )
 }
-
-
-import './globals.css'

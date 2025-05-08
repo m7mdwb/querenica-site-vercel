@@ -201,7 +201,7 @@ export default function ContactSection() {
 
                   <div className="mt-6 rounded-lg bg-[#f8f8f8] p-4">
                     <p className="text-center text-sm text-[#666]">
-                      Our sales team is available Monday to Saturday, 9am to 6pm.
+                      Our sales team is available 24/7.
                       <br />
                       Private viewings available by appointment.
                     </p>
