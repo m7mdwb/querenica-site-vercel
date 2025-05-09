@@ -47,9 +47,9 @@ export default function VirtualTourSection() {
               if (open) setHasInteracted(true)
             }}
           >
-            {/* Fix: Ensure DialogTrigger has exactly one child element by wrapping content in a button */}
+            {/* REFACTORED: Wrapped content in a semantic button element to ensure DialogTrigger has exactly one child */}
             <DialogTrigger asChild>
-              <button className="w-full p-0 m-0 bg-transparent border-0 cursor-pointer">
+              <button className="w-full p-0 m-0 bg-transparent border-0 cursor-pointer" aria-label="Open virtual tour">
                 <div className="relative aspect-video bg-gray-100 overflow-hidden rounded-lg shadow-lg group">
                   <img
                     src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Virtual%20Tour/querencia-virtual-tour-thumbnail-Rl9Yd9Yd9Yd9Yd9Yd9Yd9Yd9Yd9Yd.webp"
