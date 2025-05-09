@@ -87,12 +87,17 @@
 }
 
 @keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
   }
   50% {
-    opacity: 0.7;
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
   }
 }
 
@@ -122,6 +127,16 @@
     transform: translate(-50%, -50%) scale(0.8);
     opacity: 0;
   }
+}
+
+/* Hide scrollbar for timeline tabs while keeping functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 /* Scroll behavior improvements */
@@ -225,9 +240,11 @@ button {
     0%,
     100% {
       opacity: 1;
+      transform: scale(1);
     }
     50% {
       opacity: 1;
+      transform: scale(1);
     }
   }
 
@@ -551,3 +568,77 @@ button {
     margin-right: auto;
   }
 }
+
+/* Ensure these are in your globals.css or equivalent */
+
+/* Your existing keyframes: fadeIn, scaleUp, shimmer, pulse */
+/* Verify they match the desired effect or use/tweak these: */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  } /* Added slight translate for entry */
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleUp {
+  /* Used for logo, can be subtle */
+  from {
+    transform: scale(0.98);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  /* For the progress bar */
+  0% {
+    background-position: 200% 0;
+  } /* Start from further right */
+  100% {
+    background-position: -200% 0;
+  } /* Move to further left */
+}
+
+/* Refined 'pulse' for decorative circles or a new 'subtlePulse' */
+@keyframes subtlePulse {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Animation for the luxury accent line */
+@keyframes lineAppearAndPulse {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%); /* Start lower and invisible */
+  }
+  30% {
+    opacity: 0.7; /* Fade in */
+    transform: translateY(0px) translateX(-50%); /* Move to position */
+  }
+  100% {
+    opacity: 0.7; /* Hold opacity */
+    transform: translateY(0px) translateX(-50%);
+  }
+  /* Optional: could add a subtle shimmer or length change here if desired after appearing */
+}
+
+/* Your existing general pulse if used by other elements, ensure no conflict */
+/*
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+*/

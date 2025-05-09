@@ -15,7 +15,7 @@ export default function LocationSection() {
     { icon: Shell, text: "5 minutes to pristine Mediterranean beaches" },
     { icon: Utensils, text: "On-Site restaurant" },
     { icon: Plane, text: "30 minutes to international airport" },
-    { icon: University, text: "20 minutes to biggest university" },
+    { icon: University, text: "20 minutes to the biggest university" },
   ]
 
   return (

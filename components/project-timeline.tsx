@@ -1,10 +1,11 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { MapPin, PoundSterling } from "lucide-react"
+import { MapPin, PoundSterling, ChevronRight, CalendarDays, Info, ChevronDown } from "lucide-react" // Added Info or ChevronDown
+import { useState, useEffect } from "react" // Added useEffect for initial mobile selection
 
 interface TimelinePhase {
-  id: number
+  id: number // Should be unique for key prop
   name: string
   date: string
   description: string
@@ -19,165 +20,211 @@ interface ProjectTimelineProps {
 }
 
 export default function ProjectTimeline({ city, startingPrice, phases, className }: ProjectTimelineProps) {
-  const DOT_SIZE = 10
-  const PULSE_SIZE = 24
-  const LINE_WIDTH = 1
-  
-  const DESKTOP_DOT_CONTAINER_HEIGHT = 25;
-  const DESKTOP_PARENT_PADDING_TOP_PX = 2.5 * 16; 
+  // Initialize activePhase. For mobile, we'll set it to 0 in useEffect.
+  // For desktop, if you want nothing selected initially, keep it null.
+  // If you want the first phase selected on desktop too, initialize to 0.
+  const [activePhase, setActivePhase] = useState<number | null>(null); // Or 0 if desktop should also have first selected
 
-  // Mobile: Define how much space the dot column will take in the "text beside line" layout
-  const MOBILE_DOT_AREA_WIDTH_PX = PULSE_SIZE; // Use pulse size for width allocation
-  const MOBILE_TEXT_LEFT_MARGIN_PX = MOBILE_DOT_AREA_WIDTH_PX + 16; // Dot area width + 1rem gap (16px)
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Tailwind's 'md' breakpoint is typically 768px
+    };
+    checkMobile(); // Initial check
+    window.addEventListener('resize', checkMobile);
+
+    // Set initial active phase for mobile
+    if (window.innerWidth < 768 && phases.length > 0) {
+      setActivePhase(0);
+    } else if (phases.length > 0) {
+      // Optional: Set a default for desktop if you didn't initialize useState with 0
+      // setActivePhase(0); // Uncomment if desktop should also default to first phase selected
+    }
+
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [phases.length]); // Rerun if phases change
+
+  const handlePhaseClick = (index: number) => {
+    setActivePhase(prevActivePhase => (prevActivePhase === index ? null : index));
+  }
+
+  const isTimelineActive = activePhase !== null;
 
   return (
-    <div className={cn("mb-16 rounded-lg bg-white p-6 shadow-sm", className)}>
-      <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row md:items-stretch">
-        {/* City Info */}
-        <div className="flex flex-col items-center justify-center md:items-center md:w-1/5 md:border-r md:border-[#f0f0f0] md:pr-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-3">
+    <div className={cn("mb-10 rounded-lg bg-white p-6 shadow-sm overflow-hidden", className)}>
+      {/* Desktop Layout (previous version - assumed to be working as desired) */}
+      <div className={cn(
+        "hidden md:flex md:items-start md:justify-between md:space-x-4",
+      )}>
+        <div className={cn(
+          "flex flex-col items-center justify-start text-center pt-1 transition-all duration-300 ease-in-out",
+          isTimelineActive
+            ? "flex-none w-[130px] min-w-[120px] opacity-80 scale-95"
+            : "flex-none w-[180px] min-w-[160px] opacity-100 scale-100"
+        )}>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-2">
             <MapPin className="h-6 w-6" />
           </div>
-          <h3 className="text-sm font-medium tracking-wider text-[#666] text-center mb-1">CITY</h3>
-          <p className="text-xl font-light text-[#2c4051] text-center">{city}</p>
+          <h3 className="text-sm font-semibold tracking-wider text-[#666] mb-1 uppercase">CITY</h3>
+          <p className="text-lg font-medium text-[#2c4051]">{city}</p>
         </div>
 
-        {/* Timeline - Center */}
-        <div className="flex-grow md:w-3/5 md:px-8">
-          {/* Desktop Timeline - Verified as Perfect */}
-          <div className="relative hidden md:block pt-10 pb-6">
-            <div
-              className="absolute bg-[#f0f0f0] z-0"
-              style={{
-                left: 0,
-                right: 0,
-                top: `${DESKTOP_PARENT_PADDING_TOP_PX + (DESKTOP_DOT_CONTAINER_HEIGHT / 2) - (LINE_WIDTH / 2)}px`,
-                height: `${LINE_WIDTH}px`,
-              }}
-            ></div>
-            <div className="flex justify-between">
-              {phases.map((phase, index) => (
+        <div className={cn(
+          "pt-1 transition-all duration-300 ease-in-out flex-grow"
+        )}>
+          <div className="flex items-center justify-center text-center mb-5 space-x-2">
+            <CalendarDays className="h-5 w-5 text-[#2c4051]" />
+            <h3 className="text-sm font-semibold tracking-wider text-[#666] uppercase">PROJECT TIMELINE</h3>
+          </div>
+          <div className="flex justify-center items-start">
+            {phases.map((phase, index) => (
+              <div key={phase.id} className="flex items-start">
                 <div
-                  key={phase.id}
                   className={cn(
-                    "relative flex flex-1 flex-col px-2",
-                    index === 0 ? "items-start text-left" : "",
-                    index === phases.length - 1 ? "items-end text-right" : "items-center text-center",
+                    "px-4 py-3 rounded-lg transition-all duration-300 ease-in-out cursor-pointer min-w-[200px] flex flex-col text-left relative",
+                    activePhase === index
+                      ? "bg-[#2c4051] text-white ring-2 ring-[#c9a77c] shadow-xl scale-105 z-10"
+                      : "bg-[#f8f8f8] text-[#2c4051] hover:bg-slate-200 scale-100",
                   )}
+                  onClick={() => handlePhaseClick(index)}
                 >
-                  <div className={`relative h-[${DESKTOP_DOT_CONTAINER_HEIGHT}px]`}>
+                  <div className="flex items-center mb-2">
                     <div
-                      className="absolute z-10 rounded-full bg-[#c9a77c]" // Solid golden dot
-                      style={{
-                        width: `${DOT_SIZE}px`,
-                        height: `${DOT_SIZE}px`,
-                        top: "50%",
-                        left: index === 0 ? 0 : index === phases.length - 1 ? "auto" : "50%",
-                        right: index === phases.length - 1 ? 0 : "auto",
-                        transform:
-                          index === 0
-                            ? "translateY(-50%)"
-                            : index === phases.length - 1
-                              ? "translateY(-50%)"
-                              : "translate(-50%, -50%)",
-                      }}
+                      className={cn(
+                        "w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold mr-3 flex-shrink-0",
+                        activePhase === index ? "bg-[#c9a77c] text-white" : "bg-white text-[#2c4051] border border-slate-300",
+                      )}
                     >
-                      {/* Pulsing effect centered on the golden dot */}
-                      <div
-                        className="absolute rounded-full bg-[#c9a77c]/20 animate-pulse"
-                        style={{
-                          width: `${PULSE_SIZE}px`,
-                          height: `${PULSE_SIZE}px`,
-                          top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                        }}
-                      ></div>
+                      {index + 1}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">{phase.name}</p>
+                      <p className={cn("text-xs", activePhase === index ? "text-[#c9a77c]" : "text-slate-500")}>
+                        {phase.date}
+                      </p>
                     </div>
                   </div>
-                  <div className="mt-4 w-full">
-                    <h4 className="text-base font-medium text-[#2c4051]">{phase.name}</h4>
-                    <p className="mt-1 text-sm font-light text-[#c9a77c]">{phase.date}</p>
-                    <p className="mt-2 text-sm font-light text-[#666] opacity-80">{phase.description}</p>
-                    <p className="mt-1 text-xs font-medium text-[#2c4051] opacity-90">{phase.blocks}</p>
-                  </div>
+                  {activePhase === index && (
+                    <div className="mt-2 pt-2 border-t border-white/20 space-y-1">
+                      <p className="text-xs text-white/90 leading-relaxed">{phase.description}</p>
+                      <p className="text-sm font-semibold text-[#c9a77c] mt-1">{phase.blocks}</p>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          </div>
-
-           {/* Mobile Timeline (vertical) - Text beside the line layout */}
-          <div className="md:hidden">
-            {/* Outer container for padding and line context */}
-            <div className="relative pl-8 pr-4"> {/* Adjusted padding: More space on left for dots/line */}
-              {/* Vertical connecting line - Positioned relative to this container */}
-              <div
-                className="absolute bg-[#f0f0f0] z-0"
-                style={{
-                  left: `44px`, // Center of the allocated dot area width
-                  width: `${LINE_WIDTH}px`,
-                  transform: "translateX(-50%)",
-                  // Line starts from the center of the first pulse assembly
-                  top: `${PULSE_SIZE / 2}px`, // Starts half pulse size down from top edge of list
-                  // Line ends using your empirically determined bottom value
-                  bottom: `calc(5rem + ${PULSE_SIZE / 2}px)`, 
-                }}
-              ></div>
-
-              {/* Phase items container */}
-              <div className="w-full space-y-10"> {/* Adjust space-y for vertical gap between phases */}
-                {phases.map((phase, index) => (
-                  <div key={phase.id} className="relative flex flex-row items-start"> {/* Use flex-row */}
-                    
-                    {/* Dot and Pulse Column (Fixed Width) */}
-                    <div 
-                      className={`relative flex-shrink-0 w-[${MOBILE_DOT_AREA_WIDTH_PX}px] h-[${PULSE_SIZE}px] z-10 flex items-center justify-center`}
-                      // Height is PULSE_SIZE to vertically center the assembly within this allocated space
-                    >
-                      {/* Container to center dot and pulse */}
-                      <div className={`relative w-[${PULSE_SIZE}px] h-[${PULSE_SIZE}px]`}>
-                          {/* Solid Golden Dot - STATIC, centered */}
-                          <div
-                              className="absolute bg-[#c9a77c] rounded-full"
-                              style={{
-                                  width: `${DOT_SIZE}px`, height: `${DOT_SIZE}px`,
-                                  top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2,
-                              }}
-                          ></div>
-                          {/* Pulsing Circle - pulses, centered, behind solid dot */}
-                          <div
-                              className="absolute rounded-full bg-[#c9a77c]/20 animate-pulse"
-                              style={{
-                                  width: `${PULSE_SIZE}px`, height: `${PULSE_SIZE}px`,
-                                  top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1,
-                              }}
-                          ></div>
-                      </div>
-                    </div>
-                    
-                    {/* Content Column (Takes remaining space) */}
-                    <div className="flex-grow pl-4 text-left"> {/* Gap from dot area, text aligned left */}
-                      {/* Adjust paddingTop to visually align text with dot center */}
-                      {/* Try aligning top of text slightly above dot center */}
-                      <div style={{ paddingTop: `${(PULSE_SIZE / 2) - 8}px` }}> {/* e.g., center (12px) - approx half font height (8px) */}
-                        <h4 className="text-base font-medium text-[#2c4051]">{phase.name}</h4>
-                        <p className="mt-1 text-sm font-light text-[#c9a77c]">{phase.date}</p>
-                        <p className="mt-2 text-sm font-light text-[#666] opacity-80">{phase.description}</p>
-                        <p className="mt-1 text-xs font-medium text-[#2c4051] opacity-90">{phase.blocks}</p>
-                      </div>
-                    </div>
+                {index < phases.length - 1 && (
+                  <div className="self-center px-2">
+                    <ChevronRight
+                      className={cn(
+                        "h-6 w-6 transition-colors duration-300",
+                        (activePhase === index && activePhase !== null) || activePhase === index + 1
+                          ? "text-[#c9a77c]"
+                          : "text-slate-300"
+                      )}
+                    />
                   </div>
-                ))}
+                )}
               </div>
-            </div>
+            ))}
           </div>
         </div>
-
-        {/* Starting Price */}
-        <div className="flex flex-col items-center justify-center md:items-center md:w-1/5 md:border-l md:border-[#f0f0f0] md:pl-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-3">
+        <div className={cn(
+          "flex flex-col items-center justify-start text-center pt-1 transition-all duration-300 ease-in-out",
+          isTimelineActive
+            ? "flex-none w-[130px] min-w-[120px] opacity-80 scale-95"
+            : "flex-none w-[180px] min-w-[160px] opacity-100 scale-100"
+        )}>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-2">
             <PoundSterling className="h-6 w-6" />
           </div>
-          <h3 className="text-sm font-medium tracking-wider text-[#666] text-center mb-1">STARTING PRICE</h3>
-          <p className="text-xl font-light text-[#2c4051] text-center">{startingPrice}</p>
+          <h3 className="text-sm font-semibold tracking-wider text-[#666] mb-1 uppercase">STARTING PRICE</h3>
+          <p className="text-lg font-medium text-[#2c4051]">{startingPrice}</p>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden flex flex-col items-center space-y-6">
+        <div className="flex flex-col items-center text-center w-full">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-2">
+            <MapPin className="h-5 w-5" />
+          </div>
+          <h3 className="text-xs font-medium tracking-wider text-[#666] uppercase">CITY</h3>
+          <p className="text-base font-light text-[#2c4051]">{city}</p>
+        </div>
+
+        <div className="w-full">
+            <div className="flex items-center justify-center text-center mb-3 border-t border-slate-200 pt-4 space-x-2"> {/* Softer border */}
+                <CalendarDays className="h-4 w-4 text-[#666]" />
+                <h3 className="text-xs font-medium tracking-wider text-[#666] uppercase">
+                    PROJECT TIMELINE
+                </h3>
+            </div>
+            <div className="space-y-3">
+            {phases.map((phase, index) => (
+                <div
+                  key={phase.id} // Ensure unique key for each phase
+                  className={cn(
+                      "rounded-lg p-4 transition-all duration-300 ease-in-out cursor-pointer text-left shadow-sm hover:shadow-md", // Slightly larger padding, rounded-lg
+                      activePhase === index
+                        ? "bg-[#2c4051] text-white ring-2 ring-[#c9a77c] scale-[1.02]" // Active state with slight scale
+                        : "bg-[#f8f8f8] text-[#2c4051]", // Inactive state
+                  )}
+                  onClick={() => handlePhaseClick(index)}
+                >
+                  {/* Main content of the phase card */}
+                  <div className="flex items-start">
+                      <div
+                        className={cn(
+                            "w-7 h-7 rounded-full flex items-center justify-center text-sm font-semibold mr-3 flex-shrink-0 mt-0.5", // Slightly larger number circle
+                            activePhase === index ? "bg-[#c9a77c] text-white" : "bg-white text-[#2c4051] border border-slate-300",
+                        )}
+                      >
+                        {index + 1}
+                      </div>
+                      <div className="flex-grow">
+                        <div className="flex items-baseline justify-between">
+                            <p className="text-base font-semibold">{phase.name}</p> {/* Larger phase name */}
+                            {/* Visual cue for inactive, expandable cards (excluding the first card if preselected and active) */}
+                            {activePhase !== index && isMobile && (
+                                <ChevronDown className="h-5 w-5 text-slate-400 transition-transform duration-300 group-hover:text-slate-500" />
+                            )}
+                        </div>
+                        <p className={cn(
+                            "text-xs mt-0.5", // Adjusted margin
+                            activePhase === index ? "text-[#c9a77c]" : "text-slate-500")}
+                        >
+                            {phase.date}
+                        </p>
+                        <p className={cn(
+                            "text-sm mt-1.5", // Slightly larger block text
+                            activePhase === index ? "text-white/80" : "text-slate-600/90")}
+                        >
+                            {phase.blocks}
+                        </p>
+                        {/* Description only for active phase */}
+                        {activePhase === index && (
+                            <p className={cn(
+                                "text-sm mt-2.5 leading-relaxed border-t pt-2.5", // Larger description text, added top border for separation
+                                activePhase === index ? "text-white/90 border-white/20" : "text-slate-700/90 border-slate-200"
+                              )}
+                            >
+                            {phase.description}
+                            </p>
+                        )}
+                      </div>
+                  </div>
+                </div>
+            ))}
+            </div>
+        </div>
+
+        <div className="flex flex-col items-center text-center w-full border-t border-slate-200 pt-4"> {/* Softer border */}
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-2">
+            <PoundSterling className="h-5 w-5" />
+          </div>
+          <h3 className="text-xs font-medium tracking-wider text-[#666] uppercase">STARTING PRICE</h3>
+          <p className="text-base font-light text-[#2c4051]">{startingPrice}</p>
         </div>
       </div>
     </div>

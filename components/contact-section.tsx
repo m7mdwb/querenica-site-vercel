@@ -47,7 +47,11 @@ export default function ContactSection() {
       window.localStorage.setItem("requestCatalog", "true")
     }
 
-    // Redirect to thank you page
+    // Store a flag in sessionStorage to indicate we're coming from form submission
+    // This will be used by the thank-you page to show the loading screen
+    sessionStorage.setItem("showLoadingScreen", "true")
+
+    // Redirect to thank you page immediately
     router.push("/thank-you")
   }
 
