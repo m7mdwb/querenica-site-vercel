@@ -273,10 +273,10 @@ export default function GallerySection() {
                 className={cn(
                   "group relative cursor-pointer overflow-hidden rounded-lg transition-all duration-700",
                   inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                  { "delay-[200ms]": index % 4 === 0 },
-                  { "delay-[300ms]": index % 4 === 1 },
-                  { "delay-[400ms]": index % 4 === 2 },
-                  { "delay-[500ms]": index % 4 === 3 },
+                  { "delay-200": index % 4 === 0 },
+                  { "delay-300": index % 4 === 1 },
+                  { "delay-400": index % 4 === 2 },
+                  { "delay-500": index % 4 === 3 },
                 )}
                 onClick={() => openLightbox(index)}
               >

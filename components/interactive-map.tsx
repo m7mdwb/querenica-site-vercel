@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
+import { APIProvider, Map } from "@vis.gl/react-google-maps"
 import useSWR from "swr"
 import { fetcher } from "@/lib/fetcher"
 
@@ -81,9 +81,34 @@ export default function InteractiveMap() {
           mapId="querencia-map"
           className="h-full w-full"
           mapTypeId="satellite"
-        >
-          <Marker position={QUERENCIA_LOCATION} title="Querencia Hotel & Residence" />
-        </Map>
+          onLoad={async (map) => {
+            // Use AdvancedMarkerElement instead of deprecated Marker
+            // This needs to be done imperatively since @vis.gl/react-google-maps
+            // doesn't have a React component for AdvancedMarkerElement yet
+            if (typeof google === "undefined") {
+              await new Promise((resolve) => {
+                const script = document.createElement("script")
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&callback=initMap`
+                script.defer = true
+                script.async = true
+                window.initMap = () => {
+                  resolve(true)
+                }
+                document.head.appendChild(script)
+              })
+            }
+
+            if (window.google) {
+              const { AdvancedMarkerElement } = google.maps.marker
+
+              new AdvancedMarkerElement({
+                map,
+                position: QUERENCIA_LOCATION,
+                title: "Querencia Hotel & Residence",
+              })
+            }
+          }}
+        />
       </APIProvider>
     </div>
   )

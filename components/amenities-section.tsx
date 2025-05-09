@@ -63,10 +63,10 @@ export default function AmenitiesSection() {
               className={cn(
                 "flex flex-col items-center transition-all duration-700",
                 inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                { "delay-[200ms]": index % 4 === 0 },
-                { "delay-[400ms]": index % 4 === 1 },
-                { "delay-[600ms]": index % 4 === 2 },
-                { "delay-[800ms]": index % 4 === 3 },
+                { "delay-200": index % 4 === 0 },
+                { "delay-400": index % 4 === 1 },
+                { "delay-600": index % 4 === 2 },
+                { "delay-800": index % 4 === 3 },
               )}
             >
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#c9a77c]/20 text-[#c9a77c] sm:h-14 sm:w-14 md:mb-4 md:h-16 md:w-16">
