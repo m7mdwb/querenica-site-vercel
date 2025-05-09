@@ -47,7 +47,7 @@ export default function VirtualTourSection() {
               if (open) setHasInteracted(true)
             }}
           >
-            {/* Ensure DialogTrigger has exactly one child */}
+            {/* Fix: Ensure DialogTrigger has exactly one child element by wrapping content in a button */}
             <DialogTrigger asChild>
               <button className="w-full p-0 m-0 bg-transparent border-0 cursor-pointer">
                 <div className="relative aspect-video bg-gray-100 overflow-hidden rounded-lg shadow-lg group">
