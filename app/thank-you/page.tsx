@@ -6,39 +6,18 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle, Home, ArrowLeft, Download, Phone, Mail, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import "./thank-you.css"
-import LoadingScreen from "@/components/loading-screen"
 
 export default function ThankYouPage() {
   // State for loading
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) // Keep the state but don't use it for loading screen
 
   // Scroll to top and manage loading on page load
   useEffect(() => {
     // Scroll to top
     window.scrollTo(0, 0)
 
-    // Check if we should show the loading screen
-    // This will be true if we're coming from form submission
-    const shouldShowLoadingScreen = sessionStorage.getItem("showLoadingScreen") === "true"
-
-    if (shouldShowLoadingScreen) {
-      // Set loading to true to show the loading screen
-      setIsLoading(true)
-
-      // Clear the flag so it doesn't show again on refresh
-      sessionStorage.removeItem("showLoadingScreen")
-
-      // Generate a random loading time between 3-5 seconds
-      const randomLoadingTime = Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000
-
-      // Set a timeout to hide the loading screen after the random time
-      const loadingTimer = setTimeout(() => {
-        setIsLoading(false)
-      }, randomLoadingTime)
-
-      // Clean up the timer if component unmounts
-      return () => clearTimeout(loadingTimer)
-    }
+    // Clear any loading flags that might be set
+    sessionStorage.removeItem("showLoadingScreen")
   }, [])
 
   // Integrated catalog download functionality directly
@@ -84,9 +63,9 @@ export default function ThankYouPage() {
   ]
 
   // If still loading, show the loading screen
-  if (isLoading) {
-    return <LoadingScreen />
-  }
+  // if (isLoading) {
+  //   return <LoadingScreen />
+  // }
 
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-[#1a1a1a]">

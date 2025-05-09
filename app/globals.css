@@ -62,15 +62,17 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @keyframes scaleUp {
   from {
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
   to {
     transform: scale(1);
@@ -79,15 +81,16 @@
 
 @keyframes shimmer {
   0% {
-    background-position: -200% 0;
+    background-position: 200% 0;
   }
   100% {
-    background-position: 200% 0;
+    background-position: -200% 0;
   }
 }
 
 @keyframes pulse {
-  0% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.5;
   }
@@ -95,9 +98,129 @@
     transform: scale(1.05);
     opacity: 0.8;
   }
+}
+
+/* New animation for abstract elements */
+@keyframes floatElement {
+  0%,
   100% {
-    transform: scale(1);
+    transform: translate(0, 0) rotate(var(--rotation, 0deg));
+  }
+  25% {
+    transform: translate(10px, -15px) rotate(calc(var(--rotation, 0deg) + 5deg));
+  }
+  50% {
+    transform: translate(5px, -25px) rotate(calc(var(--rotation, 0deg) + 10deg));
+  }
+  75% {
+    transform: translate(-5px, -10px) rotate(calc(var(--rotation, 0deg) + 5deg));
+  }
+}
+
+/* New artistic loading animations */
+@keyframes floatCircle {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(5px, -5px);
+  }
+  50% {
+    transform: translate(0, -10px);
+  }
+  75% {
+    transform: translate(-5px, -5px);
+  }
+}
+
+@keyframes textFade {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes lineReveal {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes cornerFade {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
     opacity: 0.5;
+  }
+}
+
+/* Elegant Minimalist Loading Animations */
+@keyframes elegantFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes elegantProgress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes elegantPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes elegantRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes elegantDraw {
+  0% {
+    stroke-dashoffset: 300;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes elegantFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
@@ -164,97 +287,6 @@ body {
   position: relative;
   width: 100%;
 }
-
-/* Additional mobile-specific fixes */
-@media (max-width: 767px) {
-  /* Ensure all elements respect container boundaries */
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Fix for potential issues with absolute positioned elements */
-  .container {
-    max-width: 100vw;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  /* Ensure images don't cause overflow */
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-/* Fix for iOS Safari momentum scrolling while maintaining smooth scrolling */
-@supports (-webkit-overflow-scrolling: touch) {
-  body {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Prevent double-tap zoom on buttons */
-button {
-  touch-action: manipulation;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .highlight-form {
-    animation: none;
-  }
-
-  html {
-    scroll-behavior: auto;
-  }
-
-  /* Disable animations for users who prefer reduced motion */
-  @keyframes fadeIn {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes scaleUp {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: 0 0;
-    }
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .timeline-phase {
-    animation: none;
-    opacity: 1;
-  }
-}
-
-/* Add the following CSS at the end of the file to prevent horizontal scrolling */
 
 /* Additional mobile-specific fixes */
 @media (max-width: 767px) {
@@ -535,21 +567,6 @@ button {
   animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0.8;
-  }
-  70% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 0;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0;
-  }
-}
-
 /* Mobile timeline specific styles */
 @media (max-width: 767px) {
   .timeline-section {
@@ -569,76 +586,253 @@ button {
   }
 }
 
-/* Ensure these are in your globals.css or equivalent */
-
-/* Your existing keyframes: fadeIn, scaleUp, shimmer, pulse */
-/* Verify they match the desired effect or use/tweak these: */
-
+/* Ensure these base animations from your file are what you want */
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(8px);
-  } /* Added slight translate for entry */
+  }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes scaleUp {
-  /* Used for logo, can be subtle */
-  from {
-    transform: scale(0.98);
-  }
-  to {
+.animate-fadeIn {
+  /* Utility class if you prefer this over inline style */
+  animation: fadeIn 1s ease-out forwards; /* Adjust duration/easing */
+}
+
+@keyframes pulse {
+  /* Ensure this is the pulse you want for logo frame */
+  0%,
+  100% {
     transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
   }
 }
 
 @keyframes shimmer {
-  /* For the progress bar */
   0% {
     background-position: 200% 0;
-  } /* Start from further right */
+  }
   100% {
     background-position: -200% 0;
-  } /* Move to further left */
+  }
 }
 
-/* Refined 'pulse' for decorative circles or a new 'subtlePulse' */
-@keyframes subtlePulse {
+/* Make sure floatCircle is defined - used for general background elements */
+@keyframes floatCircle {
   0%,
   100% {
-    transform: scale(0.95);
-    opacity: 0.6;
+    transform: translate(0, 0) rotate(0deg);
   }
+  25% {
+    transform: translate(10px, -15px) rotate(45deg);
+  } /* More movement */
   50% {
-    transform: scale(1.05);
-    opacity: 0.9;
+    transform: translate(0px, -25px) rotate(90deg);
+  }
+  75% {
+    transform: translate(-10px, -15px) rotate(135deg);
   }
 }
 
-/* Animation for the luxury accent line */
-@keyframes lineAppearAndPulse {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) translateX(-50%); /* Start lower and invisible */
+@media (max-width: 640px) {
+  /* Responsive floatCircle if needed */
+  @keyframes floatCircle {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(0px, -15px) rotate(90deg);
+    } /* Simpler for mobile */
   }
-  30% {
-    opacity: 0.7; /* Fade in */
-    transform: translateY(0px) translateX(-50%); /* Move to position */
+}
+
+@keyframes textFade {
+  /* For cycling text messages */
+  0% {
+    opacity: 0.3;
+    transform: translateY(3px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0);
   }
   100% {
-    opacity: 0.7; /* Hold opacity */
-    transform: translateY(0px) translateX(-50%);
+    opacity: 0.3;
+    transform: translateY(-3px);
   }
-  /* Optional: could add a subtle shimmer or length change here if desired after appearing */
 }
 
-/* Your existing general pulse if used by other elements, ensure no conflict */
-/*
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
+/* Remove or update old specific loading screen CSS like .loading-logo-container if not used.
+   The class .loading-center-container is used in the TSX above.
+   The class .loading-screen is used in the TSX above.
 */
+
+/* Ensure loading screen elements are properly centered */
+.loading-center-container {
+  /* Applied to the main content block inside loading screen */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Ensure the loading screen is centered in the viewport */
+.loading-screen {
+  /* Applied to the root div of the loading screen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden; /* Prevent any potential overflow issues */
+}
+
+/* Add these improved responsive styles for the loading screen */
+
+/* Improved responsive animations */
+@media (max-width: 480px) {
+  /* Smaller devices need less dramatic animations */
+  @keyframes floatCircle {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(0, -8px);
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes textFade {
+    0%,
+    100% {
+      opacity: 0.8;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+/* Fix for very small devices */
+@media (max-width: 320px) {
+  .loading-screen img {
+    max-width: 140px; /* Ensure logo isn't too large on very small screens */
+  }
+}
+
+/* Circle-specific animations */
+@keyframes floatCircle1 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, 25px) rotate(5deg);
+  }
+  66% {
+    transform: translate(-25px, 35px) rotate(-5deg);
+  }
+}
+
+@keyframes floatCircle2 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(-35px, -20px) rotate(-8deg);
+  }
+  66% {
+    transform: translate(25px, -30px) rotate(8deg);
+  }
+}
+
+@keyframes floatCircle3 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(25px, 30px) rotate(10deg);
+  }
+  66% {
+    transform: translate(-30px, 20px) rotate(-10deg);
+  }
+}
+
+/* Responsive adjustments for the floating circles */
+@media (max-width: 768px) {
+  @keyframes floatCircle1 {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(20px, 15px) rotate(3deg);
+    }
+  }
+
+  @keyframes floatCircle2 {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(-20px, -12px) rotate(-5deg);
+    }
+  }
+
+  @keyframes floatCircle3 {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(15px, 20px) rotate(5deg);
+    }
+  }
+}
+
+/* Responsive circle sizing */
+@media (max-width: 768px) {
+  .loading-screen .absolute.rounded-full {
+    transform-origin: center;
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-screen .absolute.rounded-full {
+    transform: scale(0.5);
+  }
+}

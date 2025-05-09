@@ -254,41 +254,51 @@ const propertyTypes: PropertyBlock[] = [
       },
     ],
   },
-];
+]
 
 // Image carousel component for residence cards
 function ResidenceImageCarousel({ images, name }: { images: string[]; name: string }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const nextImage = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    setTimeout(() => setIsTransitioning(false), 300);
-  }, [images.length, isTransitioning]);
+  const nextImage = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (isTransitioning) return
+      setIsTransitioning(true)
+      setCurrentImageIndex((prev) => (prev + 1) % images.length)
+      setTimeout(() => setIsTransitioning(false), 300)
+    },
+    [images.length, isTransitioning],
+  )
 
-  const prevImage = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    setTimeout(() => setIsTransitioning(false), 300);
-  }, [images.length, isTransitioning]);
+  const prevImage = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (isTransitioning) return
+      setIsTransitioning(true)
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
+      setTimeout(() => setIsTransitioning(false), 300)
+    },
+    [images.length, isTransitioning],
+  )
 
-  const goToImage = useCallback((e: React.MouseEvent, index: number) => {
-    e.stopPropagation();
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentImageIndex(index);
-    setTimeout(() => setIsTransitioning(false), 300);
-  }, [isTransitioning]);
-
+  const goToImage = useCallback(
+    (e: React.MouseEvent, index: number) => {
+      e.stopPropagation()
+      if (isTransitioning) return
+      setIsTransitioning(true)
+      setCurrentImageIndex(index)
+      setTimeout(() => setIsTransitioning(false), 300)
+    },
+    [isTransitioning],
+  )
 
   return (
     <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg">
-      <div className="absolute inset-0 bg-slate-200"> {/* Slightly darker placeholder */}
+      <div className="absolute inset-0 bg-slate-200">
+        {" "}
+        {/* Slightly darker placeholder */}
         <img
           src={images[currentImageIndex] || "/images/placeholder.jpg"} // Fallback placeholder
           alt={`${name} - Image ${currentImageIndex + 1}`}
@@ -332,7 +342,7 @@ function ResidenceImageCarousel({ images, name }: { images: string[]; name: stri
         </>
       )}
     </div>
-  );
+  )
 }
 
 // Main Section Component
@@ -340,61 +350,64 @@ export default function ResidencesSection() {
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
-  });
+  })
 
-  const [selectedBlock, setSelectedBlock] = useState(propertyTypes[0]?.id || ""); // Ensure default
-  const [selectedResidence, setSelectedResidence] = useState<PropertyType | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [selectedBlock, setSelectedBlock] = useState(propertyTypes[0]?.id || "") // Ensure default
+  const [selectedResidence, setSelectedResidence] = useState<PropertyType | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [galleryIndex, setGalleryIndex] = useState(0)
 
-  const currentBlock = propertyTypes.find((block) => block.id === selectedBlock);
+  const currentBlock = propertyTypes.find((block) => block.id === selectedBlock)
 
   const openResidenceDialog = useCallback((residence: PropertyType) => {
-    setSelectedResidence(residence);
-    setGalleryIndex(0);
-    setDialogOpen(true);
-  }, []);
+    setSelectedResidence(residence)
+    setGalleryIndex(0)
+    setDialogOpen(true)
+  }, [])
 
   const nextImageDialog = useCallback(() => {
     if (selectedResidence) {
-      setGalleryIndex((prev) => (prev + 1) % selectedResidence.images.length);
+      setGalleryIndex((prev) => (prev + 1) % selectedResidence.images.length)
     }
-  }, [selectedResidence]);
+  }, [selectedResidence])
 
   const prevImageDialog = useCallback(() => {
     if (selectedResidence) {
-      setGalleryIndex((prev) => (prev - 1 + selectedResidence.images.length) % selectedResidence.images.length);
+      setGalleryIndex((prev) => (prev - 1 + selectedResidence.images.length) % selectedResidence.images.length)
     }
-  }, [selectedResidence]);
+  }, [selectedResidence])
 
   const scrollToContactForm = useCallback(() => {
-    window.localStorage.setItem("requestCatalog", "true");
+    window.localStorage.setItem("requestCatalog", "true")
     if (dialogOpen) {
-      setDialogOpen(false);
+      setDialogOpen(false)
     }
-    const contactSection = document.getElementById("contact");
+    const contactSection = document.getElementById("contact")
     if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" });
+      contactSection.scrollIntoView({ behavior: "smooth" })
       setTimeout(() => {
-        const formElement = document.getElementById("contact-form");
+        const formElement = document.getElementById("contact-form")
         if (formElement) {
-          formElement.classList.add("highlight-form");
+          formElement.classList.add("highlight-form")
           setTimeout(() => {
-            formElement.classList.remove("highlight-form");
-          }, 2000); // Highlight duration
+            formElement.classList.remove("highlight-form")
+          }, 2000) // Highlight duration
         }
-      }, 500); // Delay to allow scroll to finish
+      }, 500) // Delay to allow scroll to finish
     }
-  }, [dialogOpen]);
+  }, [dialogOpen])
 
   const formatResidenceCardDetails = (details: PropertyDetail): string => {
     if (details.bedrooms === 1 && details.livingRooms === 0) {
-        return `Studio • ${details.size}`;
+      return `Studio • ${details.size}`
     }
-    let bedString = `${details.bedrooms} ${details.bedrooms === 1 ? "Bedroom" : "Bedrooms"}`;
-    let livingString = details.livingRooms > 0 ? ` • ${details.livingRooms} ${details.livingRooms === 1 ? "Living Room" : "Living Rooms"}` : "";
-    return `${bedString}${livingString} • ${details.size}`;
-  };
+    const bedString = `${details.bedrooms} ${details.bedrooms === 1 ? "Bedroom" : "Bedrooms"}`
+    const livingString =
+      details.livingRooms > 0
+        ? ` • ${details.livingRooms} ${details.livingRooms === 1 ? "Living Room" : "Living Rooms"}`
+        : ""
+    return `${bedString}${livingString} • ${details.size}`
+  }
 
   return (
     <section ref={ref} id="residences" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
@@ -402,16 +415,34 @@ export default function ResidencesSection() {
         <h2 className="mb-4 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:text-5xl">
           Residences Crafted for Luxury
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-center text-base text-[#555] md:mb-16 md:text-lg"> {/* Slightly adjusted text color and size */}
-          Explore our 705 luxury apartments, each offering 180° uninterrupted sea views. Discover exclusive penthouses with private pools and panoramic terraces.
+        <p className="mx-auto mb-12 max-w-3xl text-center text-base text-[#555] md:mb-16 md:text-lg">
+          {" "}
+          {/* Slightly adjusted text color and size */}
+          Explore our 705 luxury apartments, each offering 180° uninterrupted sea views. Discover exclusive penthouses
+          with private pools and panoramic terraces.
         </p>
 
-        <div className="mb-10 flex flex-col items-center justify-center md:mb-12"> {/* Adjusted margin */}
-          <div className="flex w-full max-w-sm flex-col space-y-4 md:max-w-md"> {/* Adjusted max-width */}
-            <Tabs defaultValue={propertyTypes[0]?.id || ""} value={selectedBlock} onValueChange={setSelectedBlock} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-slate-200/80"> {/* Slightly different bg for TabsList */}
+        <div className="mb-10 flex flex-col items-center justify-center md:mb-12">
+          {" "}
+          {/* Adjusted margin */}
+          <div className="flex w-full max-w-sm flex-col space-y-4 md:max-w-md">
+            {" "}
+            {/* Adjusted max-width */}
+            <Tabs
+              defaultValue={propertyTypes[0]?.id || ""}
+              value={selectedBlock}
+              onValueChange={setSelectedBlock}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 bg-slate-200/80">
+                {" "}
+                {/* Slightly different bg for TabsList */}
                 {propertyTypes.map((block) => (
-                  <TabsTrigger key={block.id} value={block.id} className="text-sm data-[state=active]:bg-[#c9a77c] data-[state=active]:text-white data-[state=active]:shadow-md md:text-base">
+                  <TabsTrigger
+                    key={block.id}
+                    value={block.id}
+                    className="text-sm data-[state=active]:bg-[#c9a77c] data-[state=active]:text-white data-[state=active]:shadow-md md:text-base"
+                  >
                     {block.name}
                   </TabsTrigger>
                 ))}
@@ -439,17 +470,25 @@ export default function ResidencesSection() {
               <ResidenceImageCarousel images={residence.images} name={residence.displayName} />
               <div className="flex flex-grow flex-col p-4 md:p-5">
                 <CardHeader className="p-0 pb-2 md:pb-3">
-                  <CardTitle className="text-lg font-semibold text-[#2c4051] md:text-xl">{residence.displayName}</CardTitle> {/* Using displayName, adjusted color */}
-                  <CardDescription className="text-sm text-[#666] md:text-[0.9rem] leading-relaxed pt-1"> {/* Adjusted size & leading */}
+                  <CardTitle className="text-lg font-semibold text-[#2c4051] md:text-xl">
+                    {residence.displayName}
+                  </CardTitle>{" "}
+                  {/* Using displayName, adjusted color */}
+                  <CardDescription className="text-sm text-[#666] md:text-[0.9rem] leading-relaxed pt-1">
+                    {" "}
+                    {/* Adjusted size & leading */}
                     {residence.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow p-0 pt-1 md:pt-2">
-                  <p className="text-xs font-medium text-[#c9a77c] md:text-sm">{residence.feature}</p> {/* Made feature font medium */}
+                  <p className="text-xs font-medium text-[#c9a77c] md:text-sm">{residence.feature}</p>{" "}
+                  {/* Made feature font medium */}
                 </CardContent>
                 <div className="mt-auto pt-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#555] md:text-sm"> {/* Slightly darker text */}
+                    <span className="text-xs text-[#555] md:text-sm">
+                      {" "}
+                      {/* Slightly darker text */}
                       {formatResidenceCardDetails(residence.details)}
                     </span>
                     <Button
@@ -457,8 +496,8 @@ export default function ResidencesSection() {
                       size="sm"
                       className="h-auto p-0 text-xs font-semibold text-[#2c4051] opacity-80 transition-opacity hover:opacity-100 group-hover:opacity-100 md:text-sm" // Bolder, adjusted color
                       onClick={(e) => {
-                        e.stopPropagation();
-                        openResidenceDialog(residence);
+                        e.stopPropagation()
+                        openResidenceDialog(residence)
                       }}
                     >
                       View Details
@@ -474,10 +513,18 @@ export default function ResidencesSection() {
           <h3 className="text-center text-2xl font-light tracking-wider text-[#1a1a1a] sm:text-3xl">
             Want to See More?
           </h3>
-          <p className="max-w-2xl text-center text-base text-[#555] md:text-lg"> {/* Adjusted text color */}
+          <p className="max-w-2xl text-center text-base text-[#555] md:text-lg">
+            {" "}
+            {/* Adjusted text color */}
             Get our comprehensive catalog with detailed information about all residence types, floor plans, and pricing.
           </p>
-          <Button size="lg" className="bg-[#c9a77c] px-8 py-3 text-base text-white shadow-md hover:bg-[#b89669] transition-colors duration-300" asChild> {/* Enhanced button style */}
+          <Button
+            size="lg"
+            className="bg-[#c9a77c] px-8 py-3 text-base text-white shadow-md hover:bg-[#b89669] transition-colors duration-300"
+            asChild
+          >
+            {" "}
+            {/* Enhanced button style */}
             <Link href="#contact" onClick={scrollToContactForm}>
               <Download className="mr-2.5 h-5 w-5" /> {/* Slightly larger icon & margin */}
               Download Catalog
@@ -487,10 +534,14 @@ export default function ResidencesSection() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[95vh] w-[95vw] max-w-4xl overflow-y-auto overflow-x-hidden p-0 data-[state=open]:animate-contentShow sm:rounded-lg md:w-full"> {/* Shadcn animation class */}
+        <DialogContent className="max-h-[95vh] w-[95vw] max-w-4xl overflow-y-auto overflow-x-hidden p-0 data-[state=open]:animate-contentShow sm:rounded-lg md:w-full">
+          {" "}
+          {/* Shadcn animation class */}
           {selectedResidence && (
             <>
-              <div className="relative aspect-video w-full bg-slate-200"> {/* Bg for image loading state */}
+              <div className="relative aspect-video w-full bg-slate-200">
+                {" "}
+                {/* Bg for image loading state */}
                 <ZoomableImage
                   src={selectedResidence.images[galleryIndex] || "/images/placeholder.jpg"}
                   alt={selectedResidence.displayName}
@@ -531,16 +582,23 @@ export default function ResidencesSection() {
               </div>
               <div className="p-5 sm:p-6 md:p-8">
                 <div className="mb-5 md:mb-6">
-                  <h2 className="text-2xl font-semibold tracking-tight text-[#1a1a1a] md:text-3xl lg:text-4xl"> {/* Bolder, tighter tracking */}
+                  <h2 className="text-2xl font-semibold tracking-tight text-[#1a1a1a] md:text-3xl lg:text-4xl">
+                    {" "}
+                    {/* Bolder, tighter tracking */}
                     {selectedResidence.displayName}
                   </h2>
-                  <p className="pt-1.5 text-sm text-[#555] md:text-base leading-relaxed">{selectedResidence.description}</p> {/* Adjusted spacing & color */}
+                  <p className="pt-1.5 text-sm text-[#555] md:text-base leading-relaxed">
+                    {selectedResidence.description}
+                  </p>{" "}
+                  {/* Adjusted spacing & color */}
                 </div>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2 md:gap-x-8 md:gap-y-6">
                   <div>
                     <h4 className="mb-2.5 text-lg font-semibold text-[#1a1a1a] md:mb-3">Details</h4> {/* Bolder */}
                     <ul className="space-y-2 text-sm md:space-y-2.5">
-                      <li className="flex items-center justify-between border-b border-slate-200/80 pb-2.5"> {/* Softer border */}
+                      <li className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                        {" "}
+                        {/* Softer border */}
                         <span className="text-[#555]">Size</span>
                         <span className="font-medium text-[#1a1a1a]">{selectedResidence.details.size}</span>
                       </li>
@@ -558,25 +616,41 @@ export default function ResidencesSection() {
                     <h4 className="mb-2.5 text-lg font-semibold text-[#1a1a1a] md:mb-3">Features</h4> {/* Bolder */}
                     <ul className="space-y-2 text-sm md:space-y-2.5">
                       {selectedResidence.details.features.map((feature, index) => (
-                        <li key={index} className="flex items-start border-b border-slate-200/80 pb-2.5"> {/* items-start for long features */}
-                          <div className="mr-2.5 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#c9a77c]"></div> {/* Adjusted alignment */}
+                        <li key={index} className="flex items-start border-b border-slate-200/80 pb-2.5">
+                          {" "}
+                          {/* items-start for long features */}
+                          <div className="mr-2.5 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#c9a77c]"></div>{" "}
+                          {/* Adjusted alignment */}
                           <span className="text-[#333]">{feature}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-                <div className="mt-6 border-t border-slate-200/80 pt-5 md:pt-6"> {/* Softer border */}
-                  <p className="text-sm font-medium text-[#c9a77c] md:text-base">{selectedResidence.feature}</p> {/* Bolder */}
+                <div className="mt-6 border-t border-slate-200/80 pt-5 md:pt-6">
+                  {" "}
+                  {/* Softer border */}
+                  <p className="text-sm font-medium text-[#c9a77c] md:text-base">{selectedResidence.feature}</p>{" "}
+                  {/* Bolder */}
                 </div>
-                <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-end sm:gap-4"> {/* Changed to justify-end */}
-                  <Button variant="outline" className="w-full border-slate-300 text-slate-700 hover:bg-slate-100 sm:w-auto" asChild> {/* Subtle outline */}
+                <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-end sm:gap-4">
+                  {" "}
+                  {/* Changed to justify-end */}
+                  <Button
+                    variant="outline"
+                    className="w-full border-slate-300 text-slate-700 hover:bg-slate-100 sm:w-auto"
+                    asChild
+                  >
+                    {" "}
+                    {/* Subtle outline */}
                     <Link href="#contact" onClick={scrollToContactForm}>
                       <Download className="mr-2 h-4 w-4" />
                       Get Floor Plans
                     </Link>
                   </Button>
-                  <Button className="w-full bg-[#c9a77c] text-white shadow hover:bg-[#b89669] sm:w-auto" asChild> {/* Main CTA color */}
+                  <Button className="w-full bg-[#c9a77c] text-white shadow hover:bg-[#b89669] sm:w-auto" asChild>
+                    {" "}
+                    {/* Main CTA color */}
                     <Link href="#contact" onClick={scrollToContactForm}>
                       Request Information
                     </Link>
@@ -588,5 +662,5 @@ export default function ResidencesSection() {
         </DialogContent>
       </Dialog>
     </section>
-  );
+  )
 }

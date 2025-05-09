@@ -47,9 +47,8 @@ export default function ContactSection() {
       window.localStorage.setItem("requestCatalog", "true")
     }
 
-    // Store a flag in sessionStorage to indicate we're coming from form submission
-    // This will be used by the thank-you page to show the loading screen
-    sessionStorage.setItem("showLoadingScreen", "true")
+    // Remove this line that was setting the loading screen flag
+    // sessionStorage.setItem("showLoadingScreen", "true")
 
     // Redirect to thank you page immediately
     router.push("/thank-you")

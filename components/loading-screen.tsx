@@ -1,176 +1,161 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { cn } from "@/lib/utils" // Ensure this path is correct
+import { cn } from "@/lib/utils"
 
 interface LoadingScreenProps {
   minimumLoadingTime?: number
-  // onLoadingComplete is not directly used by Next.js loading.tsx in a way that
-  // this component can control Next.js's unmounting.
-  // We'll keep the prop if you use this component elsewhere and need a callback.
   onLoadingComplete?: () => void
 }
 
-// CSS Keyframes expected to be in global CSS:
-// fadeIn, scaleUp, shimmer, pulse (ensure 'pulse' is suitably elegant)
-
-export default function LoadingScreen({
-  minimumLoadingTime, // Remove default value to use random time
-  onLoadingComplete,
-}: LoadingScreenProps) {
+export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
   const [isFadingOut, setIsFadingOut] = useState(false)
-  const [hasCompletedMinimumTime, setHasCompletedMinimumTime] = useState(false)
-  const [loadingTime, setLoadingTime] = useState(0)
+  const [loadingMessage, setLoadingMessage] = useState("Crafting Luxury")
 
   useEffect(() => {
-    // Generate a random loading time between 3-5 seconds (3000-5000ms)
     const randomLoadingTime = Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000
-    setLoadingTime(randomLoadingTime)
-
-    // If minimumLoadingTime prop is provided, use that instead of random time
     const effectiveLoadingTime = minimumLoadingTime || randomLoadingTime
 
     let progressInterval: NodeJS.Timeout
     let minimumTimeTimeout: NodeJS.Timeout
+    let messageInterval: NodeJS.Timeout
 
-    // Start progress simulation
-    // Animate progress a bit faster to ensure it likely hits 100%
-    // before or around the minimumLoadingTime for a smoother visual.
-    const progressDuration = effectiveLoadingTime * 0.9 // Aim to finish progress slightly before min time
-    const steps = 50
+    const messages = [
+      "Crafting Luxury",
+      "Curating Excellence",
+      "Designing Perfection",
+      "Refining Details",
+      "Creating Harmony",
+    ]
+    let messageIndex = 0
+    setLoadingMessage(messages[0]) // Set initial message
+    messageInterval = setInterval(() => {
+      messageIndex = (messageIndex + 1) % messages.length
+      setLoadingMessage(messages[messageIndex])
+    }, 2000)
+
+    const progressDuration = effectiveLoadingTime * 0.95 // Let progress complete a bit closer to the end
+    const steps = 100
     const increment = 100 / steps
-    const intervalTime = progressDuration / steps
+    const intervalTime = Math.max(20, progressDuration / steps) // Ensure interval isn't too fast
 
     progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        const newProgress = Math.min(prev + increment, 100)
+        if (newProgress >= 100) {
           clearInterval(progressInterval)
-          return 100
         }
-        return prev + increment
+        return newProgress
       })
     }, intervalTime)
 
-    // Enforce minimum display time
     minimumTimeTimeout = setTimeout(() => {
-      setHasCompletedMinimumTime(true)
-      // If progress is also 100, or we just want to start fade out after min time
+      setProgress(100) // Ensure progress is 100%
       setIsFadingOut(true)
-
-      // Call onLoadingComplete after the fadeout animation completes
       if (onLoadingComplete) {
-        setTimeout(onLoadingComplete, 1000) // Match fadeout duration
+        setTimeout(onLoadingComplete, 1000) // Match fadeout duration (1000ms)
       }
     }, effectiveLoadingTime)
 
     return () => {
       clearInterval(progressInterval)
       clearTimeout(minimumTimeTimeout)
+      clearInterval(messageInterval)
     }
   }, [minimumLoadingTime, onLoadingComplete])
-
-  // Determine if the screen should be visible or fully faded (for unmounting by parent)
-  // For Next.js loading.tsx, it handles unmounting. This prop helps if used standalone.
-  const isEffectivelyHidden = isFadingOut
 
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#2c4051] transition-opacity duration-1000 ease-in-out",
+        "loading-screen fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#2c4051] transition-opacity duration-1000 ease-in-out overflow-hidden",
         isFadingOut ? "pointer-events-none opacity-0" : "opacity-100",
       )}
     >
-      <div className="relative flex flex-col items-center">
-        {/* Logo */}
+      {/* Three floating hollow circles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Large circle */}
         <div
-          className="mb-10 w-56 opacity-0 md:w-72" // Slightly adjusted margin and widths
+          className="absolute rounded-full border border-[#c9a77c]/20"
           style={{
-            // Ensure fadeIn and scaleUp are defined in your global CSS
-            animation: "fadeIn 0.8s ease-out forwards, scaleUp 1.2s ease-out forwards",
-            animationDelay: "0.1s", // Start logo animation a bit sooner
+            width: "600px",
+            height: "600px",
+            left: "calc(50% - 300px)",
+            top: "calc(50% - 350px)",
+            animation: "floatCircle1 15s infinite ease-in-out",
           }}
-        >
+        />
+
+        {/* Medium circle */}
+        <div
+          className="absolute rounded-full border border-[#c9a77c]/15"
+          style={{
+            width: "500px",
+            height: "500px",
+            left: "calc(50% - 350px)",
+            top: "calc(50% - 150px)",
+            animation: "floatCircle2 18s infinite ease-in-out",
+          }}
+        />
+
+        {/* Small-medium circle */}
+        <div
+          className="absolute rounded-full border border-[#c9a77c]/25"
+          style={{
+            width: "450px",
+            height: "450px",
+            left: "calc(50% + 50px)",
+            top: "calc(50% - 100px)",
+            animation: "floatCircle3 12s infinite ease-in-out",
+          }}
+        />
+      </div>
+
+      {/* Logo container with increased size */}
+      <div className="relative flex flex-col items-center justify-center w-full max-w-[85vw] sm:max-w-sm md:max-w-md">
+        {/* Logo with increased size */}
+        <div className="mb-10 sm:mb-12 w-[55%] min-w-[180px] max-w-[280px] relative mx-auto">
           <img
             src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/white_logo-BD39Nu2KjDrSHmKNE3zbil8kbxGFeq"
-            alt="Querencia" // Your brand name
-            className="w-full h-auto"
+            alt="Querencia"
+            className="w-full h-auto transition-all duration-700 animate-fadeIn"
+            onError={(e) => {
+              // Fallback if image fails to load
+              e.currentTarget.style.opacity = "0"
+            }}
           />
         </div>
 
-        {/* Loading Bar Container */}
+        {/* Elegant progress bar */}
         <div
-          className="relative h-[3px] w-56 overflow-hidden rounded-full bg-white/15 md:w-72" // Thinner bar, slightly more visible track
-          style={{
-            animation: "fadeIn 0.7s ease-out forwards",
-            animationDelay: "0.4s", // Stagger after logo
-            opacity: 0,
-          }}
+          className="w-32 sm:w-40 h-[2px] mb-5 sm:mb-6 overflow-hidden relative mx-auto animate-fadeIn"
+          style={{ animationDelay: "0.4s" }}
         >
-          {/* Loading Bar Progress */}
+          <div className="absolute inset-0 bg-[#c9a77c]/20 rounded-full"></div> {/* Bar track */}
           <div
-            className="absolute left-0 top-0 h-full bg-[#c9a77c] transition-width duration-150 ease-linear" // Faster width transition for smoother look with interval
+            className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#c9a77c]/70 via-[#c9a77c] to-[#c9a77c]/70 rounded-full"
             style={{
               width: `${progress}%`,
-              // Shimmer effect via gradient and animation
-              backgroundImage:
-                "linear-gradient(90deg, rgba(201,167,124,0.7) 0%, rgba(201,167,124,1) 30%, rgba(225,205,176,1) 50%, rgba(201,167,124,1) 70%, rgba(201,167,124,0.7) 100%)",
-              backgroundSize: "250% 100%", // Wider size for a slower, more luxurious shimmer
-              animation: "shimmer 2.5s infinite linear", // Slower shimmer
+              backgroundSize: "200% 100%", // For shimmer
+              animation: progress < 100 ? "shimmer 2.5s infinite linear" : "none", // Stop shimmer at 100%
+              transition: "width 0.2s linear", // Smooth progress update
             }}
           ></div>
         </div>
 
-        {/* Loading Text */}
+        {/* Loading text with changing messages */}
         <div
-          className="mt-6 text-center" // Adjusted margin
-          style={{
-            animation: "fadeIn 0.7s ease-out forwards",
-            animationDelay: "0.6s", // Stagger after bar
-            opacity: 0,
-          }}
+          className="flex flex-col items-center w-full text-center animate-fadeIn"
+          style={{ animationDelay: "0.6s" }}
         >
-          <p className="text-xs font-light tracking-[0.2em] uppercase text-white/60 md:text-sm">
-            {" "}
-            {/* Evocative text, wider tracking */}
-            {progress < 100 ? "Crafting Perfection" : "Welcome"}
-            {progress < 100 && <span className="ml-2 inline-block w-10 text-left">{Math.round(progress)}%</span>}
+          <p
+            className="text-[#c9a77c] text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] uppercase font-light min-h-[1.5em] sm:min-h-[1.75em] text-center w-full"
+            style={{ animation: "textFade 2s infinite ease-in-out" }}
+            key={loadingMessage}
+          >
+            {loadingMessage}
           </p>
         </div>
-
-        {/* Decorative Circles - Refined for luxury */}
-        {/* Consider fewer, larger, and more subtly animated circles or omit for ultimate clean look */}
-        {/* Example of one large, very subtle pulsing circle */}
-        <div
-          className="absolute -z-10 rounded-full border border-[#c9a77c]/10" // Accent color, very transparent
-          style={{
-            width: "clamp(300px, 80vmin, 600px)", // Responsive size
-            height: "clamp(300px, 80vmin, 600px)",
-            animation: "subtlePulse 6s infinite ease-in-out", // Custom subtle pulse
-            animationDelay: "0s",
-          }}
-        ></div>
-        <div
-          className="absolute -z-10 rounded-full border border-[#c9a77c]/5" // Even more transparent
-          style={{
-            width: "clamp(400px, 100vmin, 800px)",
-            height: "clamp(400px, 100vmin, 800px)",
-            animation: "subtlePulse 6s infinite ease-in-out",
-            animationDelay: "2s", // Staggered delay
-          }}
-        ></div>
-
-        {/* Luxury Accent Line - Making it more dynamic */}
-        <div
-          className="absolute -bottom-12 left-1/2 h-20 w-[1.5px] -translate-x-1/2 opacity-0" // Start invisible
-          style={{
-            // Gradient from gold to transparent
-            background: "linear-gradient(to bottom, rgba(201,167,124,0.5) 0%, rgba(201,167,124,0) 100%)",
-            // Animation: fade in, then gentle pulse or shimmer
-            animation: "lineAppearAndPulse 4s ease-out forwards",
-            animationDelay: "0.8s",
-          }}
-        ></div>
       </div>
     </div>
   )
