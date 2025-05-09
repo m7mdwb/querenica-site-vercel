@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   title: "Querencia - Luxury Residences in North Cyprus",
   description:
     "Discover luxury living at Querencia, featuring premium residences with panoramic sea views in North Cyprus.",
-  manifest: "/manifest.json",
   themeColor: "#2c4051",
   viewport: "width=device-width, initial-scale=1, maximum-scale=5",
   formatDetection: {
@@ -19,11 +18,6 @@ export const metadata: Metadata = {
     address: false,
     email: true,
     url: false,
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Querencia",
   },
   openGraph: {
     type: "website",
@@ -52,7 +46,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta httpEquiv="Cache-Control" content="public, max-age=3600, stale-while-revalidate=86400" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body className={inter.className}>
         {children}

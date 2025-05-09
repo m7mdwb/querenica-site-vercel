@@ -100,7 +100,7 @@ export default function Navbar() {
             <div className="h-10 w-auto md:h-12 lg:h-14">
               {/* White logo for transparent navbar */}
               <img
-                src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/white_logo-BD39Nu2KjDrSHmKNE3zbil8kbxGFeq"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/light_logo_querencia-c1yecf3hxKXUjzc7t4YQdMAwsbiC97.png"
                 alt="Querencia Hotel & Residence"
                 className={cn(
                   "h-10 w-auto md:h-12 lg:h-14 object-contain transition-opacity duration-300",
@@ -109,7 +109,7 @@ export default function Navbar() {
               />
               {/* Dark logo for scrolled navbar or open mobile menu */}
               <img
-                src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Dark_logo-JYIL3AdIqeQgQe7UEUSUsl3ZMvuj1Y.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dark_logo_querencia-RKneFVNYlNklaf0DSks551nwWQaotI.png"
                 alt="Querencia Hotel & Residence"
                 className={cn(
                   "h-10 w-auto md:h-12 lg:h-14 object-contain transition-opacity duration-300",

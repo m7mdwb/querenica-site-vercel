@@ -116,7 +116,7 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
         {/* Logo with increased size */}
         <div className="mb-10 sm:mb-12 w-[55%] min-w-[180px] max-w-[280px] relative mx-auto">
           <img
-            src="https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/white_logo-BD39Nu2KjDrSHmKNE3zbil8kbxGFeq"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/light_logo_querencia-c1yecf3hxKXUjzc7t4YQdMAwsbiC97.png"
             alt="Querencia"
             className="w-full h-auto transition-all duration-700 animate-fadeIn"
             onError={(e) => {
