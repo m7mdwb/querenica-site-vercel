@@ -62,9 +62,9 @@ export default function Home() {
           <AboutSection />
           <LocationSection />
           <ResidencesSection />
-          <AmenitiesSection />
-          <GallerySection />
-         
+          
+          <VirtualTourSection />
+          <ContactSection />
           <Footer />
         </>
       )}
