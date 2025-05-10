@@ -491,17 +491,17 @@ export default function ResidencesSection() {
                       {/* Slightly darker text */}
                       {formatResidenceCardDetails(residence.details)}
                     </span>
-                    <Button
-                      variant="link"
-                      size="sm"
-                      className="h-auto p-0 text-xs font-semibold text-[#2c4051] opacity-80 transition-opacity hover:opacity-100 group-hover:opacity-100 md:text-sm" // Bolder, adjusted color
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        openResidenceDialog(residence)
-                      }}
-                    >
-                      View Details
-                    </Button>
+                   <Button
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 text-xs font-semibold text-[#2c4051] opacity-80 transition-opacity hover:opacity-100 group-hover:opacity-100 md:text-sm" // Bolder, adjusted color
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                     e.stopPropagation()
+                     openResidenceDialog(residence)
+                    }}
+                     >
+                       View Details
+                      </Button>
                   </div>
                 </div>
               </div>
