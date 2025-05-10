@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 
 export default function VirtualTourSection() {
   const [isOpen, setIsOpen] = useState(false)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const iframeRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasInteracted, setHasInteracted] = useState(false)
 
@@ -47,34 +47,31 @@ export default function VirtualTourSection() {
               if (open) setHasInteracted(true)
             }}
           >
-            {/* REFACTORED: Wrapped content in a semantic button element to ensure DialogTrigger has exactly one child */}
             <DialogTrigger asChild>
-              <button className="w-full p-0 m-0 bg-transparent border-0 cursor-pointer" aria-label="Open virtual tour">
-                <div className="relative aspect-video bg-gray-100 overflow-hidden rounded-lg shadow-lg group">
-                  <img
-                    src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Virtual%20Tour/querencia-virtual-tour-thumbnail-Rl9Yd9Yd9Yd9Yd9Yd9Yd9Yd9Yd9Yd.webp"
-                    alt="Virtual Tour Thumbnail"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-opacity duration-300 group-hover:bg-opacity-20">
-                    <div className="w-20 h-20 rounded-full bg-[#c9a77c] bg-opacity-90 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="white"
-                        className="w-10 h-10"
-                        style={{ marginLeft: "4px" }}
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
-                    <h3 className="text-xl font-medium">Explore Querencia</h3>
-                    <p className="text-sm opacity-90">Click to start virtual tour</p>
+              <div className="relative aspect-video bg-gray-100 overflow-hidden rounded-lg shadow-lg group cursor-pointer">
+                <img
+                  src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Virtual%20Tour/querencia-virtual-tour-thumbnail-Rl9Yd9Yd9Yd9Yd9Yd9Yd9Yd9Yd9Yd.webp"
+                  alt="Virtual Tour Thumbnail"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-opacity duration-300 group-hover:bg-opacity-20">
+                  <div className="w-20 h-20 rounded-full bg-[#c9a77c] bg-opacity-90 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="white"
+                      className="w-10 h-10"
+                      style={{ marginLeft: "4px" }}
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
                   </div>
                 </div>
-              </button>
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
+                  <h3 className="text-xl font-medium">Explore Querencia</h3>
+                  <p className="text-sm opacity-90">Click to start virtual tour</p>
+                </div>
+              </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[80vw] p-0 bg-black overflow-hidden">
               <div className="relative w-full aspect-video">

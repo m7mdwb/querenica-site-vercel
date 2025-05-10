@@ -58,7 +58,15 @@ export default function Home() {
       ) : (
         <>
           <Navbar />
-        
+          <HeroSection />
+          <AboutSection />
+          <LocationSection />
+          <ResidencesSection />
+          <AmenitiesSection />
+          <GallerySection />
+          <VirtualTourSection />
+          <ContactSection />
+          <Footer />
         </>
       )}
     </main>
