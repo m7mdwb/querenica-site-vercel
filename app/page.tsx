@@ -61,7 +61,7 @@ export default function Home() {
           <HeroSection />
           <AboutSection />
           <LocationSection />
-         
+          <ResidencesSection />
           <AmenitiesSection />
           <GallerySection />
           <VirtualTourSection />

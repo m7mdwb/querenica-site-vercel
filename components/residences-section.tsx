@@ -537,6 +537,7 @@ export default function ResidencesSection() {
         <DialogContent className="max-h-[95vh] w-[95vw] max-w-4xl overflow-y-auto overflow-x-hidden p-0 data-[state=open]:animate-contentShow sm:rounded-lg md:w-full">
           {" "}
           {/* Shadcn animation class */}
+          <div>
           {selectedResidence && (
             <>
               <div className="relative aspect-video w-full bg-slate-200">
@@ -659,6 +660,7 @@ export default function ResidencesSection() {
               </div>
             </>
           )}
+          </div>
         </DialogContent>
       </Dialog>
     </section>
