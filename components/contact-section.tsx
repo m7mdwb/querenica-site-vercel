@@ -1,17 +1,18 @@
 "use client"
 
-import type React from "react" // Not strictly necessary for this component's current usage
-import { useState, useEffect } from "react" // useEffect for pre-filling catalog request
+import type React from "react"
+import { useState, useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils" // Assuming this path is correct
-import { Button } from "@/components/ui/button" // Assuming this path
-import { Input } from "@/components/ui/input" // Assuming this path
-import { Textarea } from "@/components/ui/textarea" // Assuming this path
-import { Label } from "@/components/ui/label" // Assuming this path
-import { Checkbox } from "@/components/ui/checkbox" // Assuming this path
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Mail, Phone, MapPin } from "lucide-react"
-// LoadingScreen import is removed as it's no longer used directly by this component to show on submit
+import { PhoneInput } from "react-international-phone"
+import "react-international-phone/style.css"
 
 export default function ContactSection() {
   const router = useRouter()
@@ -23,34 +24,34 @@ export default function ContactSection() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
-    phone: "",
+    phone: "+90", // Default to Turkey
     message: "",
-    requestCatalog: true, // Default to true
+    requestCatalog: true,
   })
-  const [isSubmitting, setIsSubmitting] = useState(false); // For button "Sending..." state
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Effect to check localStorage for pre-filling catalog request
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Check if catalog was requested from another part of the site (e.g., residences section)
-      const requestedFromOtherSection = window.localStorage.getItem("requestCatalogFromResidences") === "true";
+      const requestedFromOtherSection = window.localStorage.getItem("requestCatalogFromResidences") === "true"
       if (requestedFromOtherSection) {
-        setFormState(prev => ({ ...prev, requestCatalog: true }));
-        // It's good practice to remove the flag after using it to prevent it from always being true
-        // on subsequent visits to the contact form if the user unchecks it.
-        window.localStorage.removeItem("requestCatalogFromResidences");
+        setFormState((prev) => ({ ...prev, requestCatalog: true }))
+        window.localStorage.removeItem("requestCatalogFromResidences")
       }
     }
-  }, []);
-
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
     setFormState((prev) => ({ ...prev, [id]: value }))
   }
 
+  const handlePhoneChange = (phone: string) => {
+    setFormState((prev) => ({ ...prev, phone }))
+  }
+
   const handleCheckboxChange = (checked: boolean | "indeterminate") => {
-    if (typeof checked === 'boolean') {
+    if (typeof checked === "boolean") {
       setFormState((prev) => ({ ...prev, requestCatalog: checked }))
     }
   }
@@ -59,28 +60,7 @@ export default function ContactSection() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // ---
-    // TODO: Add your ACTUAL form submission logic here (e.g., API call)
-    // For example:
-    // try {
-    //   const response = await fetch('/api/contact', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(formState), // Send relevant form data
-    //   });
-    //   if (!response.ok) {
-    //     throw new Error('Form submission failed');
-    //   }
-    //   // Form submitted successfully to your backend
-    // } catch (error) {
-    //   console.error("Submission error:", error);
-    //   setIsSubmitting(false); // Re-enable button on error
-    //   // Optionally show an error message to the user here
-    //   return; // Stop further processing if submission fails
-    // }
-    // ---
-
-    // If catalog was requested, store in localStorage for the thank you page to potentially use
+    // If catalog was requested, store in localStorage for the thank you page
     if (formState.requestCatalog) {
       if (typeof window !== "undefined") {
         window.localStorage.setItem("catalogRequestedOnSubmit", "true")
@@ -89,20 +69,12 @@ export default function ContactSection() {
 
     // Set a flag for ThankYouPage to show its own loading screen if desired
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("showThankYouPageLoading", "true");
+      sessionStorage.setItem("showThankYouPageLoading", "true")
     }
 
-    // Redirect to thank you page immediately after setting flags (and after actual submission)
+    // Redirect to thank you page
     router.push("/thank-you")
-
-    // No need to set isSubmitting back to false here if we are navigating away.
-    // If there was an error in submission, it should be set to false above.
   }
-
-  // No longer conditionally rendering LoadingScreen here
-  // if (showLoadingScreen) {
-  //   return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
-  // }
 
   return (
     <section ref={ref} id="contact" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
@@ -115,7 +87,7 @@ export default function ContactSection() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
             <div
               className={cn(
-                "transition-all duration-1000", // Entrance animation for the form
+                "transition-all duration-1000",
                 inView ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0",
               )}
             >
@@ -157,13 +129,22 @@ export default function ContactSection() {
                   <Label htmlFor="phone" className="text-sm font-medium text-[#333]">
                     Phone Number
                   </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
+                  <PhoneInput
+                    defaultCountry="tr"
                     value={formState.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter your phone number"
-                    className="border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
+                    onChange={handlePhoneChange}
+                    inputClassName="!w-full !h-10 !border-slate-300 !rounded-md !px-3 !py-2 !text-base focus:!ring-2 focus:!ring-[#c9a77c] focus:!ring-offset-1 focus:!border-[#c9a77c] focus:!outline-none"
+                    containerClassName="!font-sans"
+                    countrySelectorStyleProps={{
+                      buttonClassName:
+                        "!border-slate-300 !border-r-0 !rounded-r-none !h-10 !px-3 !py-2 focus:!ring-2 focus:!ring-[#c9a77c] focus:!ring-offset-1 focus:!border-[#c9a77c] focus:!outline-none",
+                      dropdownStyleProps: {
+                        className: "!bg-white !border !border-slate-200 !shadow-lg !rounded-md !mt-1 !z-50",
+                        listItemClassName: "!py-2 !px-3 !text-sm hover:!bg-slate-100 focus:!bg-slate-100",
+                        searchInputClassName:
+                          "!border-slate-300 !rounded-md !px-3 !py-2 !text-sm !mb-2 focus:!ring-2 focus:!ring-[#c9a77c] focus:!border-[#c9a77c] focus:!outline-none",
+                      },
+                    }}
                     required
                   />
                 </div>
@@ -209,7 +190,7 @@ export default function ContactSection() {
 
             <div
               className={cn(
-                "flex flex-col justify-center transition-all delay-200 duration-1000 md:delay-300", // Entrance animation for contact info
+                "flex flex-col justify-center transition-all delay-200 duration-1000 md:delay-300",
                 inView ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0",
               )}
             >
@@ -225,7 +206,10 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <p className="text-sm text-[#666]">Call Us</p>
-                      <a href="tel:+905488370015" className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg">
+                      <a
+                        href="tel:+905488370015"
+                        className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg"
+                      >
                         +90 548 837 0015
                       </a>
                     </div>
@@ -237,7 +221,10 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <p className="text-sm text-[#666]">Email Us</p>
-                      <a href="mailto:info@dovecgroup.com" className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg break-all">
+                      <a
+                        href="mailto:info@dovecgroup.com"
+                        className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg break-all"
+                      >
                         info@dovecgroup.com
                       </a>
                     </div>
@@ -250,7 +237,14 @@ export default function ContactSection() {
                     <div>
                       <p className="text-sm text-[#666]">Visit Us</p>
                       <p className="text-base font-medium text-[#2c4051] md:text-lg">Döveç Head Quarters</p>
-                      <p className="text-sm text-[#555]">Uluçam Road, No.2, Sakarya, Famagusta, TRNC</p>
+                      <a
+                        href="https://maps.app.goo.gl/Vq7xfep4b49RTescA"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-[#555] hover:text-[#c9a77c] hover:underline transition-colors duration-300"
+                      >
+                        Uluçam Road, No.2, Sakarya, Famagusta, TRNC
+                      </a>
                     </div>
                   </div>
                   {/* Availability Note */}

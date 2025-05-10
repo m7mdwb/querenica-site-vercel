@@ -431,7 +431,7 @@ export default function GallerySection() {
                   </span>
                 </div>
 
-                {/* Download Catalog Button in Lightbox */}
+                {/* Download Catalog Button in Lightbox 
                 <div className="absolute bottom-4 right-4">
                   <Button size="sm" className="bg-[#c9a77c] text-white hover:bg-[#b89669]" asChild>
                     <Link href="#contact" onClick={scrollToContactForm}>
@@ -439,7 +439,7 @@ export default function GallerySection() {
                       Get Catalog
                     </Link>
                   </Button>
-                </div>
+                </div>*/}
               </div>
             )}
           </DialogContent>
