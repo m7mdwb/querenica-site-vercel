@@ -57,7 +57,7 @@ const propertyTypes: PropertyBlock[] = [
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/1-%20A%20Blok%20Studio/a-block-studio-plan-Cb5Me3GXf23qTFYjbye1Eo4n3B9yEO.webp",
         ],
         details: {
-          size: "45-55 m²",
+          size: "45-50 m²",
           bedrooms: 1,
           livingRooms: 0,
           features: ["Sea View", "Efficient Layout", "Modern Kitchen", "Built-in Storage"],
@@ -82,7 +82,7 @@ const propertyTypes: PropertyBlock[] = [
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/2-%20A%20Block%201%2B1/a-block-1%2B1-plan-bRjrz9JKNmCG2yGiG04rUo3YPLlzig.webp",
         ],
         details: {
-          size: "65-75 m²",
+          size: "80 m²",
           bedrooms: 1,
           livingRooms: 1,
           features: ["Sea View", "Smart Home", "Private Balcony"],
@@ -107,7 +107,7 @@ const propertyTypes: PropertyBlock[] = [
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/3-%20A%20Block%202%2B1/a-block-2%2B1-plan-JyuOMYcbAX0RoMXHhUxB46K7yHzj5u.webp",
         ],
         details: {
-          size: "85-95 m²",
+          size: "140 m²",
           bedrooms: 2,
           livingRooms: 1,
           features: ["Sea View", "Underfloor Heating", "Spacious Living Area"],
@@ -133,7 +133,7 @@ const propertyTypes: PropertyBlock[] = [
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/4-%20B-C-D%20Studio/b-c-d-block-studio-plan-bVsvfW2zON6ST6c8w9RBO8g5X4R5mI.webp",
         ],
         details: {
-          size: "50-60 m²",
+          size: "45-50 m²",
           bedrooms: 1,
           livingRooms: 0,
           features: ["Sea View", "Premium Location", "Efficient Design", "Luxury Finishes"],
@@ -154,7 +154,7 @@ const propertyTypes: PropertyBlock[] = [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/5-%20B-C-D%201%2B1/b-c-d-block-1%2B1-plan-q1zbi1u4hcJGwgHwIJDVH3fZE1Yy7P.webp",
         ],
         details: {
-          size: "70-80 m²",
+          size: "80 m²",
           bedrooms: 1,
           livingRooms: 1,
           features: ["Sea View", "Premium Location", "Luxury Finishes", "Modern Design"],
@@ -176,7 +176,7 @@ const propertyTypes: PropertyBlock[] = [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/6-%20B-C-D%202%2B1/b-c-d-block-2%2B1-plan-1f01CsuEd37Uh5lUPWIBCbtQRLj98n.webp",
         ],
         details: {
-          size: "90-100 m²",
+          size: "110-170 m²",
           bedrooms: 2,
           livingRooms: 1,
           features: ["Sea View", "Family-Friendly", "Spacious Layout", "Premium Appliances"],
@@ -202,7 +202,7 @@ const propertyTypes: PropertyBlock[] = [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/7-%20B-C-D%203%2B1/b-c-d-block-3%2B1-plan-j9BAihFn1jFU1Za1PTINSt6b9EII19.webp",
         ],
         details: {
-          size: "120-140 m²",
+          size: "155-165 m²",
           bedrooms: 3,
           livingRooms: 1,
           features: ["Panoramic Sea Views", "Spacious Terrace", "Premium Finishes"],
@@ -212,7 +212,7 @@ const propertyTypes: PropertyBlock[] = [
         id: "bcd-penthouse",
         name: "BCD Penthouse 5+1",
         displayName: "The Skyview Penthouse",
-        description: "Exclusive top-floor living with 360° sea views.",
+        description: "Top-floor exclusivity: breathtaking 360° sea vistas, offering flexible 2-5 bedrooms.",
         feature: "Private rooftop terrace with infinity plunge pool.",
         images: [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/8-%20B-C-D%20Penthouse%205%2B1/b-c-d-block-penthouse-5%2B1-1-SHTfRkXnlb8DCUNOAzL1372jBh4Em5.webp",
@@ -225,7 +225,7 @@ const propertyTypes: PropertyBlock[] = [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/8-%20B-C-D%20Penthouse%205%2B1/b-c-d-block-penthouse-5%2B1-8-FizECc3NgMSEF8s5FQZDa0BqsKhsrU.webp",
         ],
         details: {
-          size: "180-220 m²",
+          size: "270-500 m²",
           bedrooms: 5,
           livingRooms: 1,
           features: ["360° Sea Views", "Rooftop Terrace", "Private Pool", "Panoramic Views"],
@@ -235,7 +235,7 @@ const propertyTypes: PropertyBlock[] = [
         id: "bcd-duplex",
         name: "BCD Duplex 5+1",
         displayName: "Exclusive Duplex Residence",
-        description: "Two-floor luxury residence with premium features and sweeping sea views.",
+        description: "Luxurious duplex residence: sweeping sea views, premium features & choice of 2-5 bedrooms.",
         feature: "Exclusive living across two floors with private terrace.",
         images: [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-1-VCViOvtwdwRDWwmDbWx99J4WMasbcG.webp",
@@ -246,7 +246,7 @@ const propertyTypes: PropertyBlock[] = [
             "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-6-pl1KDWafYh4A7yu473XlZYRpoRfdpN.webp",
         ],
         details: {
-          size: "150-180 m²",
+          size: "265-475 m²",
           bedrooms: 5,
           livingRooms: 1,
           features: ["Sweeping Sea Views", "Two Floors", "Private Terrace", "Luxury Finishes"],
