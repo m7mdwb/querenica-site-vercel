@@ -934,3 +934,5 @@ body.overflow-hidden {
 }
 
 @import "../styles/phone-input.css";
+/* Add this import at the end of your globals.css file */
+@import "./phone-input.css";
