@@ -17,10 +17,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <LanguageProvider>{children}</LanguageProvider>
-
-        {/* Structured data for Organization */}
+      <head>
+        {/* Organization structured data */}
         <Script
           id="organization-schema"
           type="application/ld+json"
@@ -56,6 +54,9 @@ export default function RootLayout({
             }),
           }}
         />
+      </head>
+      <body className={inter.className}>
+        <LanguageProvider>{children}</LanguageProvider>
 
         {/* Add Speed Insights using Script tag instead of component */}
         <Script src="https://vercel.com/speed-insights/script.js" strategy="afterInteractive" data-sd-client="next" />

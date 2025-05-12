@@ -28,6 +28,7 @@ const languageNames: Record<string, string> = {
   ru: "Русский",
 }
 
+// This is a Server Component that renders the Home component
 export default function LangPage({ params }: { params: { lang: string } }) {
   // Validate language parameter
   const validLangs = ["en", "tr", "de", "ru"]

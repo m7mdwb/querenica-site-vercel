@@ -1,4 +1,4 @@
-import ThankYouPage from "../../thank-you/page"
+import ThankYouClientPage from "../../thank-you/client-page"
 import type { Metadata } from "next"
 import { siteConfig } from "../../metadata-config"
 
@@ -40,5 +40,5 @@ export async function generateMetadata({ params }: { params: { lang: string } })
 
 export default function LangThankYouPage() {
   // Render the same ThankYouPage component
-  return <ThankYouPage />
+  return <ThankYouClientPage />
 }

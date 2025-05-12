@@ -17,17 +17,17 @@ export const tr = {
     getInTouch: "Bizimle İletişime Geçin",
   },
   hero: {
-    tagline: "Kuzey Kıbrıs'ta Lüks ile Uyum İçinde",
+    tagline: "Kuzey Kıbrıs'ta Lüks ve Uyum İçinde",
     discover: "Keşfet",
   },
   about: {
     title: "Querencia'yı Keşfedin",
     paragraph1:
-      "Querencia, mimari mükemmelliğin uzlaşmaz kaliteyle buluştuğu lüks yaşamın zirvesini temsil eder. Kuzey Kıbrıs'ın en çok arzu edilen konumlarından birinde yer alan bu özel proje, mükemmelliği talep edenler için bir sığınak sunar.",
+      "Querencia, mimari mükemmelliği ve kusursuz kaliteyi buluşturan, lüks yaşamın zirvesini temsil eden özel bir projedir. Kuzey Kıbrıs’ın en değerli ve arzu edilen bölgelerinden birinde konumlanan Querencia, ayrıcalıklı bir yaşam arayanlara özel bir dünya sunar.",
     paragraph2:
-      "Her konut, hem zamansız hem de çağdaş yaşam alanları oluşturan premium malzemeler ve ince işçilikle titizlikle tasarlanmıştır. Detaylara gösterilen özen, iç mekânların ötesinde özenle seçilmiş olanaklara ve hizmetlere kadar uzanır.",
+      " Her konut, zamansız estetikle modern yaşamı harmanlayan bir anlayışla; üstün işçilik, kaliteli malzemeler ve ince detaylarla titizlikle tasarlanmıştır. Bu özen, sadece iç mekânlarla sınırlı kalmaz; proje genelinde sunulan seçkin hizmetler ve sosyal olanaklara kadar yansır.",
     paragraph3:
-      "Querencia sadece bir konut değil, aynı zamanda az kişinin deneyimleyeceği ancak birçok kişinin özlem duyacağı bir yaşam tarzı sunan bir ayrım ve başarı ifadesidir.",
+      "Querencia, yalnızca bir konut değil; çok az kişinin sahip olabileceği, ancak pek çok kişinin hayalini kurduğu seçkin bir yaşam tarzının simgesidir.",
     downloadCatalog: "Kataloğu İndir",
     timeline: {
       cityLabel: "ŞEHİR",

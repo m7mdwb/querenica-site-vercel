@@ -3,8 +3,15 @@ import "../globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { LanguageProvider } from "@/lib/i18n/context"
-import { defaultMetadata, siteConfig } from "../metadata-config"
+import { generateHomeMetadata } from "../metadata-config"
 import Script from "next/script"
+import {
+  generateFAQStructuredData,
+  generateRealEstateStructuredData,
+  generateResidenceStructuredData,
+  generateLocalBusinessStructuredData,
+  generateProductStructuredData,
+} from "@/lib/structured-data-i18n"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -13,20 +20,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { lang: string } }): Promise<Metadata> {
-  const lang = params.lang
+  // Validate language parameter
+  const lang = ["en", "tr", "de", "ru"].includes(params.lang) ? params.lang : "en"
 
-  return {
-    ...defaultMetadata,
-    alternates: {
-      canonical: `${siteConfig.url}/${lang}`,
-      languages: {
-        en: `${siteConfig.url}/en`,
-        tr: `${siteConfig.url}/tr`,
-        de: `${siteConfig.url}/de`,
-        ru: `${siteConfig.url}/ru`,
-      },
-    },
-  }
+  // Use the enhanced metadata generation function
+  return generateHomeMetadata(lang)
 }
 
 export default function LangLayout({
@@ -36,12 +34,20 @@ export default function LangLayout({
   children: React.ReactNode
   params: { lang: string }
 }) {
+  // Validate language parameter
+  const lang = ["en", "tr", "de", "ru"].includes(params.lang) ? (params.lang as "en" | "tr" | "de" | "ru") : "en"
+
+  // Generate structured data for the language
+  const faqStructuredData = generateFAQStructuredData(lang)
+  const realEstateStructuredData = generateRealEstateStructuredData(lang)
+  const residenceStructuredData = generateResidenceStructuredData(lang)
+  const localBusinessStructuredData = generateLocalBusinessStructuredData(lang)
+  const productStructuredData = generateProductStructuredData(lang)
+
   return (
     <html lang={params.lang}>
-      <body className={inter.className}>
-        <LanguageProvider initialLang={params.lang as any}>{children}</LanguageProvider>
-
-        {/* Structured data for Organization */}
+      <head>
+        {/* Organization structured data */}
         <Script
           id="organization-schema"
           type="application/ld+json"
@@ -77,6 +83,54 @@ export default function LangLayout({
             }),
           }}
         />
+
+        {/* FAQ structured data */}
+        <Script
+          id="faq-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqStructuredData),
+          }}
+        />
+
+        {/* Real Estate Agent structured data */}
+        <Script
+          id="real-estate-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(realEstateStructuredData),
+          }}
+        />
+
+        {/* Residence structured data */}
+        <Script
+          id="residence-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(residenceStructuredData),
+          }}
+        />
+
+        {/* Local Business structured data */}
+        <Script
+          id="local-business-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessStructuredData),
+          }}
+        />
+
+        {/* Product structured data */}
+        <Script
+          id="product-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productStructuredData),
+          }}
+        />
+      </head>
+      <body className={inter.className}>
+        <LanguageProvider initialLang={params.lang as any}>{children}</LanguageProvider>
 
         {/* Add Speed Insights using Script tag instead of component */}
         <Script src="https://vercel.com/speed-insights/script.js" strategy="afterInteractive" data-sd-client="next" />
