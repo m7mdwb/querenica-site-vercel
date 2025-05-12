@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { ArrowLeft, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/lib/i18n/context"
+import { thankYouTranslations } from "@/lib/i18n/thank-you-translations"
 
 const ThankYouPage = () => {
   const router = useRouter()
+  const { language } = useLanguage()
+  const t = thankYouTranslations[language] || thankYouTranslations.en
 
   useEffect(() => {
     // Scroll to top when component mounts
@@ -34,7 +38,7 @@ const ThankYouPage = () => {
           transition={{ delay: 0.2 }}
           className="text-3xl font-bold mb-4 text-gray-800"
         >
-          Thank You!
+          {t.title}
         </motion.h1>
 
         <motion.p
@@ -43,7 +47,7 @@ const ThankYouPage = () => {
           transition={{ delay: 0.3 }}
           className="text-lg mb-8 text-gray-600"
         >
-          Your inquiry has been received successfully. Our team will contact you shortly.
+          {t.message}
         </motion.p>
 
         {/* Divider */}
@@ -57,12 +61,12 @@ const ThankYouPage = () => {
         {/* Return button */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <Button
-            onClick={() => router.push("/")}
+            onClick={() => router.push(`/${language}`)}
             variant="outline"
             className="group border-[#c9a77c] text-[#c9a77c] hover:bg-[#c9a77c] hover:text-white transition-all duration-300"
           >
             <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Return to Home
+            {t.returnButton}
           </Button>
         </motion.div>
       </div>
