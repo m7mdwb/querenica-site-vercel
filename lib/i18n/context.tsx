@@ -35,6 +35,7 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void
   t: (key: string) => string
   translations: Translations
+  isLoaded: boolean
 }
 
 // Create context with default values
@@ -43,6 +44,7 @@ const LanguageContext = createContext<LanguageContextType>({
   setLanguage: () => {},
   t: () => "",
   translations: en,
+  isLoaded: false,
 })
 
 // Provider props
@@ -133,11 +135,6 @@ export function LanguageProvider({ children, initialLang }: LanguageProviderProp
     return typeof value === "string" ? value : key
   }
 
-  // Only render children after language is loaded from localStorage
-  if (!isLoaded && !initialLang) {
-    return null
-  }
-
   return (
     <LanguageContext.Provider
       value={{
@@ -145,6 +142,7 @@ export function LanguageProvider({ children, initialLang }: LanguageProviderProp
         setLanguage,
         t,
         translations: translations[language],
+        isLoaded,
       }}
     >
       {children}
