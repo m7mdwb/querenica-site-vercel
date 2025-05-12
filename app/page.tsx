@@ -14,7 +14,7 @@ import Footer from "@/components/footer"
 import LoadingScreen from "@/components/loading-screen"
 import { preloadImages, cacheImagesInIndexedDB } from "@/lib/image-cache"
 import Script from "next/script"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { useLanguage } from "@/lib/i18n/context"
 
 // Critical images that should be preloaded
@@ -36,6 +36,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const { language } = useLanguage()
   const router = useRouter()
+  const pathname = usePathname()
+
+  // Detect language from URL path on initial load
+  useEffect(() => {
+    if (pathname) {
+      const pathLangMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+      if (pathLangMatch && ["en", "tr", "de", "ru"].includes(pathLangMatch[1])) {
+        // Language is already set in the URL, no need to redirect
+      } else if (language && language !== "en") {
+        // If language is set but not in URL, consider redirecting
+        // This is optional and depends on your routing strategy
+      }
+    }
+  }, [pathname, language, router])
 
   useEffect(() => {
     // Always show loading screen on every page load/refresh

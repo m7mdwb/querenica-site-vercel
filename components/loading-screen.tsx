@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/context"
+import { loadingTranslations } from "@/lib/i18n/loading-translations"
 
 interface LoadingScreenProps {
   minimumLoadingTime?: number
@@ -11,7 +13,8 @@ interface LoadingScreenProps {
 export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
   const [isFadingOut, setIsFadingOut] = useState(false)
-  const [loadingMessage, setLoadingMessage] = useState("Crafting Luxury")
+  const [loadingMessage, setLoadingMessage] = useState("")
+  const { language } = useLanguage()
 
   useEffect(() => {
     const randomLoadingTime = Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000
@@ -21,13 +24,9 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
     let minimumTimeTimeout: NodeJS.Timeout
     let messageInterval: NodeJS.Timeout
 
-    const messages = [
-      "Crafting Luxury",
-      "Curating Excellence",
-      "Designing Perfection",
-      "Refining Details",
-      "Creating Harmony",
-    ]
+    // Get translated messages based on current language
+    const messages = loadingTranslations[language]?.messages || loadingTranslations.en.messages
+
     let messageIndex = 0
     setLoadingMessage(messages[0]) // Set initial message
     messageInterval = setInterval(() => {
@@ -63,7 +62,7 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
       clearTimeout(minimumTimeTimeout)
       clearInterval(messageInterval)
     }
-  }, [minimumLoadingTime, onLoadingComplete])
+  }, [minimumLoadingTime, onLoadingComplete, language])
 
   return (
     <div
