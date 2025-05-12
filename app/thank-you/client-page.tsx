@@ -35,7 +35,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.laCasalia || "Luxury villas with private pools and panoramic sea views.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/2-%20A%20Block%201%2B1/A%20Blok%201%2B1%201-G0mes18sTWOZ2cWwd6FM2eYbgfGL3y.jpg",
-      location: "Kyrenia, North Cyprus",
+      location: t.locations?.kyrenia || "Kyrenia, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/la-casalia",
     },
     {
@@ -44,7 +44,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.natalux || "Modern apartments in the heart of the city.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/3-%20A%20Block%202%2B1/A%20Blok%202%2B1%201-32NbplBa3pvC5dJqzWeUHJjRLVo6LO.jpg",
-      location: "Famagusta, North Cyprus",
+      location: t.locations?.famagusta || "Famagusta, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/natalux",
     },
     {
@@ -53,7 +53,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.laIsla || "Beachfront residences with exclusive amenities.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/6-%20B-C-D%202%2B1/B-C-D%202%2B1%201-pSGOjrRyvS0wWb9aPMmoGMGsQmskUP.jpg",
-      location: "Bafra, North Cyprus",
+      location: t.locations?.bafra || "Bafra, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/la-isla",
     },
     {
@@ -62,7 +62,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.panorama || "Elevated living with 360° mountain and sea views.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/7-%20B-C-D%203%2B1/B-C-D%203%2B1%201-8wK1VD3e6L1ZKnGmxYPvCUIbOzPMym.jpg",
-      location: "Iskele, North Cyprus",
+      location: t.locations?.iskele || "Iskele, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/panorama",
     },
   ]
@@ -141,7 +141,7 @@ export default function ThankYouPage() {
                 variant="outline"
                 className="border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 transition-colors"
               >
-                <Link href="/">
+                <Link href={`/${language}`}>
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   {t.buttons?.returnToHomepage}
                 </Link>
@@ -225,27 +225,27 @@ export default function ThankYouPage() {
               variant="outline"
               className="border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors px-6 py-2.5 text-sm md:text-base"
             >
-              <Link href="/#residences">{t.discoverMore?.exploreResidences}</Link>
+              <Link href={`/${language}#residences`}>{t.discoverMore?.exploreResidences}</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               className="border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors px-6 py-2.5 text-sm md:text-base"
             >
-              <Link href="/#gallery">{t.discoverMore?.exploreGallery}</Link>
+              <Link href={`/${language}#gallery`}>{t.discoverMore?.exploreGallery}</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               className="border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors px-6 py-2.5 text-sm md:text-base"
             >
-              <Link href="/#virtual-tour">{t.discoverMore?.virtualTour}</Link>
+              <Link href={`/${language}#virtual-tour`}>{t.discoverMore?.virtualTour}</Link>
             </Button>
             <Button
               asChild
               className="bg-[#2c4051] text-white shadow hover:bg-[#3a526a] transition-colors px-6 py-2.5 text-sm md:text-base"
             >
-              <Link href="/">
+              <Link href={`/${language}`}>
                 <Home className="mr-2 h-4 w-4" />
                 {t.discoverMore?.backToHome}
               </Link>

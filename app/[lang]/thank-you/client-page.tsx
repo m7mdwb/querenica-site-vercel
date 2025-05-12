@@ -35,7 +35,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.laCasalia || "Luxury villas with private pools and panoramic sea views.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/2-%20A%20Block%201%2B1/A%20Blok%201%2B1%201-G0mes18sTWOZ2cWwd6FM2eYbgfGL3y.jpg",
-      location: "Kyrenia, North Cyprus",
+      location: t.locations?.kyrenia || "Kyrenia, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/la-casalia",
     },
     {
@@ -44,7 +44,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.natalux || "Modern apartments in the heart of the city.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/3-%20A%20Block%202%2B1/A%20Blok%202%2B1%201-32NbplBa3pvC5dJqzWeUHJjRLVo6LO.jpg",
-      location: "Famagusta, North Cyprus",
+      location: t.locations?.famagusta || "Famagusta, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/natalux",
     },
     {
@@ -53,7 +53,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.laIsla || "Beachfront residences with exclusive amenities.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/6-%20B-C-D%202%2B1/B-C-D%202%2B1%201-pSGOjrRyvS0wWb9aPMmoGMGsQmskUP.jpg",
-      location: "Bafra, North Cyprus",
+      location: t.locations?.bafra || "Bafra, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/la-isla",
     },
     {
@@ -62,7 +62,7 @@ export default function ThankYouPage() {
       description: t.projectDescriptions?.panorama || "Elevated living with 360° mountain and sea views.",
       image:
         "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/Residencies/7-%20B-C-D%203%2B1/B-C-D%203%2B1%201-8wK1VD3e6L1ZKnGmxYPvCUIbOzPMym.jpg",
-      location: "Iskele, North Cyprus",
+      location: t.locations?.iskele || "Iskele, North Cyprus",
       websiteUrl: "https://dovecgroup.com/projects/panorama",
     },
   ]

@@ -16,6 +16,8 @@ export const thankYouTranslations = {
       title: "Immediate Assistance",
       callUs: "Call Us",
       emailUs: "Email Us",
+      visitUs: "Visit Us",
+      headquarters: "Döveç Head Quarters",
     },
     buttons: {
       returnToHomepage: "Return to Homepage",
@@ -38,6 +40,12 @@ export const thankYouTranslations = {
       laIsla: "Beachfront residences with exclusive amenities.",
       panorama: "Elevated living with 360° mountain and sea views.",
     },
+    locations: {
+      kyrenia: "Kyrenia, North Cyprus",
+      famagusta: "Famagusta, North Cyprus",
+      bafra: "Bafra, North Cyprus",
+      iskele: "Iskele, North Cyprus",
+    },
   },
   tr: {
     title: "Talebiniz için Teşekkürler",
@@ -54,6 +62,8 @@ export const thankYouTranslations = {
       title: "Acil Yardım",
       callUs: "Bizi Arayın",
       emailUs: "E-posta Gönderin",
+      visitUs: "Bizi Ziyaret Edin",
+      headquarters: "Döveç Genel Merkezi",
     },
     buttons: {
       returnToHomepage: "Ana Sayfaya Dön",
@@ -76,6 +86,12 @@ export const thankYouTranslations = {
       laIsla: "Özel olanaklara sahip sahil rezidansları.",
       panorama: "360° dağ ve deniz manzaralı yüksek yaşam.",
     },
+    locations: {
+      kyrenia: "Girne, Kuzey Kıbrıs",
+      famagusta: "Gazimağusa, Kuzey Kıbrıs",
+      bafra: "Bafra, Kuzey Kıbrıs",
+      iskele: "İskele, Kuzey Kıbrıs",
+    },
   },
   de: {
     title: "Vielen Dank für Ihre Anfrage",
@@ -92,6 +108,8 @@ export const thankYouTranslations = {
       title: "Sofortige Unterstützung",
       callUs: "Rufen Sie uns an",
       emailUs: "E-Mail an uns",
+      visitUs: "Besuchen Sie uns",
+      headquarters: "Döveç Hauptsitz",
     },
     buttons: {
       returnToHomepage: "Zurück zur Startseite",
@@ -114,6 +132,12 @@ export const thankYouTranslations = {
       laIsla: "Strandnahe Residenzen mit exklusiven Annehmlichkeiten.",
       panorama: "Gehobenes Wohnen mit 360° Berg- und Meerblick.",
     },
+    locations: {
+      kyrenia: "Kyrenia, Nordzypern",
+      famagusta: "Famagusta, Nordzypern",
+      bafra: "Bafra, Nordzypern",
+      iskele: "Iskele, Nordzypern",
+    },
   },
   ru: {
     title: "Благодарим за Ваш Запрос",
@@ -130,6 +154,8 @@ export const thankYouTranslations = {
       title: "Немедленная Помощь",
       callUs: "Позвоните Нам",
       emailUs: "Напишите Нам",
+      visitUs: "Посетите Нас",
+      headquarters: "Головной офис Döveç",
     },
     buttons: {
       returnToHomepage: "Вернуться на Главную",
@@ -151,6 +177,12 @@ export const thankYouTranslations = {
       natalux: "Современные апартаменты в центре города.",
       laIsla: "Резиденции на берегу моря с эксклюзивными удобствами.",
       panorama: "Элитное жилье с 360° видом на горы и море.",
+    },
+    locations: {
+      kyrenia: "Кирения, Северный Кипр",
+      famagusta: "Фамагуста, Северный Кипр",
+      bafra: "Бафра, Северный Кипр",
+      iskele: "Искеле, Северный Кипр",
     },
   },
 }
