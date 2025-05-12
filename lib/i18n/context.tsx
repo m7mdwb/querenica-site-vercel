@@ -5,6 +5,7 @@ import { en } from "./translations/en"
 import { tr } from "./translations/tr"
 import { de } from "./translations/de"
 import { ru } from "./translations/ru"
+import { useRouter, usePathname } from "next/navigation"
 
 // Define available languages
 export type Language = "en" | "tr" | "de" | "ru"
@@ -47,35 +48,70 @@ const LanguageContext = createContext<LanguageContextType>({
 // Provider props
 interface LanguageProviderProps {
   children: ReactNode
+  initialLang?: Language
 }
 
 // Language provider component
-export function LanguageProvider({ children }: LanguageProviderProps) {
-  // Initialize with English, will be updated from localStorage if available
-  const [language, setLanguageState] = useState<Language>("en")
-  const [isLoaded, setIsLoaded] = useState(false)
+export function LanguageProvider({ children, initialLang }: LanguageProviderProps) {
+  // Initialize with English or initialLang if provided
+  const [language, setLanguageState] = useState<Language>(initialLang || "en")
+  const [isLoaded, setIsLoaded] = useState(initialLang ? true : false)
+  const router = useRouter()
+  const pathname = usePathname()
 
-  // Load language preference from localStorage on mount
+  // Detect language from URL path
   useEffect(() => {
-    const storedLanguage = localStorage.getItem("language") as Language
-    if (storedLanguage && translations[storedLanguage]) {
-      setLanguageState(storedLanguage)
-    } else {
-      // Try to detect browser language
-      const browserLang = navigator.language.split("-")[0] as Language
-      if (translations[browserLang]) {
-        setLanguageState(browserLang)
+    if (pathname) {
+      const pathLangMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+      if (pathLangMatch && pathLangMatch[1] in translations) {
+        const pathLang = pathLangMatch[1] as Language
+        if (language !== pathLang) {
+          setLanguageState(pathLang)
+        }
       }
     }
-    setIsLoaded(true)
-  }, [])
+  }, [pathname, language])
+
+  // Load language preference from localStorage on mount if initialLang not provided
+  useEffect(() => {
+    if (!initialLang) {
+      const storedLanguage = localStorage.getItem("language") as Language
+      if (storedLanguage && translations[storedLanguage]) {
+        setLanguageState(storedLanguage)
+      } else {
+        // Try to detect browser language
+        const browserLang = navigator.language.split("-")[0] as Language
+        if (translations[browserLang]) {
+          setLanguageState(browserLang)
+        }
+      }
+      setIsLoaded(true)
+    }
+  }, [initialLang])
 
   // Update language and save to localStorage
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
     localStorage.setItem("language", lang)
+
     // Update HTML lang attribute
     document.documentElement.lang = lang
+
+    // Update URL to reflect language change if we're not already on a language-specific route
+    if (!pathname.startsWith(`/${lang}`)) {
+      // Only navigate if we're changing to a different language
+      if (language !== lang) {
+        // Check if we're on a language route already
+        const currentLangMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+        if (currentLangMatch) {
+          // Replace current language with new language
+          router.push(pathname.replace(/^\/[a-z]{2}/, `/${lang}`))
+        } else {
+          // Add language to current path
+          router.push(`/${lang}${pathname}`)
+        }
+      }
+    }
   }
 
   // Translation function
@@ -98,7 +134,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   }
 
   // Only render children after language is loaded from localStorage
-  if (!isLoaded) {
+  if (!isLoaded && !initialLang) {
     return null
   }
 

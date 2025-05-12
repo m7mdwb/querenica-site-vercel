@@ -1,24 +1,45 @@
 import type React from "react"
-import "./globals.css"
+import "../globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { LanguageProvider } from "@/lib/i18n/context"
-import { defaultMetadata } from "./metadata-config"
+import { defaultMetadata, siteConfig } from "../metadata-config"
 import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = defaultMetadata
+export async function generateStaticParams() {
+  return [{ lang: "en" }, { lang: "tr" }, { lang: "de" }, { lang: "ru" }]
+}
 
-export default function RootLayout({
+export async function generateMetadata({ params }: { params: { lang: string } }): Promise<Metadata> {
+  const lang = params.lang
+
+  return {
+    ...defaultMetadata,
+    alternates: {
+      canonical: `${siteConfig.url}/${lang}`,
+      languages: {
+        en: `${siteConfig.url}/en`,
+        tr: `${siteConfig.url}/tr`,
+        de: `${siteConfig.url}/de`,
+        ru: `${siteConfig.url}/ru`,
+      },
+    },
+  }
+}
+
+export default function LangLayout({
   children,
+  params,
 }: {
   children: React.ReactNode
+  params: { lang: string }
 }) {
   return (
-    <html lang="en">
+    <html lang={params.lang}>
       <body className={inter.className}>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider initialLang={params.lang as any}>{children}</LanguageProvider>
 
         {/* Structured data for Organization */}
         <Script

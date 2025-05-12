@@ -13,6 +13,9 @@ import ContactSection from "@/components/contact-section"
 import Footer from "@/components/footer"
 import LoadingScreen from "@/components/loading-screen"
 import { preloadImages, cacheImagesInIndexedDB } from "@/lib/image-cache"
+import Script from "next/script"
+import { useRouter } from "next/navigation"
+import { useLanguage } from "@/lib/i18n/context"
 
 // Critical images that should be preloaded
 const CRITICAL_IMAGES = [
@@ -31,6 +34,8 @@ const SECONDARY_IMAGES = [
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
+  const { language } = useLanguage()
+  const router = useRouter()
 
   useEffect(() => {
     // Always show loading screen on every page load/refresh
@@ -53,6 +58,82 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-[#1a1a1a]">
+      {/* Structured data for Real Estate Development */}
+      <Script
+        id="real-estate-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ApartmentComplex",
+            name: "Querencia Hotel & Residence",
+            description:
+              "Luxury hotel and residence in North Cyprus offering panoramic sea views, premium amenities, and exclusive living spaces.",
+            url: "https://querencia.com",
+            image: [
+              "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Hero%20Section/querencia-hero-section-PSfKHchhEjIfGpDkXDJBFkE6boXMqE.webp",
+              "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-1-2KGar18rZ8kKbe4VwFivhnCUSGkbMU.webp",
+              "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-2-AfHnMYCOrV23nqcfRW1ncq3c0B8ey1.webp",
+            ],
+            numberOfAccommodationUnits: 705,
+            petsAllowed: true,
+            tourBookingPage: "https://querencia.com/#virtual-tour",
+            address: {
+              "@type": "PostalAddress",
+              addressCountry: "TRNC",
+              addressLocality: "Trikomo",
+              addressRegion: "Famagusta",
+            },
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: 35.265891430330605,
+              longitude: 33.909266898704175,
+            },
+            amenityFeature: [
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Swimming Pools & Aquapark",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "24-Hour Security & Cameras",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Wellness & Spa",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Restaurants & Bars",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Sports Courts",
+                value: true,
+              },
+            ],
+            containsPlace: [
+              {
+                "@type": "SportsActivityLocation",
+                name: "Sports Courts",
+              },
+              {
+                "@type": "Restaurant",
+                name: "On-Site Restaurant",
+              },
+              {
+                "@type": "HealthAndBeautyBusiness",
+                name: "Wellness & Spa",
+              },
+            ],
+          }),
+        }}
+      />
+
       {isLoading ? (
         <LoadingScreen onLoadingComplete={handleLoadingComplete} />
       ) : (

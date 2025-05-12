@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { useLanguage, type Language, languageNames } from "@/lib/i18n/context"
 import { cn } from "@/lib/utils"
 import { ChevronDown } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
 
 interface LanguageSelectorProps {
   isMobile?: boolean
@@ -16,6 +17,8 @@ export function LanguageSelector({ isMobile, mobileMenuOpen, index, isScrolled }
   const { language, setLanguage } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+  const router = useRouter()
 
   // Language options with flags
   const languages: { code: Language; flag: string }[] = [
@@ -41,6 +44,28 @@ export function LanguageSelector({ isMobile, mobileMenuOpen, index, isScrolled }
 
   // Get current language data
   const currentLanguage = languages.find((lang) => lang.code === language)
+
+  // Handle language change with URL update
+  const handleLanguageChange = (langCode: Language) => {
+    setLanguage(langCode)
+    setIsOpen(false)
+
+    // Update URL to reflect language change
+    if (pathname.includes("/thank-you")) {
+      // If on thank you page, navigate to language-specific thank you page
+      router.push(`/${langCode}/thank-you`)
+    } else {
+      // Check if we're already on a language route
+      const currentLangMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+      if (currentLangMatch) {
+        // Replace current language with new language
+        router.push(pathname.replace(/^\/[a-z]{2}/, `/${langCode}`))
+      } else {
+        // Add language to current path
+        router.push(`/${langCode}${pathname}`)
+      }
+    }
+  }
 
   // Mobile version with smaller cards
   if (isMobile) {
@@ -80,10 +105,7 @@ export function LanguageSelector({ isMobile, mobileMenuOpen, index, isScrolled }
               {languages.map((lang) => (
                 <button
                   key={lang.code}
-                  onClick={() => {
-                    setLanguage(lang.code)
-                    setIsOpen(false)
-                  }}
+                  onClick={() => handleLanguageChange(lang.code)}
                   className={cn(
                     "flex items-center w-full px-3 py-2 text-sm rounded-md transition-colors",
                     language === lang.code ? "bg-[#c9a77c]/10 text-[#c9a77c]" : "text-[#2c4051] hover:bg-gray-100",
@@ -133,10 +155,7 @@ export function LanguageSelector({ isMobile, mobileMenuOpen, index, isScrolled }
           {languages.map(({ code, flag }) => (
             <button
               key={code}
-              onClick={() => {
-                setLanguage(code)
-                setIsOpen(false)
-              }}
+              onClick={() => handleLanguageChange(code)}
               className={cn(
                 "w-full text-left px-4 py-2 text-sm flex items-center justify-between",
                 code === language ? "bg-[#c9a77c]/10 text-[#c9a77c]" : "text-[#2c4051] hover:bg-gray-100",

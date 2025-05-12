@@ -6,26 +6,33 @@ import { cn } from "@/lib/utils"
 import { Menu, X } from "lucide-react"
 import { LanguageSelector } from "./language-selector"
 import { useLanguage } from "@/lib/i18n/context"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [savedScrollPosition, setSavedScrollPosition] = useState(0)
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const navbarRef = useRef<HTMLElement>(null)
   const isNavigatingFromMenu = useRef(false)
+  const pathname = usePathname()
 
   const shouldShowDarkLogo = isScrolled || isMobileMenuOpen
 
+  // Check if we're on a language-specific route
+  const isLangRoute = pathname.match(/^\/[a-z]{2}(\/|$)/)
+  const currentLang = isLangRoute ? pathname.split("/")[1] : language
+
   const NAV_ITEMS = [
-    { label: t("navbar.home"), href: "#home" },
-    { label: t("navbar.about"), href: "#about" },
-    { label: t("navbar.location"), href: "#location" },
-    { label: t("navbar.residences"), href: "#residences" },
-    { label: t("navbar.amenities"), href: "#amenities" },
-    { label: t("navbar.gallery"), href: "#gallery" },
-    { label: t("navbar.virtualTour"), href: "#virtual-tour" },
-    { label: t("navbar.contact"), href: "#contact" },
+    { label: t("navbar.home"), href: "#home", path: `/${currentLang}` },
+    { label: t("navbar.about"), href: "#about", path: `/${currentLang}/about` },
+    { label: t("navbar.location"), href: "#location", path: `/${currentLang}/location` },
+    { label: t("navbar.residences"), href: "#residences", path: `/${currentLang}/residences` },
+    { label: t("navbar.amenities"), href: "#amenities", path: `/${currentLang}/amenities` },
+    { label: t("navbar.gallery"), href: "#gallery", path: `/${currentLang}/gallery` },
+    { label: t("navbar.virtualTour"), href: "#virtual-tour", path: `/${currentLang}/virtual-tour` },
+    { label: t("navbar.contact"), href: "#contact", path: `/${currentLang}/contact` },
   ]
 
   useEffect(() => {
@@ -193,8 +200,10 @@ export default function Navbar() {
             <ul className="flex space-x-4 lg:space-x-8">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
-                  <a
-                    href={item.href}
+                  {/* Add Link component for SEO with prefetch */}
+                  <Link
+                    href={item.path}
+                    prefetch={false}
                     onClick={(e) => scrollToSection(e, item.href)}
                     className={cn(
                       "text-sm font-light tracking-wide transition-colors hover:text-[#c9a77c]",
@@ -202,7 +211,7 @@ export default function Navbar() {
                     )}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -271,8 +280,10 @@ export default function Navbar() {
                   transitionDelay: isMobileMenuOpen ? `${75 + index * 50}ms` : "0ms",
                 }}
               >
-                <a
-                  href={item.href}
+                {/* Add Link component for SEO with prefetch */}
+                <Link
+                  href={item.path}
+                  prefetch={false}
                   onClick={(e) => scrollToSection(e, item.href)}
                   className="group flex items-center py-2.5 text-lg font-light text-[#2c4051] transition-colors active:text-[#c9a77c]"
                   style={{ WebkitTapHighlightColor: "transparent" }}
@@ -281,7 +292,7 @@ export default function Navbar() {
                     {item.label}
                     <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-[#c9a77c] transition-all duration-300 group-hover:w-full group-focus:w-full"></span>
                   </span>
-                </a>
+                </Link>
               </li>
             ))}
             {/* Language selector with staggered animation */}
