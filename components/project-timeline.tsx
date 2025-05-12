@@ -2,11 +2,11 @@
 
 import { useLanguage } from "@/lib/i18n/context"
 import { cn } from "@/lib/utils"
-import { MapPin, PoundSterling, ChevronRight, CalendarDays, ChevronDown } from "lucide-react" // Added Info or ChevronDown
-import { useState, useEffect } from "react" // Added useEffect for initial mobile selection
+import { MapPin, PoundSterling, ChevronRight, CalendarDays, ChevronDown } from "lucide-react"
+import { useState, useEffect } from "react"
 
 interface TimelinePhase {
-  id: number // Should be unique for key prop
+  id: number
   name: string
   date: string
   description: string
@@ -22,31 +22,22 @@ interface ProjectTimelineProps {
 
 export default function ProjectTimeline({ city, startingPrice, phases, className }: ProjectTimelineProps) {
   const { t } = useLanguage()
-
-  // Initialize activePhase. For mobile, we'll set it to 0 in useEffect.
-  // For desktop, if you want nothing selected initially, keep it null.
-  // If you want the first phase selected on desktop too, initialize to 0.
-  const [activePhase, setActivePhase] = useState<number | null>(null) // Or 0 if desktop should also have first selected
-
+  const [activePhase, setActivePhase] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768) // Tailwind's 'md' breakpoint is typically 768px
+      setIsMobile(window.innerWidth < 768)
     }
-    checkMobile() // Initial check
+    checkMobile()
     window.addEventListener("resize", checkMobile)
 
-    // Set initial active phase for mobile
     if (window.innerWidth < 768 && phases.length > 0) {
       setActivePhase(0)
-    } else if (phases.length > 0) {
-      // Optional: Set a default for desktop if you didn't initialize useState with 0
-      // setActivePhase(0); // Uncomment if desktop should also default to first phase selected
     }
 
     return () => window.removeEventListener("resize", checkMobile)
-  }, [phases.length]) // Rerun if phases change
+  }, [phases.length])
 
   const handlePhaseClick = (index: number) => {
     setActivePhase((prevActivePhase) => (prevActivePhase === index ? null : index))
@@ -56,7 +47,7 @@ export default function ProjectTimeline({ city, startingPrice, phases, className
 
   return (
     <div className={cn("mb-10 rounded-lg bg-white p-6 shadow-sm overflow-hidden", className)}>
-      {/* Desktop Layout (previous version - assumed to be working as desired) */}
+      {/* Desktop Layout */}
       <div className={cn("hidden md:flex md:items-start md:justify-between md:space-x-4")}>
         <div
           className={cn(
@@ -165,8 +156,6 @@ export default function ProjectTimeline({ city, startingPrice, phases, className
 
         <div className="w-full">
           <div className="flex items-center justify-center text-center mb-3 border-t border-slate-200 pt-4 space-x-2">
-            {" "}
-            {/* Softer border */}
             <CalendarDays className="h-4 w-4 text-[#666]" />
             <h3 className="text-xs font-medium tracking-wider text-[#666] uppercase">
               {t("about.timeline.projectTimelineLabel")}
@@ -175,20 +164,19 @@ export default function ProjectTimeline({ city, startingPrice, phases, className
           <div className="space-y-3">
             {phases.map((phase, index) => (
               <div
-                key={phase.id} // Ensure unique key for each phase
+                key={phase.id}
                 className={cn(
-                  "rounded-lg p-4 transition-all duration-300 ease-in-out cursor-pointer text-left shadow-sm hover:shadow-md", // Slightly larger padding, rounded-lg
+                  "rounded-lg p-4 transition-all duration-300 ease-in-out cursor-pointer text-left shadow-sm hover:shadow-md",
                   activePhase === index
-                    ? "bg-[#2c4051] text-white ring-2 ring-[#c9a77c] scale-[1.02]" // Active state with slight scale
-                    : "bg-[#f8f8f8] text-[#2c4051]", // Inactive state
+                    ? "bg-[#2c4051] text-white ring-2 ring-[#c9a77c] scale-[1.02]"
+                    : "bg-[#f8f8f8] text-[#2c4051]",
                 )}
                 onClick={() => handlePhaseClick(index)}
               >
-                {/* Main content of the phase card */}
                 <div className="flex items-start">
                   <div
                     className={cn(
-                      "w-7 h-7 rounded-full flex items-center justify-center text-sm font-semibold mr-3 flex-shrink-0 mt-0.5", // Slightly larger number circle
+                      "w-7 h-7 rounded-full flex items-center justify-center text-sm font-semibold mr-3 flex-shrink-0 mt-0.5",
                       activePhase === index
                         ? "bg-[#c9a77c] text-white"
                         : "bg-white text-[#2c4051] border border-slate-300",
@@ -198,33 +186,21 @@ export default function ProjectTimeline({ city, startingPrice, phases, className
                   </div>
                   <div className="flex-grow">
                     <div className="flex items-baseline justify-between">
-                      <p className="text-base font-semibold">{phase.name}</p> {/* Larger phase name */}
-                      {/* Visual cue for inactive, expandable cards (excluding the first card if preselected and active) */}
+                      <p className="text-base font-semibold">{phase.name}</p>
                       {activePhase !== index && isMobile && (
                         <ChevronDown className="h-5 w-5 text-slate-400 transition-transform duration-300 group-hover:text-slate-500" />
                       )}
                     </div>
-                    <p
-                      className={cn(
-                        "text-xs mt-0.5", // Adjusted margin
-                        activePhase === index ? "text-[#c9a77c]" : "text-slate-500",
-                      )}
-                    >
+                    <p className={cn("text-xs mt-0.5", activePhase === index ? "text-[#c9a77c]" : "text-slate-500")}>
                       {phase.date}
                     </p>
-                    <p
-                      className={cn(
-                        "text-sm mt-1.5", // Slightly larger block text
-                        activePhase === index ? "text-white/80" : "text-slate-600/90",
-                      )}
-                    >
+                    <p className={cn("text-sm mt-1.5", activePhase === index ? "text-white/80" : "text-slate-600/90")}>
                       {phase.blocks}
                     </p>
-                    {/* Description only for active phase */}
                     {activePhase === index && (
                       <p
                         className={cn(
-                          "text-sm mt-2.5 leading-relaxed border-t pt-2.5", // Larger description text, added top border for separation
+                          "text-sm mt-2.5 leading-relaxed border-t pt-2.5",
                           activePhase === index
                             ? "text-white/90 border-white/20"
                             : "text-slate-700/90 border-slate-200",
@@ -241,8 +217,6 @@ export default function ProjectTimeline({ city, startingPrice, phases, className
         </div>
 
         <div className="flex flex-col items-center text-center w-full border-t border-slate-200 pt-4">
-          {" "}
-          {/* Softer border */}
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c4051]/5 text-[#2c4051] mb-2">
             <PoundSterling className="h-5 w-5" />
           </div>

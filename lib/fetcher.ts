@@ -1,6 +1,3 @@
-/**
- * Generic fetcher function for use with SWR
- */
 export async function fetcher<T>(url: string): Promise<T> {
   const response = await fetch(url)
 

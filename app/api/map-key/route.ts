@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server"
 import { cacheData, getCachedData } from "@/lib/cache"
 
-// Cache key for the map API key
 const CACHE_KEY = "map-api-key"
-
-// Cache options: 1 hour cache with 24 hour stale-while-revalidate
 const CACHE_OPTIONS = {
   maxAge: 60 * 60, // 1 hour in seconds
   staleWhileRevalidate: 60 * 60 * 24, // 24 hours in seconds
@@ -28,7 +25,6 @@ export async function GET() {
 
     // Check if API key exists
     if (!apiKey) {
-      // Return a proper JSON response with error status
       return NextResponse.json(
         { error: "API key not configured", success: false },
         {
@@ -53,7 +49,6 @@ export async function GET() {
       },
     })
   } catch (error) {
-    // Handle any unexpected errors
     console.error("Error in map-key API route:", error)
     return NextResponse.json(
       { error: "Failed to retrieve API key", success: false },

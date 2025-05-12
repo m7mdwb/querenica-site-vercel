@@ -13,7 +13,6 @@ export default function AboutSection() {
     triggerOnce: true,
   })
 
-  // Project phases data from translations
   const projectPhases = [
     {
       id: 1,
@@ -38,6 +37,24 @@ export default function AboutSection() {
     },
   ]
 
+  const handleCatalogRequest = () => {
+    window.localStorage.setItem("requestCatalog", "true")
+    const contactSection = document.getElementById("contact")
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" })
+
+      setTimeout(() => {
+        const formElement = document.getElementById("contact-form")
+        if (formElement) {
+          formElement.classList.add("highlight-form")
+          setTimeout(() => {
+            formElement.classList.remove("highlight-form")
+          }, 2000)
+        }
+      }, 500)
+    }
+  }
+
   return (
     <section id="about" ref={ref} className="py-5 md:py-10 scroll-mt-20">
       <div className="container mx-auto px-4">
@@ -45,7 +62,6 @@ export default function AboutSection() {
           {t("about.title")}
         </h2>
 
-        {/* Project Timeline */}
         <div
           className={cn(
             "transition-all duration-700",
@@ -59,7 +75,6 @@ export default function AboutSection() {
           />
         </div>
 
-        {/* About Content */}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
           <div
             className={cn(
@@ -73,24 +88,7 @@ export default function AboutSection() {
 
             <div className="mt-6">
               <Button
-                onClick={() => {
-                  window.localStorage.setItem("requestCatalog", "true")
-                  const contactSection = document.getElementById("contact")
-                  if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: "smooth" })
-
-                    // Highlight the form
-                    setTimeout(() => {
-                      const formElement = document.getElementById("contact-form")
-                      if (formElement) {
-                        formElement.classList.add("highlight-form")
-                        setTimeout(() => {
-                          formElement.classList.remove("highlight-form")
-                        }, 2000)
-                      }
-                    }, 500)
-                  }
-                }}
+                onClick={handleCatalogRequest}
                 className="bg-[#c9a77c] text-white hover:bg-[#b89669] flex items-center"
               >
                 <Download className="mr-2 h-4 w-4" />

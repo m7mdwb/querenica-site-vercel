@@ -5,7 +5,6 @@ import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useLanguage } from "@/lib/i18n/context"
 
-// Primary image path with fallback
 const HERO_IMAGE =
   "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Hero%20Section/querencia-hero-section-PSfKHchhEjIfGpDkXDJBFkE6boXMqE.webp"
 const FALLBACK_IMAGE = "/placeholder.svg?key=kncmj"
@@ -16,29 +15,22 @@ export default function HeroSection() {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageSrc, setImageSrc] = useState(HERO_IMAGE)
 
-  // Handle animations and image loading
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
   const handleImageError = () => {
-    console.error("Hero image failed to load, using fallback")
     setImageSrc(FALLBACK_IMAGE)
   }
 
   const scrollToNextSection = () => {
     const aboutSection = document.getElementById("about")
     if (aboutSection) {
-      // Get the navbar height to use as offset
       const navbar = document.querySelector("nav")
       const navbarHeight = navbar ? navbar.offsetHeight : 0
-
-      // Calculate the element's position relative to the document
       const elementPosition = aboutSection.getBoundingClientRect().top + window.scrollY
-
-      // Scroll to the element with offset for the navbar
       window.scrollTo({
-        top: elementPosition - navbarHeight - 16, // Additional 16px buffer for spacing
+        top: elementPosition - navbarHeight - 16,
         behavior: "smooth",
       })
     }
@@ -46,7 +38,6 @@ export default function HeroSection() {
 
   return (
     <section id="home" className="relative h-screen w-full overflow-hidden">
-      {/* Background image with overlay */}
       <div className="absolute inset-0">
         <img
           src={imageSrc || "/placeholder.svg"}
@@ -61,7 +52,6 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-[#2c4051]/40"></div>
       </div>
 
-      {/* Content */}
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">
         <h1
           className={cn(
@@ -80,12 +70,10 @@ export default function HeroSection() {
           {t("hero.tagline")}
         </p>
 
-        {/* Scroll indicator - Adjusted positioning for mobile */}
         <button
           onClick={scrollToNextSection}
           className={cn(
             "absolute flex animate-bounce flex-col items-center justify-center transition-all delay-700 duration-1000",
-            // Adjusted positioning for better mobile visibility
             "bottom-20 sm:bottom-12",
             isVisible ? "opacity-100" : "opacity-0",
           )}

@@ -11,28 +11,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Mail, Phone, MapPin } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useLanguage } from "@/lib/i18n/context"
-
-// Country codes data
-const countryCodes = [
-  { code: "+90", name: "Turkey" },
-  { code: "+1", name: "United States" },
-  { code: "+44", name: "United Kingdom" },
-  { code: "+49", name: "Germany" },
-  { code: "+33", name: "France" },
-  { code: "+7", name: "Russia" },
-  { code: "+971", name: "United Arab Emirates" },
-  { code: "+966", name: "Saudi Arabia" },
-  { code: "+98", name: "Iran" },
-  { code: "+964", name: "Iraq" },
-  { code: "+380", name: "Ukraine" },
-  { code: "+30", name: "Greece" },
-  { code: "+357", name: "Cyprus" },
-  { code: "+972", name: "Israel" },
-  { code: "+20", name: "Egypt" },
-  { code: "+961", name: "Lebanon" },
-]
+import { PhoneInput } from "react-international-phone"
+import "react-international-phone/style.css"
 
 export default function ContactSection() {
   const router = useRouter()
@@ -45,8 +26,7 @@ export default function ContactSection() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
-    phoneCountryCode: "+90", // Default to Turkey
-    phoneNumber: "",
+    phone: "", // Changed from separate phoneCountryCode and phoneNumber
     message: "",
     requestCatalog: true,
   })
@@ -68,8 +48,8 @@ export default function ContactSection() {
     setFormState((prev) => ({ ...prev, [id]: value }))
   }
 
-  const handleCountryCodeChange = (value: string) => {
-    setFormState((prev) => ({ ...prev, phoneCountryCode: value }))
+  const handlePhoneChange = (value: string) => {
+    setFormState((prev) => ({ ...prev, phone: value }))
   }
 
   const handleCheckboxChange = (checked: boolean | "indeterminate") => {
@@ -82,11 +62,11 @@ export default function ContactSection() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Combine country code and phone number
-    const fullPhoneNumber = `${formState.phoneCountryCode}${formState.phoneNumber.startsWith("0") ? formState.phoneNumber.substring(1) : formState.phoneNumber}`
+    // Phone number is now handled by the PhoneInput component
+    // and stored directly in formState.phone
 
     // TODO: Add your ACTUAL form submission logic here (e.g., API call)
-    // Include fullPhoneNumber in your submission data
+    // Include formState.phone in your submission data
 
     // If catalog was requested, store in localStorage for the thank you page
     if (formState.requestCatalog) {
@@ -154,37 +134,19 @@ export default function ContactSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phoneNumber" className="text-sm font-medium text-[#333]">
+                  <Label htmlFor="phone" className="text-sm font-medium text-[#333]">
                     {t("contact.form.phone")}
                   </Label>
-                  <div className="flex">
-                    <Select value={formState.phoneCountryCode} onValueChange={handleCountryCodeChange}>
-                      <SelectTrigger className="w-[110px] border-slate-300 border-r-0 rounded-r-none focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1">
-                        <SelectValue placeholder="+90" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[300px]">
-                        {countryCodes.map((country) => (
-                          <SelectItem key={country.code} value={country.code}>
-                            {country.code} {country.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      id="phoneNumber"
-                      type="tel"
-                      value={formState.phoneNumber}
-                      onChange={handleInputChange}
-                      placeholder={t("contact.form.phonePlaceholder")}
-                      className="flex-1 border-slate-300 rounded-l-none focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
-                      required
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {formState.phoneCountryCode === "+90"
-                      ? t("contact.form.phoneExample")
-                      : t("contact.form.phoneExampleIntl")}
-                  </p>
+                  <PhoneInput
+                    defaultCountry="tr"
+                    value={formState.phone}
+                    onChange={handlePhoneChange}
+                    inputClassName="border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1 w-full rounded-md"
+                    containerClassName="flex"
+                    buttonClassName="border border-slate-300 rounded-l-md focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">{t("contact.form.phoneExampleIntl")}</p>
                 </div>
 
                 <div className="space-y-2">

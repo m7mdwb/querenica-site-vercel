@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
@@ -42,29 +41,18 @@ export function ZoomableImage({
     }
   }, [zoom])
 
-  // Handle zoom in
-  const zoomIn = () => {
-    setZoom((prev) => Math.min(prev + zoomStep, maxZoom))
-  }
-
-  // Handle zoom out
-  const zoomOut = () => {
-    setZoom((prev) => Math.max(prev - zoomStep, minZoom))
-  }
-
-  // Reset zoom
+  const zoomIn = () => setZoom((prev) => Math.min(prev + zoomStep, maxZoom))
+  const zoomOut = () => setZoom((prev) => Math.max(prev - zoomStep, minZoom))
   const resetZoom = () => {
     setZoom(1)
     setPosition({ x: 0, y: 0 })
   }
 
-  // Handle double click to toggle between zoom levels
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     if (zoom > 1) {
       resetZoom()
     } else {
-      // Zoom in centered on the click position
       const container = containerRef.current
       const image = imageRef.current
       if (!container || !image) return
@@ -73,34 +61,25 @@ export function ZoomableImage({
       const x = (e.clientX - rect.left) / container.offsetWidth
       const y = (e.clientY - rect.top) / container.offsetHeight
 
-      // Calculate the position to center the zoom on the click point
       const newZoom = Math.min(maxZoom, zoom + zoomStep * 2)
       setZoom(newZoom)
 
-      // Center the zoom on the clicked point
       const newX = ((0.5 - x) * container.offsetWidth * (newZoom - 1)) / newZoom
       const newY = ((0.5 - y) * container.offsetHeight * (newZoom - 1)) / newZoom
       setPosition({ x: newX, y: newY })
     }
   }
 
-  // Handle mouse wheel zoom
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault()
-    if (e.deltaY < 0) {
-      zoomIn()
-    } else {
-      zoomOut()
-    }
+    e.deltaY < 0 ? zoomIn() : zoomOut()
   }
 
-  // Handle drag start
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
     if (zoom <= 1) return
 
     setIsDragging(true)
 
-    // Handle both mouse and touch events
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
     const clientY = "touches" in e ? e.touches[0].clientY : e.clientY
 
@@ -110,35 +89,28 @@ export function ZoomableImage({
     })
   }
 
-  // Handle drag
   const handleDrag = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging || zoom <= 1) return
 
-    // Handle both mouse and touch events
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
     const clientY = "touches" in e ? e.touches[0].clientY : e.clientY
 
     const container = containerRef.current
     if (!container) return
 
-    // Calculate boundaries to prevent dragging outside image bounds
     const maxX = (container.offsetWidth * (zoom - 1)) / (2 * zoom)
     const maxY = (container.offsetHeight * (zoom - 1)) / (2 * zoom)
 
     const newX = clientX - dragStart.x
     const newY = clientY - dragStart.y
 
-    // Constrain position within boundaries
     setPosition({
       x: Math.max(-maxX, Math.min(maxX, newX)),
       y: Math.max(-maxY, Math.min(maxY, newY)),
     })
   }
 
-  // Handle drag end
-  const handleDragEnd = () => {
-    setIsDragging(false)
-  }
+  const handleDragEnd = () => setIsDragging(false)
 
   // Handle touch events
   useEffect(() => {
@@ -147,15 +119,12 @@ export function ZoomableImage({
 
     const handleTouchMove = (e: TouchEvent) => {
       if (isDragging && zoom > 1) {
-        e.preventDefault() // Prevent page scrolling when dragging
+        e.preventDefault()
       }
     }
 
     container.addEventListener("touchmove", handleTouchMove, { passive: false })
-
-    return () => {
-      container.removeEventListener("touchmove", handleTouchMove)
-    }
+    return () => container.removeEventListener("touchmove", handleTouchMove)
   }, [isDragging, zoom])
 
   // Handle pinch to zoom
@@ -230,14 +199,12 @@ export function ZoomableImage({
         draggable={false}
       />
 
-      {/* Loading indicator */}
       {!imageLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#c9a77c] border-t-transparent"></div>
         </div>
       )}
 
-      {/* Zoom controls */}
       {showControls && zoom > 1 && (
         <div className="absolute bottom-4 right-4 flex space-x-2 bg-black/30 rounded-full p-1">
           <button
@@ -274,14 +241,12 @@ export function ZoomableImage({
         </div>
       )}
 
-      {/* Zoom indicator */}
       {zoom > 1 && (
         <div className="absolute top-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
           {Math.round(zoom * 100)}%
         </div>
       )}
 
-      {/* Zoom instructions (shown briefly) */}
       {zoom === 1 && imageLoaded && (
         <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
           <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm">Double-click to zoom</div>

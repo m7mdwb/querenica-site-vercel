@@ -77,6 +77,9 @@ export default function LangLayout({
             }),
           }}
         />
+
+        {/* Add Speed Insights using Script tag instead of component */}
+        <Script src="https://vercel.com/speed-insights/script.js" strategy="afterInteractive" data-sd-client="next" />
       </body>
     </html>
   )

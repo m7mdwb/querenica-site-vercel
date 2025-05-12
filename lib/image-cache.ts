@@ -8,13 +8,6 @@ export const preloadImages = (urls: string[]): void => {
   urls.forEach((url) => {
     const img = new Image()
     img.src = url
-    // Add to browser's memory cache
-    img.onload = () => {
-      console.log(`Preloaded: ${url}`)
-    }
-    img.onerror = () => {
-      console.error(`Failed to preload: ${url}`)
-    }
   })
 }
 
@@ -38,7 +31,6 @@ export const cacheImagesInIndexedDB = async (urls: string[]): Promise<void> => {
             // If not cached, fetch and cache
             const response = await fetch(url, { mode: "no-cors" })
             await cache.put(url, response)
-            console.log(`Cached in IndexedDB: ${url}`)
           }
         } catch (error) {
           console.error(`Failed to cache image in IndexedDB: ${url}`, error)
