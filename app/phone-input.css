@@ -16,7 +16,7 @@
   border-bottom-left-radius: 0.375rem; /* rounded-l-md */
   border-color: rgb(203 213 225); /* slate-300 */
   background-color: #f9fafb; /* gray-50, or match your input bg */
-  padding-left: 0.75rem;  /* px-3 */
+  padding-left: 0.75rem; /* px-3 */
   padding-right: 0.5rem; /* px-2, space for the arrow */
   /* Ensure it matches the height of your Shadcn Input */
   height: 2.5rem; /* h-10 */
@@ -31,9 +31,10 @@
 }
 
 /* --- NEW STYLES TO TARGET AND ENLARGE THE FLAG --- */
-.phone-input-container .react-international-phone-country-selector-flag-img { /* Adjust this class if different after inspection */
-  width: 1.5rem !important;   /* Approx 24px, Tailwind: w-6. Use !important if needed to override. */
-  height: auto !important;    /* Maintain aspect ratio */
+.phone-input-container .react-international-phone-country-selector-flag-img {
+  /* Adjust this class if different after inspection */
+  width: 1.5rem !important; /* Approx 24px, Tailwind: w-6. Use !important if needed to override. */
+  height: auto !important; /* Maintain aspect ratio */
   max-height: 1rem !important; /* Approx 16px, if flags are rectangular, adjust height to fit button */
   object-fit: contain;
 }
@@ -48,22 +49,22 @@
 */
 /* --- END OF NEW FLAG STYLES --- */
 
-
 .phone-input-container
   .react-international-phone-input-container--focused /* Check library's class for focus on container */
   .react-international-phone-country-selector-button,
-.phone-input-container .react-international-phone-country-selector-button:focus-visible, /* Added for button direct focus */
-.phone-input-container .react-international-phone-country-selector-button[data-state="open"] /* Style when dropdown is open */
- {
+.phone-input-container
+  .react-international-phone-country-selector-button:focus-visible /* Added for button direct focus */,
+.phone-input-container
+  .react-international-phone-country-selector-button[data-state="open"] /* Style when dropdown is open */ {
   border-color: #c9a77c !important; /* Your accent color */
   /* You might need to add ring styles here too to match Shadcn focus */
-  box-shadow: 0 0 0 2px transparent, 0 0 0 4px rgba(201, 167, 124, 0.25), inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: 0 0 0 2px transparent, 0 0 0 4px rgba(201, 167, 124, 0.25), inset 0 1px 1px rgba(0, 0, 0, 0.075);
   outline: none;
 }
 
 .phone-input-container .react-international-phone-input:focus {
   border-color: #c9a77c !important; /* Your accent color */
-  box-shadow: 0 0 0 2px transparent, 0 0 0 4px rgba(201, 167, 124, 0.25), inset 0 1px 1px rgba(0,0,0,.075); /* Mimic Shadcn focus */
+  box-shadow: 0 0 0 2px transparent, 0 0 0 4px rgba(201, 167, 124, 0.25), inset 0 1px 1px rgba(0, 0, 0, 0.075); /* Mimic Shadcn focus */
   outline: none;
   /* Ensure the left border is styled correctly when the main input is focused after the button */
   border-left-color: transparent !important; /* Assuming button provides the left visual border */
@@ -71,7 +72,7 @@
 
 /* Adjustments to ensure the input field doesn't have a left border when next to the button */
 .phone-input-container .react-international-phone-input {
-    border-left: none; /* Remove left border if button provides it */
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  border-left: none; /* Remove left border if button provides it */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

@@ -933,8 +933,7 @@ body.overflow-hidden {
   padding-right: 0.5rem;
 }
 
-@import "../styles/phone-input.css";
-/* Add this import at the end of your globals.css file */
+/* Import the phone-input.css file from the correct location */
 @import "./phone-input.css";
 
 /* Thank You Page Animations */
