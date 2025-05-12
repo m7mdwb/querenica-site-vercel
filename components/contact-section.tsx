@@ -11,11 +11,32 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Mail, Phone, MapPin } from "lucide-react"
-import { PhoneInput } from "react-international-phone"
-import "react-international-phone/style.css"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useLanguage } from "@/lib/i18n/context"
+
+// Country codes data
+const countryCodes = [
+  { code: "+90", name: "Turkey" },
+  { code: "+1", name: "United States" },
+  { code: "+44", name: "United Kingdom" },
+  { code: "+49", name: "Germany" },
+  { code: "+33", name: "France" },
+  { code: "+7", name: "Russia" },
+  { code: "+971", name: "United Arab Emirates" },
+  { code: "+966", name: "Saudi Arabia" },
+  { code: "+98", name: "Iran" },
+  { code: "+964", name: "Iraq" },
+  { code: "+380", name: "Ukraine" },
+  { code: "+30", name: "Greece" },
+  { code: "+357", name: "Cyprus" },
+  { code: "+972", name: "Israel" },
+  { code: "+20", name: "Egypt" },
+  { code: "+961", name: "Lebanon" },
+]
 
 export default function ContactSection() {
   const router = useRouter()
+  const { t } = useLanguage()
   const { ref, inView } = useInView({
     threshold: 0.3,
     triggerOnce: true,
@@ -24,7 +45,8 @@ export default function ContactSection() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
-    phone: "+90", // Default to Turkey
+    phoneCountryCode: "+90", // Default to Turkey
+    phoneNumber: "",
     message: "",
     requestCatalog: true,
   })
@@ -46,8 +68,8 @@ export default function ContactSection() {
     setFormState((prev) => ({ ...prev, [id]: value }))
   }
 
-  const handlePhoneChange = (phone: string) => {
-    setFormState((prev) => ({ ...prev, phone }))
+  const handleCountryCodeChange = (value: string) => {
+    setFormState((prev) => ({ ...prev, phoneCountryCode: value }))
   }
 
   const handleCheckboxChange = (checked: boolean | "indeterminate") => {
@@ -59,6 +81,12 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+
+    // Combine country code and phone number
+    const fullPhoneNumber = `${formState.phoneCountryCode}${formState.phoneNumber.startsWith("0") ? formState.phoneNumber.substring(1) : formState.phoneNumber}`
+
+    // TODO: Add your ACTUAL form submission logic here (e.g., API call)
+    // Include fullPhoneNumber in your submission data
 
     // If catalog was requested, store in localStorage for the thank you page
     if (formState.requestCatalog) {
@@ -80,7 +108,7 @@ export default function ContactSection() {
     <section ref={ref} id="contact" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:mb-16 md:text-5xl">
-          Inquire Within
+          {t("contact.title")}
         </h2>
 
         <div className="mx-auto max-w-4xl">
@@ -98,13 +126,13 @@ export default function ContactSection() {
               >
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-sm font-medium text-[#333]">
-                    Full Name
+                    {t("contact.form.fullName")}
                   </Label>
                   <Input
                     id="name"
                     value={formState.name}
                     onChange={handleInputChange}
-                    placeholder="Enter your name"
+                    placeholder={t("contact.form.fullNamePlaceholder")}
                     className="border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
                     required
                   />
@@ -112,52 +140,62 @@ export default function ContactSection() {
 
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium text-[#333]">
-                    Email Address
+                    {t("contact.form.email")}
                   </Label>
                   <Input
                     id="email"
                     type="email"
                     value={formState.email}
                     onChange={handleInputChange}
-                    placeholder="Enter your email"
+                    placeholder={t("contact.form.emailPlaceholder")}
                     className="border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-sm font-medium text-[#333]">
-                    Phone Number
+                  <Label htmlFor="phoneNumber" className="text-sm font-medium text-[#333]">
+                    {t("contact.form.phone")}
                   </Label>
-                  <PhoneInput
-                    defaultCountry="tr"
-                    value={formState.phone}
-                    onChange={handlePhoneChange}
-                    inputClassName="!w-full !h-10 !border-slate-300 !rounded-md !px-3 !py-2 !text-base focus:!ring-2 focus:!ring-[#c9a77c] focus:!ring-offset-1 focus:!border-[#c9a77c] focus:!outline-none"
-                    containerClassName="!font-sans"
-                    countrySelectorStyleProps={{
-                      buttonClassName:
-                        "!border-slate-300 !border-r-0 !rounded-r-none !h-10 !px-3 !py-2 focus:!ring-2 focus:!ring-[#c9a77c] focus:!ring-offset-1 focus:!border-[#c9a77c] focus:!outline-none",
-                      dropdownStyleProps: {
-                        className: "!bg-white !border !border-slate-200 !shadow-lg !rounded-md !mt-1 !z-50",
-                        listItemClassName: "!py-2 !px-3 !text-sm hover:!bg-slate-100 focus:!bg-slate-100",
-                        searchInputClassName:
-                          "!border-slate-300 !rounded-md !px-3 !py-2 !text-sm !mb-2 focus:!ring-2 focus:!ring-[#c9a77c] focus:!border-[#c9a77c] focus:!outline-none",
-                      },
-                    }}
-                    required
-                  />
+                  <div className="flex">
+                    <Select value={formState.phoneCountryCode} onValueChange={handleCountryCodeChange}>
+                      <SelectTrigger className="w-[110px] border-slate-300 border-r-0 rounded-r-none focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1">
+                        <SelectValue placeholder="+90" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px]">
+                        {countryCodes.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            {country.code} {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="phoneNumber"
+                      type="tel"
+                      value={formState.phoneNumber}
+                      onChange={handleInputChange}
+                      placeholder={t("contact.form.phonePlaceholder")}
+                      className="flex-1 border-slate-300 rounded-l-none focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formState.phoneCountryCode === "+90"
+                      ? t("contact.form.phoneExample")
+                      : t("contact.form.phoneExampleIntl")}
+                  </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="message" className="text-sm font-medium text-[#333]">
-                    Message
+                    {t("contact.form.message")}
                   </Label>
                   <Textarea
                     id="message"
                     value={formState.message}
                     onChange={handleInputChange}
-                    placeholder="Tell us about your interest in Querencia"
+                    placeholder={t("contact.form.messagePlaceholder")}
                     className="min-h-[120px] border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
                     required
                   />
@@ -174,7 +212,7 @@ export default function ContactSection() {
                     htmlFor="requestCatalog"
                     className="cursor-pointer text-sm font-medium leading-none text-[#333] peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    Send me the Querencia catalog
+                    {t("contact.form.requestCatalog")}
                   </label>
                 </div>
 
@@ -183,7 +221,7 @@ export default function ContactSection() {
                   className="w-full bg-[#2c4051] text-white py-3 text-base hover:bg-[#3a526a] transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-2"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Sending..." : "Request Information"}
+                  {isSubmitting ? t("contact.form.sending") : t("contact.form.submitButton")}
                 </Button>
               </form>
             </div>
@@ -196,7 +234,7 @@ export default function ContactSection() {
             >
               <div className="rounded-lg bg-white p-6 shadow-lg sm:p-8">
                 <h3 className="mb-5 text-xl font-semibold text-[#1a1a1a] sm:mb-6 sm:text-2xl">
-                  Sales and Customer Service
+                  {t("contact.contactDetails.title")}
                 </h3>
                 <div className="space-y-5 sm:space-y-6">
                   {/* Contact Details - Phone */}
@@ -205,7 +243,7 @@ export default function ContactSection() {
                       <Phone className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#666]">Call Us</p>
+                      <p className="text-sm text-[#666]">{t("contact.contactDetails.callUs")}</p>
                       <a
                         href="tel:+905488370015"
                         className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg"
@@ -220,7 +258,7 @@ export default function ContactSection() {
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#666]">Email Us</p>
+                      <p className="text-sm text-[#666]">{t("contact.contactDetails.emailUs")}</p>
                       <a
                         href="mailto:info@dovecgroup.com"
                         className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg break-all"
@@ -235,8 +273,10 @@ export default function ContactSection() {
                       <MapPin className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#666]">Visit Us</p>
-                      <p className="text-base font-medium text-[#2c4051] md:text-lg">Döveç Head Quarters</p>
+                      <p className="text-sm text-[#666]">{t("contact.contactDetails.visitUs")}</p>
+                      <p className="text-base font-medium text-[#2c4051] md:text-lg">
+                        {t("contact.contactDetails.headquarters")}
+                      </p>
                       <a
                         href="https://maps.app.goo.gl/Vq7xfep4b49RTescA"
                         target="_blank"
@@ -249,10 +289,8 @@ export default function ContactSection() {
                   </div>
                   {/* Availability Note */}
                   <div className="mt-6 rounded-md bg-slate-50 p-4">
-                    <p className="text-center text-xs text-[#555] md:text-sm">
-                      Our sales team is available 24/7.
-                      <br />
-                      Private viewings available by appointment.
+                    <p className="text-center text-xs text-[#555] md:text-sm whitespace-pre-line">
+                      {t("contact.contactDetails.availability")}
                     </p>
                   </div>
                 </div>

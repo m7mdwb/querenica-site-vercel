@@ -836,3 +836,99 @@ button {
     transform: scale(0.5);
   }
 }
+
+/* Prevent layout shifts during mobile menu transitions */
+body.menu-open {
+  /* Prevent any horizontal overflow during menu transitions */
+  overflow-x: hidden !important;
+  /* Ensure smooth transitions */
+  transition: padding-right 0.01s ease;
+}
+
+/* Ensure the mobile menu overlay doesn't cause horizontal overflow */
+.fixed.inset-0 {
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Prevent horizontal scrolling on all devices during transitions */
+html.overflow-hidden,
+body.overflow-hidden {
+  overflow-x: hidden !important;
+  overscroll-behavior: none;
+}
+
+/* Improve mobile menu transitions */
+@media (max-width: 767px) {
+  .fixed.inset-0 {
+    /* Ensure the overlay is properly contained */
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+}
+
+/* Mobile menu improvements */
+@media (max-width: 767px) {
+  /* Ensure the mobile menu content doesn't scroll behind the logo */
+  .mobile-menu-content {
+    padding-top: 5rem !important;
+    margin-top: 0 !important;
+  }
+
+  /* Improve scrolling behavior on mobile */
+  .mobile-menu-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 167, 124, 0.3) transparent;
+  }
+
+  .mobile-menu-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .mobile-menu-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mobile-menu-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(201, 167, 124, 0.3);
+    border-radius: 20px;
+  }
+}
+
+/* Ensure the fixed header in mobile menu has a solid background */
+.mobile-menu-header {
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rem;
+  z-index: 56;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Prevent any content from showing through the mobile menu header */
+.mobile-menu-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: -1;
+}
+
+/* Ensure the mobile menu has proper padding */
+.mobile-menu-content {
+  padding: 5rem 1.5rem 2rem 1.5rem;
+}
+
+/* Ensure the mobile menu items are properly spaced */
+.mobile-menu-content ul {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}

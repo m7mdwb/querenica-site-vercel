@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { APIProvider, Map } from "@vis.gl/react-google-maps"
+import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
 import useSWR from "swr"
 import { fetcher } from "@/lib/fetcher"
 
-// Location coordinates for Querencia in North Cyprus (Trikomo)
-const QUERENCIA_LOCATION = { lat: 35.26575033733829, lng: 33.90919369796316 }
+// Updated location coordinates for Querencia in North Cyprus
+const QUERENCIA_LOCATION = { lat: 35.265891430330605, lng: 33.909266898704175 }
 const FALLBACK_IMAGE =
   "https://hctq5la9sjbfp4dk.public.blob.vercel-storage.com/map-fallback-image-Yx9Ij9Yd0Yd0Yd0Yd0Yd0.jpg"
 
@@ -19,6 +19,7 @@ interface MapKeyResponse {
 
 export default function InteractiveMap() {
   const [isLoading, setIsLoading] = useState(true)
+  const [mapLoaded, setMapLoaded] = useState(false)
 
   // Use SWR for data fetching with caching
   const { data, error } = useSWR<MapKeyResponse>("/api/map-key", fetcher, {
@@ -81,34 +82,11 @@ export default function InteractiveMap() {
           mapId="querencia-map"
           className="h-full w-full"
           mapTypeId="satellite"
-          onLoad={async (map) => {
-            // Use AdvancedMarkerElement instead of deprecated Marker
-            // This needs to be done imperatively since @vis.gl/react-google-maps
-            // doesn't have a React component for AdvancedMarkerElement yet
-            if (typeof google === "undefined") {
-              await new Promise((resolve) => {
-                const script = document.createElement("script")
-                script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&callback=initMap`
-                script.defer = true
-                script.async = true
-                window.initMap = () => {
-                  resolve(true)
-                }
-                document.head.appendChild(script)
-              })
-            }
-
-            if (window.google) {
-              const { AdvancedMarkerElement } = google.maps.marker
-
-              new AdvancedMarkerElement({
-                map,
-                position: QUERENCIA_LOCATION,
-                title: "Querencia Hotel & Residence",
-              })
-            }
-          }}
-        />
+          onLoad={() => setMapLoaded(true)}
+        >
+          {/* Use the built-in Marker component from @vis.gl/react-google-maps */}
+          <Marker position={QUERENCIA_LOCATION} title="Querencia Hotel & Residence" />
+        </Map>
       </APIProvider>
     </div>
   )

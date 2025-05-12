@@ -11,8 +11,10 @@ import { X, ChevronLeft, ChevronRight, Download, Eye } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { ZoomableImage } from "./ui/zoomable-image"
+import { useLanguage } from "@/lib/i18n/context"
 
 export default function GallerySection() {
+  const { t } = useLanguage()
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -261,7 +263,7 @@ export default function GallerySection() {
     <section ref={ref} id="gallery" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:mb-16 md:text-5xl">
-          Explore Querencia
+          {t("gallery.title")}
         </h2>
 
         {/* Gallery Grid with optimized images */}
@@ -308,23 +310,20 @@ export default function GallerySection() {
         <div className="mb-12 flex justify-center">
           <Button onClick={() => openLightbox(0)} className="group bg-[#2c4051] text-white hover:bg-[#3a526a]">
             <Eye className="mr-2 h-4 w-4" />
-            View Gallery
+            {t("gallery.viewGallery")}
           </Button>
         </div>
 
         {/* Catalog Download CTA */}
         <div className="mt-8 flex flex-col items-center justify-center space-y-4">
           <h3 className="text-center text-2xl font-light tracking-wider text-[#1a1a1a] sm:text-3xl">
-            Want to See More?
+            {t("gallery.wantToSeeMore")}
           </h3>
-          <p className="max-w-2xl text-center text-[#666]">
-            Download our comprehensive catalog with detailed information about all residence types, amenities, and
-            features.
-          </p>
+          <p className="max-w-2xl text-center text-[#666]">{t("gallery.catalogDescription")}</p>
           <Button size="lg" className="bg-[#c9a77c] text-white hover:bg-[#b89669]" asChild>
             <Link href="#contact" onClick={scrollToContactForm}>
               <Download className="mr-2 h-4 w-4" />
-              Download Catalog
+              {t("gallery.downloadCatalog")}
             </Link>
           </Button>
         </div>
@@ -347,7 +346,7 @@ export default function GallerySection() {
                 setSelectedImage(null)
               }}
               className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 p-2 text-white shadow-md transition-all hover:bg-black/80 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
-              aria-label="Close gallery"
+              aria-label={t("common.close")}
             >
               <X className="h-6 w-6" />
             </button>
@@ -427,7 +426,7 @@ export default function GallerySection() {
                 {/* Image Counter */}
                 <div className="absolute bottom-24 left-0 right-0 text-center text-white md:bottom-28">
                   <span className="rounded-full bg-black/50 px-3 py-1 text-sm">
-                    {currentImageIndex + 1} / {galleryImages.length}
+                    {currentImageIndex + 1} {t("gallery.imageCounter")} {galleryImages.length}
                   </span>
                 </div>
 

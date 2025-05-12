@@ -4,35 +4,37 @@ import { useInView } from "react-intersection-observer"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import ProjectTimeline from "./project-timeline"
+import { useLanguage } from "@/lib/i18n/context"
 
 export default function AboutSection() {
+  const { t } = useLanguage()
   const { ref, inView } = useInView({
     threshold: 0.3,
     triggerOnce: true,
   })
 
-  // Project phases data
+  // Project phases data from translations
   const projectPhases = [
     {
       id: 1,
-      name: "Phase 1",
-      date: "April 2026",
-      description: "First Signature Homes",
-      blocks: "Block A",
+      name: t("about.timeline.phase1.name"),
+      date: t("about.timeline.phase1.date"),
+      description: t("about.timeline.phase1.description"),
+      blocks: t("about.timeline.phase1.blocks"),
     },
     {
       id: 2,
-      name: "Phase 2",
-      date: "December 2026",
-      description: "New Homes & Amenities",
-      blocks: "Block B",
+      name: t("about.timeline.phase2.name"),
+      date: t("about.timeline.phase2.date"),
+      description: t("about.timeline.phase2.description"),
+      blocks: t("about.timeline.phase2.blocks"),
     },
     {
       id: 3,
-      name: "Phase 3",
-      date: "June 2027",
-      description: "The Vision Perfected",
-      blocks: "Block C & D",
+      name: t("about.timeline.phase3.name"),
+      date: t("about.timeline.phase3.date"),
+      description: t("about.timeline.phase3.description"),
+      blocks: t("about.timeline.phase3.blocks"),
     },
   ]
 
@@ -40,7 +42,7 @@ export default function AboutSection() {
     <section id="about" ref={ref} className="py-5 md:py-10 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-16 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:text-5xl">
-          Discover Querencia
+          {t("about.title")}
         </h2>
 
         {/* Project Timeline */}
@@ -50,7 +52,11 @@ export default function AboutSection() {
             inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
           )}
         >
-          <ProjectTimeline city="TRIKOMO" startingPrice="£ 145,000" phases={projectPhases} />
+          <ProjectTimeline
+            city={t("about.timeline.city")}
+            startingPrice={t("about.timeline.startingPrice")}
+            phases={projectPhases}
+          />
         </div>
 
         {/* About Content */}
@@ -61,20 +67,9 @@ export default function AboutSection() {
               inView ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0",
             )}
           >
-            <p className="mb-6 text-lg leading-relaxed text-[#333]">
-              Querencia represents the pinnacle of luxury living, where architectural brilliance meets uncompromising
-              quality. Nestled in one of North Cyprus's most coveted locations, this exclusive development offers a
-              sanctuary for those who demand excellence.
-            </p>
-            <p className="mb-6 text-lg leading-relaxed text-[#333]">
-              Each residence is meticulously crafted with premium materials and finishes, creating living spaces that
-              are both timeless and contemporary. The attention to detail extends beyond the interiors to the carefully
-              curated amenities and services.
-            </p>
-            <p className="text-lg leading-relaxed text-[#333]">
-              Querencia isn't merely a residence—it's a statement of discernment and achievement, offering a lifestyle
-              that few will experience but many will aspire to.
-            </p>
+            <p className="mb-6 text-lg leading-relaxed text-[#333]">{t("about.paragraph1")}</p>
+            <p className="mb-6 text-lg leading-relaxed text-[#333]">{t("about.paragraph2")}</p>
+            <p className="text-lg leading-relaxed text-[#333]">{t("about.paragraph3")}</p>
 
             <div className="mt-6">
               <Button
@@ -99,7 +94,7 @@ export default function AboutSection() {
                 className="bg-[#c9a77c] text-white hover:bg-[#b89669] flex items-center"
               >
                 <Download className="mr-2 h-4 w-4" />
-                Download Catalog
+                {t("about.downloadCatalog")}
               </Button>
             </div>
           </div>

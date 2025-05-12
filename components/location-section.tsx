@@ -2,31 +2,31 @@
 
 import { useInView } from "react-intersection-observer"
 import { cn } from "@/lib/utils"
-import { Utensils, Plane, University, Shell } from "lucide-react"
+import { Utensils, Plane, School, Shell } from "lucide-react"
 import InteractiveMap from "./interactive-map"
+import { useLanguage } from "@/lib/i18n/context"
 
 export default function LocationSection() {
   const { ref, inView } = useInView({
     threshold: 0.3,
     triggerOnce: true,
   })
+  const { t } = useLanguage()
 
   const locationFeatures = [
-    { icon: Shell, text: "5 minutes to pristine Mediterranean beaches" },
-    { icon: Utensils, text: "On-Site restaurant" },
-    { icon: Plane, text: "30 minutes to international airport" },
-    { icon: University, text: "20 minutes to the biggest university" },
+    { icon: Shell, text: t("location.features.0") },
+    { icon: Utensils, text: t("location.features.1") },
+    { icon: Plane, text: t("location.features.2") },
+    { icon: School, text: t("location.features.3") },
   ]
 
   return (
     <section ref={ref} id="location" className="bg-[#2c4051] py-20 text-white md:py-32 scroll-mt-20">
       <div className="container mx-auto px-4">
         <h2 className="mb-4 text-center text-3xl font-light tracking-wider sm:text-4xl md:text-5xl">
-          An Enviable Location
+          {t("location.title")}
         </h2>
-        <p className="mx-auto mb-12 max-w-2xl text-center text-[#8a9bae] md:mb-16">
-          Querencia is strategically positioned in Trikomo, North Cyprus, offering both tranquility and convenience.
-        </p>
+        <p className="mx-auto mb-12 max-w-2xl text-center text-[#8a9bae] md:mb-16">{t("location.subtitle")}</p>
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
           <div
@@ -44,11 +44,7 @@ export default function LocationSection() {
               inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
             )}
           >
-            <p className="mb-8 text-lg leading-relaxed text-[#e0e0e0]">
-              Querencia is strategically positioned to offer both tranquility and convenience. The development's prime
-              location provides easy access to the region's most desirable destinations while maintaining an exclusive,
-              private atmosphere.
-            </p>
+            <p className="mb-8 text-lg leading-relaxed text-[#e0e0e0]">{t("location.description")}</p>
 
             <ul className="space-y-6">
               {locationFeatures.map((feature, index) => (

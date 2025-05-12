@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/context"
 
 // Primary image path with fallback
 const HERO_IMAGE =
@@ -10,6 +11,7 @@ const HERO_IMAGE =
 const FALLBACK_IMAGE = "/placeholder.svg?key=kncmj"
 
 export default function HeroSection() {
+  const { t } = useLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageSrc, setImageSrc] = useState(HERO_IMAGE)
@@ -75,7 +77,7 @@ export default function HeroSection() {
             isVisible ? "translate-y-0 opacity-100 text-white/90" : "translate-y-10 opacity-0 text-[#2c4051]",
           )}
         >
-          In Harmony With Luxury in North Cyprus
+          {t("hero.tagline")}
         </p>
 
         {/* Scroll indicator - Adjusted positioning for mobile */}
@@ -89,7 +91,7 @@ export default function HeroSection() {
           )}
           aria-label="Scroll down"
         >
-          <span className="mb-2 text-sm font-light">Discover</span>
+          <span className="mb-2 text-sm font-light">{t("hero.discover")}</span>
           <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6" />
         </button>
       </div>
