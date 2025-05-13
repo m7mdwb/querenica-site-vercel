@@ -202,7 +202,7 @@ export const tr = {
     imageCounter: "/", // For "1/12" format in Turkish
   },
   virtualTour: {
-    title: "Kendinizi İçine Dahil Edin",
+    title: "Sanal Turumuzu İnceleyin",
     description:
       "Sürükleyici sanal turumuzla Querencia'yı her açıdan deneyimleyin. Rezidansları, olanakları ve nefes kesen manzaraları cihazınızın konforundan keşfedin.",
     fallbackText: "Tarayıcınız iframe'leri desteklemiyor. Turu buradan görüntüleyebilirsiniz.",

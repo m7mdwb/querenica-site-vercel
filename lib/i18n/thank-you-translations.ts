@@ -101,7 +101,7 @@ export const thankYouTranslations = {
       steps: [
         "Ein Mitglied unseres engagierten Teams wird Ihre Daten prüfen.",
         "Erwarten Sie, innerhalb von 24-48 Stunden von uns zu hören.",
-        "Wenn Sie unseren Katalog angefordert haben, ist er unten für Sie bereit!",
+        "Wenn Sie unseren Katalog angefordert haben, ist es unten für Sie bereit!",
       ],
     },
     immediateAssistance: {
