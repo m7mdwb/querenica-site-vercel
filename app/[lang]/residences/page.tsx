@@ -1,5 +1,5 @@
 import { redirectToSection } from "@/lib/section-redirect"
-import { generateSectionMetadata } from "../metadata-config"
+import { generateSectionMetadata } from "../../metadata-config"
 
 export const metadata = generateSectionMetadata(
   "residences",
@@ -9,6 +9,5 @@ export const metadata = generateSectionMetadata(
 )
 
 export default function ResidencesPage() {
-  redirectToSection("residences")
-  return null
+  return redirectToSection("residences")
 }

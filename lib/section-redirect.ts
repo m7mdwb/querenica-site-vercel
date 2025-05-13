@@ -1,9 +1,26 @@
 import { redirect } from "next/navigation"
 
-export function redirectToSection(section: string) {
-  // This function will be used in server components to redirect to the main page with a section hash
-  redirect(`/#${section}`)
+/**
+ * Redirects to a section on the homepage
+ * @param sectionId The ID of the section to redirect to
+ * @returns null (for use in Server Components)
+ */
+export function redirectToSection(sectionId: string) {
+  // Get the current URL path
+  const path = typeof window !== "undefined" ? window.location.pathname : ""
+
+  // Extract language from path if it exists
+  const langMatch = path.match(/^\/([a-z]{2})(\/|$)/)
+  const lang = langMatch ? langMatch[1] : "en"
+
+  // Redirect to the homepage with the section hash
+  redirect(`/${lang}#${sectionId}`)
 }
 
-// Add the missing export that's being referenced elsewhere in the codebase
-export const sectionRedirect = redirectToSection
+/**
+ * Legacy function for backward compatibility
+ * @deprecated Use redirectToSection instead
+ */
+export function sectionRedirect(sectionId: string) {
+  return redirectToSection(sectionId)
+}

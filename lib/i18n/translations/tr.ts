@@ -120,47 +120,47 @@ export const tr = {
     downloadCatalog: "Kataloğu İndir",
     propertyTypes: {
       aStudio: {
-        displayName: "Modern Stüdyo Yaşamı",
+        displayName: "Stüdyo",
         description: "Modern olanaklara ve deniz manzarasına sahip verimli stüdyo daire.",
         feature: "Premium bitişlerle kompakt lüks.",
       },
       a1Plus1: {
-        displayName: "Huzurlu Rezidans",
+        displayName: "1+1 Daire",
         description: "Panoramik deniz manzaralı bir yatak odalı rezidans.",
         feature: "Akıllı ev entegrasyonlu tavandan tabana pencereler.",
       },
       a2Plus1: {
-        displayName: "Geniş Ev",
+        displayName: "2+1 Daire",
         description: "Özel balkonlu ve muhteşem deniz manzaralı iki yatak odalı rezidans.",
         feature: "Lüks bitişler ve yerden ısıtma.",
       },
       bcdStudio: {
-        displayName: "Modern Stüdyo Yaşamı",
+        displayName: "Stüdyo",
         description: "Lüks olanaklara ve deniz manzarasına sahip premium stüdyo daire.",
         feature: "Premium bitişlerle verimli lüks yaşam.",
       },
       bcd1Plus1: {
-        displayName: "Huzurlu Rezidans",
+        displayName: "1+1 Daire",
         description: "Premium olanaklara ve deniz manzarasına sahip bir yatak odalı rezidans.",
         feature: "Yüksek kaliteli bitişlerle zarif tasarım.",
       },
       bcd2Plus1: {
-        displayName: "Geniş Ev",
+        displayName: "2+1 Daire",
         description: "Geniş yerleşime ve deniz manzarasına sahip iki yatak odalı rezidans.",
         feature: "Premium olanaklarla aileler için mükemmel.",
       },
       bcd3Plus1: {
-        displayName: "Büyük Malikane",
+        displayName: "3+1 Daire",
         description: "Panoramik deniz manzaralı üç yatak odalı rezidans.",
         feature: "Aileler için bol alanlı lüks yaşam.",
       },
       bcdPenthouse: {
-        displayName: "Gökyüzü Manzaralı Çatı Katı",
+        displayName: "Penthouse",
         description: "En üst kat ayrıcalığı: nefes kesen 360° deniz manzarası, 2-5 yatak odası seçeneği sunar.",
         feature: "Sonsuzluk havuzlu özel çatı terası.",
       },
       bcdDuplex: {
-        displayName: "Özel Dubleks Rezidans",
+        displayName: "Dubleks",
         description: "Lüks dubleks rezidans: geniş deniz manzarası, premium özellikler ve 2-5 yatak odası seçeneği.",
         feature: "Özel teraslı iki katlı özel yaşam.",
       },

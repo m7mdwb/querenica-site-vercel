@@ -3,13 +3,13 @@
 import { useEffect } from "react"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, Home, ArrowLeft, Download, Phone, Mail, ExternalLink, MapPin } from "lucide-react"
+import { CheckCircle, Home, ArrowLeft, Download, Phone, Mail } from "lucide-react"
 import Link from "next/link"
 import { useLanguage } from "@/lib/i18n/context"
 import { thankYouTranslations } from "@/lib/i18n/thank-you-translations"
 import "./thank-you.css"
 
-export default function ThankYouPage() {
+export default function ThankYouClientPage() {
   const { language } = useLanguage()
   const t = thankYouTranslations[language as keyof typeof thankYouTranslations] || thankYouTranslations.en
 
@@ -28,6 +28,8 @@ export default function ThankYouPage() {
     window.open(catalogUrl, "_blank")
   }
 
+  // Commented out until other projects are ready
+  /*
   const projects = [
     {
       id: "la-casalia",
@@ -66,6 +68,7 @@ export default function ThankYouPage() {
       websiteUrl: "https://dovecgroup.com/projects/panorama",
     },
   ]
+  */
 
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-[#1a1a1a] relative overflow-hidden">
@@ -157,6 +160,7 @@ export default function ThankYouPage() {
           </div>
         </div>
 
+        {/* Commented out until other projects are ready
         <div className="mx-auto mt-16 max-w-5xl md:mt-20 fade-in-delay-3">
           <h2 className="mb-8 text-center text-2xl font-light tracking-wider text-[#1a1a1a] md:text-3xl">
             {t.otherVentures?.title}
@@ -214,6 +218,7 @@ export default function ThankYouPage() {
             </Button>
           </div>
         </div>
+        */}
 
         <div className="mx-auto mt-12 max-w-3xl text-center md:mt-20 fade-in-delay-3">
           <h2 className="mb-6 text-2xl font-light tracking-wider text-[#1a1a1a] md:text-3xl">

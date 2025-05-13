@@ -33,7 +33,7 @@ const SECONDARY_IMAGES = [
   "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-3-wEuk0Z9SqDRJNEfRPjUrLqN61y3Lue.webp",
 ]
 
-export default function ClientPage() {
+export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
   const { language, isLoaded } = useLanguage()
   const router = useRouter()

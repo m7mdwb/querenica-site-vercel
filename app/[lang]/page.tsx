@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import Home from "../page"
+import HomePage from "@/components/pages/home-page"
 import type { Metadata } from "next"
 import { siteConfig } from "../metadata-config"
 
@@ -28,7 +28,7 @@ const languageNames: Record<string, string> = {
   ru: "Русский",
 }
 
-// This is a Server Component that renders the Home component
+// This is a Server Component that renders the HomePage component
 export default function LangPage({ params }: { params: { lang: string } }) {
   // Validate language parameter
   const validLangs = ["en", "tr", "de", "ru"]
@@ -36,6 +36,6 @@ export default function LangPage({ params }: { params: { lang: string } }) {
     redirect("/")
   }
 
-  // Render the same Home component
-  return <Home />
+  // Render the shared HomePage component
+  return <HomePage />
 }

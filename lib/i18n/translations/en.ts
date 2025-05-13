@@ -120,47 +120,47 @@ export const en = {
     downloadCatalog: "Download Catalog",
     propertyTypes: {
       aStudio: {
-        displayName: "Modern Studio Living",
+        displayName: "Studio",
         description: "Efficient studio apartment with modern amenities and sea views.",
         feature: "Compact luxury with premium finishes.",
       },
       a1Plus1: {
-        displayName: "The Serene Residence",
+        displayName: "1+1 Unit",
         description: "One-bedroom residence with panoramic sea views.",
         feature: "Floor-to-ceiling windows with smart home integration.",
       },
       a2Plus1: {
-        displayName: "The Expansive Home",
+        displayName: "2+1 Unit",
         description: "Two-bedroom residence with private balcony and stunning sea views.",
         feature: "Luxury finishes and underfloor heating.",
       },
       bcdStudio: {
-        displayName: "Modern Studio Living",
+        displayName: "Studio",
         description: "Premium studio apartment with luxury amenities and sea views.",
         feature: "Efficient luxury living with premium finishes.",
       },
       bcd1Plus1: {
-        displayName: "The Serene Residence",
+        displayName: "1+1 Unit",
         description: "One-bedroom residence with premium amenities and sea views.",
         feature: "Elegant design with high-end finishes.",
       },
       bcd2Plus1: {
-        displayName: "The Expansive Home",
+        displayName: "2+1 Unit",
         description: "Two-bedroom residence with spacious layout and sea views.",
         feature: "Perfect for families with premium amenities.",
       },
       bcd3Plus1: {
-        displayName: "The Grand Estate",
+        displayName: "3+1 Unit",
         description: "Three-bedroom residence with panoramic sea views.",
         feature: "Luxury living with ample space for families.",
       },
       bcdPenthouse: {
-        displayName: "The Skyview Penthouse",
+        displayName: "Penthouse",
         description: "Top-floor exclusivity: breathtaking 360° sea vistas, offering flexible 2-5 bedrooms.",
         feature: "Private rooftop terrace with infinity plunge pool.",
       },
       bcdDuplex: {
-        displayName: "Exclusive Duplex Residence",
+        displayName: "Duplex",
         description: "Luxurious duplex residence: sweeping sea views, premium features & choice of 2-5 bedrooms.",
         feature: "Exclusive living across two floors with private terrace.",
       },

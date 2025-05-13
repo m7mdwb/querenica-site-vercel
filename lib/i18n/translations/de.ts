@@ -119,47 +119,47 @@ export const de = {
     downloadCatalog: "Katalog herunterladen",
     propertyTypes: {
       aStudio: {
-        displayName: "Modernes Studio-Wohnen",
+        displayName: "Studio",
         description: "Effizientes Studio-Apartment mit modernen Annehmlichkeiten und Meerblick.",
         feature: "Kompakter Luxus mit hochwertigen Oberflächen.",
       },
       a1Plus1: {
-        displayName: "Die Serene Residenz",
+        displayName: "1+1 Wohnung",
         description: "Einzimmerwohnung mit Panorama-Meerblick.",
         feature: "Bodentiefe Fenster mit Smart-Home-Integration.",
       },
       a2Plus1: {
-        displayName: "Das Großzügige Zuhause",
+        displayName: "2+1 Wohnung",
         description: "Zweizimmerwohnung mit privatem Balkon und atemberaubendem Meerblick.",
         feature: "Luxuriöse Oberflächen und Fußbodenheizung.",
       },
       bcdStudio: {
-        displayName: "Modernes Studio-Wohnen",
+        displayName: "Studio",
         description: "Premium-Studio-Apartment mit Luxus-Annehmlichkeiten und Meerblick.",
         feature: "Effizientes Luxusleben mit hochwertigen Oberflächen.",
       },
       bcd1Plus1: {
-        displayName: "Die Serene Residenz",
+        displayName: "1+1 Wohnung",
         description: "Einzimmerwohnung mit Premium-Annehmlichkeiten und Meerblick.",
         feature: "Elegantes Design mit hochwertigen Oberflächen.",
       },
       bcd2Plus1: {
-        displayName: "Das Großzügige Zuhause",
+        displayName: "2+1 Wohnung",
         description: "Zweizimmerwohnung mit großzügigem Grundriss und Meerblick.",
         feature: "Perfekt für Familien mit Premium-Annehmlichkeiten.",
       },
       bcd3Plus1: {
-        displayName: "Das Große Anwesen",
+        displayName: "3+1 Wohnung",
         description: "Dreizimmerwohnung mit Panorama-Meerblick.",
         feature: "Luxuriöses Wohnen mit viel Platz für Familien.",
       },
       bcdPenthouse: {
-        displayName: "Das Skyview Penthouse",
+        displayName: "Penthouse",
         description: "Exklusivität im Obergeschoss: atemberaubende 360° Meerblicke, mit flexiblen 2-5 Schlafzimmern.",
         feature: "Private Dachterrasse mit Infinity-Tauchbecken.",
       },
       bcdDuplex: {
-        displayName: "Exklusive Duplex-Residenz",
+        displayName: "Duplex",
         description:
           "Luxuriöse Duplex-Residenz: weitläufiger Meerblick, Premium-Ausstattung & Auswahl von 2-5 Schlafzimmern.",
         feature: "Exklusives Wohnen auf zwei Etagen mit privater Terrasse.",

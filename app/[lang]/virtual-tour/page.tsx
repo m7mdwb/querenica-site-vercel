@@ -1,5 +1,5 @@
 import { redirectToSection } from "@/lib/section-redirect"
-import { generateSectionMetadata } from "../metadata-config"
+import { generateSectionMetadata } from "../../metadata-config"
 
 export const metadata = generateSectionMetadata(
   "virtual-tour",
@@ -8,6 +8,5 @@ export const metadata = generateSectionMetadata(
 )
 
 export default function VirtualTourPage() {
-  redirectToSection("virtual-tour")
-  return null
+  return redirectToSection("virtual-tour")
 }
