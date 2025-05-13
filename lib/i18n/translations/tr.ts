@@ -33,7 +33,7 @@ export const tr = {
       cityLabel: "ŞEHİR",
       startingPriceLabel: "BAŞLANGIÇ FİYATI",
       projectTimelineLabel: "PROJE ZAMAN ÇİZELGESİ",
-      city: "TRIKOMO",
+      city: "ISKELE",
       startingPrice: "£ 145,000",
       phase1: {
         name: "1. Aşama",
