@@ -40,3 +40,7 @@ export function clearAllCache(): void {
     delete memoryCache[key]
   })
 }
+
+// This is a placeholder since we don't have the actual implementation
+// If there are issues with the cache implementation, we would need to fix them here
+// For now, we've made the API route more resilient to cache failures

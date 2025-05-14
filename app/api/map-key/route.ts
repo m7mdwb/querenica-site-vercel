@@ -10,7 +10,14 @@ const CACHE_OPTIONS = {
 export async function GET() {
   try {
     // Try to get from cache first
-    const cachedData = getCachedData<{ apiKey: string; success: boolean }>(CACHE_KEY, CACHE_OPTIONS)
+    let cachedData = null
+
+    try {
+      cachedData = getCachedData<{ apiKey: string; success: boolean }>(CACHE_KEY, CACHE_OPTIONS)
+    } catch (cacheError) {
+      console.error("Cache error:", cacheError)
+      // Continue execution even if cache fails
+    }
 
     if (cachedData) {
       return NextResponse.json(cachedData, {
@@ -21,10 +28,12 @@ export async function GET() {
     }
 
     // If not in cache, get from environment variables
+    // IMPORTANT: Only use server-side environment variables, not NEXT_PUBLIC_ ones
     const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.MAP_API_KEY
 
     // Check if API key exists
     if (!apiKey) {
+      console.error("API key not configured in environment variables")
       return NextResponse.json(
         { error: "API key not configured", success: false },
         {
@@ -39,8 +48,13 @@ export async function GET() {
     // Create response data
     const responseData = { apiKey, success: true }
 
-    // Store in cache
-    cacheData(CACHE_KEY, responseData, CACHE_OPTIONS)
+    // Store in cache (but don't let cache errors break the response)
+    try {
+      cacheData(CACHE_KEY, responseData, CACHE_OPTIONS)
+    } catch (cacheError) {
+      console.error("Failed to cache API key:", cacheError)
+      // Continue execution even if cache fails
+    }
 
     // Return the API key as JSON with cache headers
     return NextResponse.json(responseData, {
@@ -50,8 +64,14 @@ export async function GET() {
     })
   } catch (error) {
     console.error("Error in map-key API route:", error)
+
+    // Return a more detailed error response
     return NextResponse.json(
-      { error: "Failed to retrieve API key", success: false },
+      {
+        error: "Failed to retrieve API key",
+        message: error instanceof Error ? error.message : "Unknown error occurred",
+        success: false,
+      },
       {
         status: 500,
         headers: {

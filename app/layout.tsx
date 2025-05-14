@@ -18,6 +18,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Tag Manager - Script placed as high as possible in head */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-T63BLP4L');`,
+          }}
+        />
         {/* Organization structured data */}
         <Script
           id="organization-schema"
@@ -56,6 +66,16 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+        {/* Google Tag Manager (noscript) - Placed at the beginning of body */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-T63BLP4L"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
+
         <LanguageProvider>{children}</LanguageProvider>
 
         {/* Add Speed Insights using Script tag instead of component */}
