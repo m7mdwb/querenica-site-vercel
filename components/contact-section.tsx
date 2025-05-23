@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useTransition } from "react"
 import { useInView } from "react-intersection-observer"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -31,7 +31,9 @@ export default function ContactSection() {
     message: "",
     requestCatalog: true,
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Use useTransition for handling the server action
+  const [isPending, startTransition] = useTransition()
   const [formError, setFormError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -61,44 +63,44 @@ export default function ContactSection() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
     setFormError(null)
 
-    try {
-      // Add current language to the form data
-      const formData = {
-        ...formState,
-        language: currentLanguage,
-        submittedAt: new Date().toISOString(),
-        source: "website_contact_form",
-      }
-
-      // Submit form data to our server action
-      const result = await submitContactForm(formData)
-
-      if (result.success) {
-        // Handle successful submission
-        if (formState.requestCatalog && typeof window !== "undefined") {
-          window.localStorage.setItem("catalogRequestedOnSubmit", "true")
-        }
-
-        if (typeof window !== "undefined") {
-          sessionStorage.setItem("showThankYouPageLoading", "true")
-        }
-
-        router.push(`/${useLanguage().currentLanguage}/thank-you`)
-      } else {
-        // Handle error
-        setFormError(result.message || t("contact.form.errorGeneric"))
-        setIsSubmitting(false)
-      }
-    } catch (error) {
-      console.error("Form submission error:", error)
-      setFormError(t("contact.form.errorGeneric"))
-      setIsSubmitting(false)
+    // Prepare form data
+    const formData = {
+      ...formState,
+      language: currentLanguage,
+      submittedAt: new Date().toISOString(),
+      source: "website_contact_form",
     }
+
+    // Use startTransition to handle the server action
+    startTransition(async () => {
+      try {
+        // Submit form data to our server action
+        const result = await submitContactForm(formData)
+
+        if (result.success) {
+          // Handle successful submission
+          if (formState.requestCatalog && typeof window !== "undefined") {
+            window.localStorage.setItem("catalogRequestedOnSubmit", "true")
+          }
+
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("showThankYouPageLoading", "true")
+          }
+
+          router.push(`/${currentLanguage}/thank-you`)
+        } else {
+          // Handle error
+          setFormError(result.message || t("contact.form.errorGeneric"))
+        }
+      } catch (error) {
+        console.error("Form submission error:", error)
+        setFormError(t("contact.form.errorGeneric"))
+      }
+    })
   }
 
   return (
@@ -200,9 +202,9 @@ export default function ContactSection() {
                 <Button
                   type="submit"
                   className="w-full bg-[#2c4051] text-white py-3 text-base hover:bg-[#3a526a] transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-2"
-                  disabled={isSubmitting}
+                  disabled={isPending}
                 >
-                  {isSubmitting ? t("contact.form.sending") : t("contact.form.submitButton")}
+                  {isPending ? t("contact.form.sending") : t("contact.form.submitButton")}
                 </Button>
               </form>
             </div>

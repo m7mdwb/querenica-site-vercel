@@ -1,7 +1,5 @@
 "use server"
 
-import { cache } from "@/lib/cache"
-
 type ContactFormData = {
   name: string
   email: string
@@ -23,25 +21,6 @@ const SUBMISSION_CACHE_TTL = 60 * 60 // 1 hour in seconds
 
 export async function submitContactForm(formData: ContactFormData): Promise<FormResult> {
   try {
-    // Generate a cache key based on email and timestamp (within a 5-minute window)
-    const timeWindow = Math.floor(Date.now() / (1000 * 300)) // 5-minute window
-    const cacheKey = `form_submission:${formData.email}:${timeWindow}`
-
-    // Check if this submission is a duplicate within the time window
-    let cachedSubmission = null
-    try {
-      cachedSubmission = await cache.get(cacheKey)
-    } catch (cacheError) {
-      console.error("Cache retrieval error:", cacheError)
-      // Continue with submission even if cache check fails
-    }
-
-    if (cachedSubmission) {
-      console.log("Duplicate submission prevented:", formData.email)
-      // Return success to prevent spam but don't actually submit again
-      return { success: true }
-    }
-
     // Get your Zapier webhook URL from environment variables
     const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL
 
@@ -87,14 +66,6 @@ export async function submitContactForm(formData: ContactFormData): Promise<Form
         success: false,
         message: "Failed to submit form. Please try again later.",
       }
-    }
-
-    // Cache the successful submission to prevent duplicates
-    try {
-      await cache.set(cacheKey, { timestamp: Date.now() }, SUBMISSION_CACHE_TTL)
-    } catch (cacheError) {
-      console.error("Cache storage error:", cacheError)
-      // Continue even if caching fails
     }
 
     return { success: true }
