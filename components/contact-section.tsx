@@ -91,7 +91,25 @@ export default function ContactSection() {
             sessionStorage.setItem("showThankYouPageLoading", "true")
           }
 
-          router.push(`/${currentLanguage}/thank-you`)
+          // Replace this line:
+          // router.push(`/${currentLanguage}/thank-you`)
+
+          // With this more robust redirect logic:
+          const getCurrentLanguage = () => {
+            // Try to get language from the current URL path
+            if (typeof window !== "undefined") {
+              const pathSegments = window.location.pathname.split("/")
+              const langFromPath = pathSegments[1]
+              if (["en", "tr", "de", "ru"].includes(langFromPath)) {
+                return langFromPath
+              }
+            }
+            // Fallback to currentLanguage from context, then to 'en'
+            return currentLanguage || "en"
+          }
+
+          const language = getCurrentLanguage()
+          router.push(`/${language}/thank-you`)
         } else {
           // Handle error
           setFormError(result.message || t("contact.form.errorGeneric"))
