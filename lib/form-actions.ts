@@ -2,26 +2,16 @@ import { cache } from "@/lib/cache"
 
 const SUBMISSION_CACHE_TTL = 60 * 60 // 1 hour
 
-export async function submitContactForm(formData: FormData) {
-  "use server"
-
-  // Convert FormData to a plain object
-  const formValues: { [key: string]: string } = {}
-  for (const [key, value] of formData.entries()) {
-    if (typeof value === "string") {
-      formValues[key] = value
-    }
-  }
-
+export async function submitContactForm(formData: ContactFormData): Promise<FormResult> {
   try {
     // Generate a cache key based on email and timestamp (within a 5-minute window)
     const timeWindow = Math.floor(Date.now() / (1000 * 300)) // 5-minute window
-    const cacheKey = `form_submission:${formData.get("email")}:${timeWindow}`
+    const cacheKey = `form_submission:${formData.email}:${timeWindow}`
 
     // Check if this submission is a duplicate within the time window
     const cachedSubmission = await cache.get(cacheKey)
     if (cachedSubmission) {
-      console.log("Duplicate submission prevented:", formData.get("email"))
+      console.log("Duplicate submission prevented:", formData.email)
       // Return success to prevent spam but don't actually submit again
       return { success: true }
     }
@@ -42,12 +32,10 @@ export async function submitContactForm(formData: FormData) {
 
     // Prepare the data for Zapier
     const zapierData = {
-      ...formValues,
-      // Add any additional fields your CRM might need
+      ...formData,
       formName: "Querencia Contact Form",
       websiteUrl: "https://querencia.dovecgroup.com",
-      submittedAt: new Date().toISOString(),
-      requestCatalog: formData.get("requestCatalog") === "true",
+      submittedAt: formData.submittedAt || new Date().toISOString(),
     }
 
     console.log("Preparing to send data to Zapier:", {
@@ -82,7 +70,7 @@ export async function submitContactForm(formData: FormData) {
       // Log the response status and headers
       console.log(`Zapier response status: ${response.status} ${response.statusText}`)
 
-      const responseHeaders = {}
+      const responseHeaders: Record<string, string> = {}
       response.headers.forEach((value, name) => {
         responseHeaders[name] = value
       })
@@ -111,13 +99,13 @@ export async function submitContactForm(formData: FormData) {
           }
         }
       } catch (e) {
-        console.log("Could not read response body:", e.message)
+        console.log("Could not read response body:", (e as Error).message)
       }
     } catch (fetchError) {
       clearTimeout(timeoutId)
-      console.error("Fetch to Zapier failed:", fetchError.message)
+      console.error("Fetch to Zapier failed:", (fetchError as Error).message)
 
-      if (fetchError.name === "AbortError") {
+      if ((fetchError as Error).name === "AbortError") {
         return {
           success: false,
           message: "Request to form service timed out. Please try again later.",
@@ -126,7 +114,7 @@ export async function submitContactForm(formData: FormData) {
 
       return {
         success: false,
-        message: `Network error: ${fetchError.message}. Please try again later.`,
+        message: `Network error: ${(fetchError as Error).message}. Please try again later.`,
       }
     }
 
@@ -143,4 +131,19 @@ export async function submitContactForm(formData: FormData) {
       message: "An unexpected error occurred. Please try again later.",
     }
   }
+}
+
+export type ContactFormData = {
+  name: string
+  email: string
+  phone?: string
+  message: string
+  requestCatalog: boolean
+  language: string
+  submittedAt?: string
+}
+
+export type FormResult = {
+  success: boolean
+  message?: string
 }
