@@ -1,94 +1,85 @@
 "use client"
 
 import { useInView } from "react-intersection-observer"
-import { cn } from "@/lib/utils"
-import { useLanguage } from "@/lib/i18n/context"
-import {
-  Ship,
-  Waves,
-  Shield,
-  ParkingSquare,
-  Sparkles,
-  Utensils,
-  Trophy,
-  LandPlot,
-  Paintbrush,
-  Snowflake,
-  Thermometer,
-  Baby,
-  User,
-  Briefcase,
-  Bike,
-  Music,
-} from "lucide-react"
+import { cn } from "@/lib/utils" // Assuming you have this
+// Import chosen Lucide icons
+import { Waves, Leaf, Users, Baby, ParkingSquare, UserCheck, Store, Dumbbell } from "lucide-react"
+
+// Define your D-Point specific amenities for the icon grid (icons and names only)
+const dPointAmenitiesList = [
+  { name: "Resort-Style Pool", icon: Waves },
+  { name: "Landscaped Gardens", icon: Leaf },
+  { name: "Social Lounges", icon: Users },
+  { name: "Children's Play Area", icon: Baby },
+  { name: "Secure Parking", icon: ParkingSquare },
+  { name: "Concierge Services", icon: UserCheck },
+  { name: "Retail Conveniences", icon: Store },
+  { name: "Fitness Center", icon: Dumbbell }, // Example
+]
+
+// Select a subset for 2 rows (e.g., 8 items for 4 columns, or 6 for 3 columns)
+const displayedAmenities = dPointAmenitiesList.slice(0, 8)
+// Or for 2 rows with 3 items each = 6 items
+// const displayedAmenities = dPointAmenitiesList.slice(0, 6);
 
 export default function AmenitiesSection() {
-  const { t } = useLanguage()
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
   })
 
-  const amenities = [
-    { name: t("amenities.items.seaView"), icon: Ship },
-    { name: t("amenities.items.swimmingPools"), icon: Waves },
-    { name: t("amenities.items.security"), icon: Shield },
-    { name: t("amenities.items.parking"), icon: ParkingSquare },
-    { name: t("amenities.items.wellness"), icon: Sparkles },
-    { name: t("amenities.items.restaurants"), icon: Utensils },
-    { name: t("amenities.items.sportsCourts"), icon: Trophy },
-    { name: t("amenities.items.miniGolf"), icon: LandPlot },
-    { name: t("amenities.items.interiorFinishes"), icon: Paintbrush },
-    { name: t("amenities.items.cooling"), icon: Snowflake },
-    { name: t("amenities.items.heating"), icon: Thermometer },
-    { name: t("amenities.items.kidsClub"), icon: Baby },
-    { name: t("amenities.items.concierge"), icon: User },
-    { name: t("amenities.items.businessCenter"), icon: Briefcase },
-    { name: t("amenities.items.paths"), icon: Bike },
-    { name: t("amenities.items.entertainment"), icon: Music },
-  ]
+  const gridColsClass = displayedAmenities.length <= 6 ? "md:grid-cols-3" : "md:grid-cols-4"
 
   return (
-    <section id="amenities" className="py-20 md:py-32 bg-gradient-to-b from-[#2c4051] to-[#1e2c38] scroll-mt-20">
-      <div className="container mx-auto px-4">
-        <h2 className="text-center text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-12 md:mb-16">
-          {t("amenities.title")}
-        </h2>
+    <section id="amenities" className="py-20 md:py-28 bg-[#F8F9FA] scroll-mt-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 md:mb-20">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#31325b] mb-4">
+            Unparalleled Amenities
+          </h2>
+          <div className="w-20 h-1 bg-[#c6a55d] mx-auto mb-6"></div>
+          <p className="max-w-2xl mx-auto text-lg text-gray-700">
+            Enhancing your everyday with features designed for comfort, convenience, and delight.
+          </p>
+        </div>
 
-        <div
-          ref={ref}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 md:gap-x-8 md:gap-y-12"
-        >
-          {amenities.map((amenity, index) => {
-            // Calculate delay based on column position
-            const columnPosition = index % 4
-            const delayClass =
-              columnPosition === 0
-                ? ""
-                : columnPosition === 1
-                  ? "delay-200"
-                  : columnPosition === 2
-                    ? "delay-400"
-                    : "delay-600"
+        <div ref={ref} className={`grid grid-cols-2 ${gridColsClass} gap-x-6 gap-y-10 md:gap-x-8 md:gap-y-12`}>
+          {displayedAmenities.map((amenity, index) => {
+            const columnCount = displayedAmenities.length <= 6 ? 3 : 4
+            const columnPosition = index % columnCount
+            let delayClass = ""
+            if (inView) {
+              delayClass =
+                columnPosition === 0
+                  ? "delay-0"
+                  : columnPosition === 1
+                    ? "delay-150"
+                    : columnPosition === 2
+                      ? "delay-300"
+                      : "delay-[450ms]"
+            }
 
             return (
               <div
                 key={amenity.name}
                 className={cn(
-                  "flex flex-col items-center text-center transition-all duration-700 h-full",
-                  inView ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-8 opacity-0",
+                  "flex flex-col items-center text-center transition-all duration-700 ease-out h-full group",
+                  inView ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-10 opacity-0",
                 )}
               >
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-4 
-                  bg-[rgba(255,255,255,0.08)] backdrop-blur-md 
-                  border border-[rgba(255,255,255,0.1)] 
-                  shadow-[0_4px_12px_rgba(0,0,0,0.1)] 
-                  hover:bg-[rgba(255,255,255,0.12)] transition-all duration-300 flex-shrink-0"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mb-5
+                             bg-white border border-gray-200 
+                             shadow-lg group-hover:shadow-xl 
+                             group-hover:border-[#c6a55d] transition-all duration-300 flex-shrink-0
+                             transform group-hover:scale-105"
                 >
-                  <amenity.icon className="w-7 h-7 text-[#c9a77c]" aria-hidden="true" />
+                  <amenity.icon
+                    className="w-9 h-9 sm:w-11 sm:h-11 text-[#31325b] group-hover:text-[#c6a55d] transition-colors duration-300 z-10"
+                    aria-hidden="true"
+                  />
                 </div>
-                <h3 className="text-lg font-light text-white tracking-wide line-clamp-2 min-h-[3.5rem] flex items-center justify-center">
+                <h3 className="text-md sm:text-lg font-medium text-[#31325b] tracking-wide line-clamp-2 min-h-[2.8em] sm:min-h-[3em] flex items-center justify-center">
                   {amenity.name}
                 </h3>
               </div>

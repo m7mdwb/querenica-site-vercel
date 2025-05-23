@@ -10,14 +10,15 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Mail, PhoneIcon, MapPin } from "lucide-react" // Renamed Phone to PhoneIcon
+import { Mail, PhoneIcon, MapPin } from "lucide-react"
 import { PhoneInput } from "react-international-phone"
 import "react-international-phone/style.css"
-import { useLanguage } from "@/lib/i18n/context" // Your i18n hook
+import { useLanguage } from "@/lib/i18n/context"
+import { submitContactForm } from "@/lib/form-actions"
 
 export default function ContactSection() {
   const router = useRouter()
-  const { t } = useLanguage() // Initialize your translation function
+  const { t, currentLanguage } = useLanguage()
   const { ref, inView } = useInView({
     threshold: 0.3,
     triggerOnce: true,
@@ -26,11 +27,12 @@ export default function ContactSection() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
-    phone: "+90", // Default to Turkey, or use a translated default from your i18n if needed
+    phone: "+90",
     message: "",
     requestCatalog: true,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -45,10 +47,12 @@ export default function ContactSection() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
     setFormState((prev) => ({ ...prev, [id]: value }))
+    setFormError(null) // Clear any previous errors when user makes changes
   }
 
   const handlePhoneChange = (phone: string) => {
     setFormState((prev) => ({ ...prev, phone }))
+    setFormError(null)
   }
 
   const handleCheckboxChange = (checked: boolean | "indeterminate") => {
@@ -60,27 +64,41 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setFormError(null)
 
-    // Phone number is already in formState.phone (E.164 format from PhoneInput)
-    console.log("Submitting Data:", {
-      name: formState.name,
-      email: formState.email,
-      phone: formState.phone,
-      message: formState.message,
-      requestCatalog: formState.requestCatalog,
-    })
-
-    // TODO: Add your ACTUAL form submission logic here (e.g., API call)
-
-    if (formState.requestCatalog) {
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("catalogRequestedOnSubmit", "true")
+    try {
+      // Add current language to the form data
+      const formData = {
+        ...formState,
+        language: currentLanguage,
+        submittedAt: new Date().toISOString(),
+        source: "website_contact_form",
       }
+
+      // Submit form data to our server action
+      const result = await submitContactForm(formData)
+
+      if (result.success) {
+        // Handle successful submission
+        if (formState.requestCatalog && typeof window !== "undefined") {
+          window.localStorage.setItem("catalogRequestedOnSubmit", "true")
+        }
+
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("showThankYouPageLoading", "true")
+        }
+
+        router.push(`/${useLanguage().currentLanguage}/thank-you`)
+      } else {
+        // Handle error
+        setFormError(result.message || t("contact.form.errorGeneric"))
+        setIsSubmitting(false)
+      }
+    } catch (error) {
+      console.error("Form submission error:", error)
+      setFormError(t("contact.form.errorGeneric"))
+      setIsSubmitting(false)
     }
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("showThankYouPageLoading", "true")
-    }
-    router.push("/thank-you")
   }
 
   return (
@@ -176,6 +194,8 @@ export default function ContactSection() {
                     {t("contact.form.requestCatalog")}
                   </label>
                 </div>
+
+                {formError && <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">{formError}</div>}
 
                 <Button
                   type="submit"
