@@ -31,14 +31,14 @@ export default function AmenitiesSection() {
   const gridColsClass = displayedAmenities.length <= 6 ? "md:grid-cols-3" : "md:grid-cols-4"
 
   return (
-    <section id="amenities" className="py-20 md:py-28 bg-[#F8F9FA] scroll-mt-16">
+    <section id="amenities" className="py-20 md:py-28 bg-[#2c4051] scroll-mt-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 md:mb-20">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#31325b] mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
             Unparalleled Amenities
           </h2>
           <div className="w-20 h-1 bg-[#c6a55d] mx-auto mb-6"></div>
-          <p className="max-w-2xl mx-auto text-lg text-gray-700">
+          <p className="max-w-2xl mx-auto text-lg text-[#e0e0e0]">
             Enhancing your everyday with features designed for comfort, convenience, and delight.
           </p>
         </div>
@@ -75,11 +75,11 @@ export default function AmenitiesSection() {
                              transform group-hover:scale-105"
                 >
                   <amenity.icon
-                    className="w-9 h-9 sm:w-11 sm:h-11 text-[#31325b] group-hover:text-[#c6a55d] transition-colors duration-300 z-10"
+                    className="w-9 h-9 sm:w-11 sm:h-11 text-white group-hover:text-[#c6a55d] transition-colors duration-300 z-10"
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="text-md sm:text-lg font-medium text-[#31325b] tracking-wide line-clamp-2 min-h-[2.8em] sm:min-h-[3em] flex items-center justify-center">
+                <h3 className="text-md sm:text-lg font-medium text-white tracking-wide line-clamp-2 min-h-[2.8em] sm:min-h-[3em] flex items-center justify-center">
                   {amenity.name}
                 </h3>
               </div>
