@@ -2,7 +2,7 @@
 
 import { useInView } from "react-intersection-observer"
 import { cn } from "@/lib/utils"
-import { useLanguage } from "@/lib/i18n/context" // Import useLanguage hook
+import { useLanguage } from "@/lib/i18n/context"
 // Import chosen Lucide icons
 import { Waves, Leaf, Users, Baby, ParkingSquare, UserCheck, Store, Dumbbell } from "lucide-react"
 
@@ -22,7 +22,7 @@ const dPointAmenitiesList = [
 const displayedAmenities = dPointAmenitiesList.slice(0, 8)
 
 export default function AmenitiesSection() {
-  const { t } = useLanguage() // Use the translation hook
+  const { t } = useLanguage()
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -59,7 +59,7 @@ export default function AmenitiesSection() {
 
             return (
               <div
-                key={amenity.nameKey} // Use nameKey for unique key
+                key={amenity.nameKey}
                 className={cn(
                   "flex flex-col items-center text-center transition-all duration-700 ease-out h-full group",
                   inView ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-10 opacity-0",
@@ -67,13 +67,13 @@ export default function AmenitiesSection() {
               >
                 <div
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mb-5
-                             bg-white border border-gray-200 
-                             shadow-lg group-hover:shadow-xl 
+                             bg-white border border-gray-200
+                             shadow-lg group-hover:shadow-xl
                              group-hover:border-[#c6a55d] transition-all duration-300 flex-shrink-0
                              transform group-hover:scale-105"
                 >
                   <amenity.icon
-                    className="w-9 h-9 sm:w-11 sm:h-11 text-white group-hover:text-[#c6a55d] transition-colors duration-300 z-10"
+                    className="w-9 h-9 sm:w-11 sm:h-11 text-[#31325b] group-hover:text-[#c6a55d] transition-colors duration-300 z-10"
                     aria-hidden="true"
                   />
                 </div>
