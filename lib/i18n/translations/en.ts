@@ -69,8 +69,17 @@ export const en = {
     },
   },
   amenities: {
-    title: "Amenities & Features",
+    title: "Unparalleled Amenities",
+    description: "Enhancing your everyday with features designed for comfort, convenience, and delight.",
     items: {
+      resortPool: "Resort-Style Pool",
+      landscapedGardens: "Landscaped Gardens",
+      socialLounges: "Social Lounges",
+      childrenPlayArea: "Children's Play Area",
+      secureParking: "Secure Parking",
+      conciergeServices: "Concierge Services",
+      retailConveniences: "Retail Conveniences",
+      fitnessCenter: "Fitness Center",
       seaView: "Sea View",
       swimmingPools: "Swimming Pools & Aquapark",
       security: "24-Hour Security & Cameras",

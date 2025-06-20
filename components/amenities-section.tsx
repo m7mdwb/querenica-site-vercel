@@ -1,28 +1,28 @@
 "use client"
 
 import { useInView } from "react-intersection-observer"
-import { cn } from "@/lib/utils" // Assuming you have this
+import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/context" // Import useLanguage hook
 // Import chosen Lucide icons
 import { Waves, Leaf, Users, Baby, ParkingSquare, UserCheck, Store, Dumbbell } from "lucide-react"
 
-// Define your D-Point specific amenities for the icon grid (icons and names only)
+// Define your D-Point specific amenities for the icon grid using translation keys
 const dPointAmenitiesList = [
-  { name: "Resort-Style Pool", icon: Waves },
-  { name: "Landscaped Gardens", icon: Leaf },
-  { name: "Social Lounges", icon: Users },
-  { name: "Children's Play Area", icon: Baby },
-  { name: "Secure Parking", icon: ParkingSquare },
-  { name: "Concierge Services", icon: UserCheck },
-  { name: "Retail Conveniences", icon: Store },
-  { name: "Fitness Center", icon: Dumbbell }, // Example
+  { nameKey: "amenities.items.resortPool", icon: Waves },
+  { nameKey: "amenities.items.landscapedGardens", icon: Leaf },
+  { nameKey: "amenities.items.socialLounges", icon: Users },
+  { nameKey: "amenities.items.childrenPlayArea", icon: Baby },
+  { nameKey: "amenities.items.secureParking", icon: ParkingSquare },
+  { nameKey: "amenities.items.conciergeServices", icon: UserCheck },
+  { nameKey: "amenities.items.retailConveniences", icon: Store },
+  { nameKey: "amenities.items.fitnessCenter", icon: Dumbbell },
 ]
 
 // Select a subset for 2 rows (e.g., 8 items for 4 columns, or 6 for 3 columns)
 const displayedAmenities = dPointAmenitiesList.slice(0, 8)
-// Or for 2 rows with 3 items each = 6 items
-// const displayedAmenities = dPointAmenitiesList.slice(0, 6);
 
 export default function AmenitiesSection() {
+  const { t } = useLanguage() // Use the translation hook
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -35,12 +35,10 @@ export default function AmenitiesSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 md:mb-20">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4">
-            Unparalleled Amenities
+            {t("amenities.title")}
           </h2>
           <div className="w-20 h-1 bg-[#c6a55d] mx-auto mb-6"></div>
-          <p className="max-w-2xl mx-auto text-lg text-[#e0e0e0]">
-            Enhancing your everyday with features designed for comfort, convenience, and delight.
-          </p>
+          <p className="max-w-2xl mx-auto text-lg text-[#e0e0e0]">{t("amenities.description")}</p>
         </div>
 
         <div ref={ref} className={`grid grid-cols-2 ${gridColsClass} gap-x-6 gap-y-10 md:gap-x-8 md:gap-y-12`}>
@@ -61,7 +59,7 @@ export default function AmenitiesSection() {
 
             return (
               <div
-                key={amenity.name}
+                key={amenity.nameKey} // Use nameKey for unique key
                 className={cn(
                   "flex flex-col items-center text-center transition-all duration-700 ease-out h-full group",
                   inView ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-10 opacity-0",
@@ -80,7 +78,7 @@ export default function AmenitiesSection() {
                   />
                 </div>
                 <h3 className="text-md sm:text-lg font-medium text-white tracking-wide line-clamp-2 min-h-[2.8em] sm:min-h-[3em] flex items-center justify-center">
-                  {amenity.name}
+                  {t(amenity.nameKey)}
                 </h3>
               </div>
             )

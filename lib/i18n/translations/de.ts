@@ -68,8 +68,18 @@ export const de = {
     },
   },
   amenities: {
-    title: "Annehmlichkeiten & Ausstattung",
+    title: "Unvergleichliche Annehmlichkeiten",
+    description:
+      "Verbessern Sie Ihren Alltag mit Funktionen, die auf Komfort, Bequemlichkeit und Freude ausgelegt sind.",
     items: {
+      resortPool: "Resort-Stil Pool",
+      landscapedGardens: "Landschaftsgärten",
+      socialLounges: "Soziale Lounges",
+      childrenPlayArea: "Kinderspielbereich",
+      secureParking: "Sicheres Parken",
+      conciergeServices: "Concierge-Dienste",
+      retailConveniences: "Einzelhandelsannehmlichkeiten",
+      fitnessCenter: "Fitnesscenter",
       seaView: "Meerblick",
       swimmingPools: "Schwimmbäder & Wasserpark",
       security: "24-Stunden-Sicherheit & Kameras",

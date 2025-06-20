@@ -68,8 +68,17 @@ export const ru = {
     },
   },
   amenities: {
-    title: "Удобства и Особенности",
+    title: "Непревзойденные удобства",
+    description: "Улучшите свой повседневный быт с функциями, разработанными для комфорта, удобства и удовольствия.",
     items: {
+      resortPool: "Бассейн в курортном стиле",
+      landscapedGardens: "Ландшафтные сады",
+      socialLounges: "Социальные зоны",
+      childrenPlayArea: "Детская игровая площадка",
+      secureParking: "Охраняемая парковка",
+      conciergeServices: "Услуги консьержа",
+      retailConveniences: "Торговые удобства",
+      fitnessCenter: "Фитнес-центр",
       seaView: "Вид на море",
       swimmingPools: "Бассейны и аквапарк",
       security: "Круглосуточная охрана и камеры",

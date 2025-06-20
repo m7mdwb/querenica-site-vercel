@@ -69,8 +69,17 @@ export const tr = {
     },
   },
   amenities: {
-    title: "Olanaklar ve Özellikler",
+    title: "Eşsiz Olanaklar",
+    description: "Konfor, rahatlık ve keyif için tasarlanmış özelliklerle günlük yaşamınızı zenginleştirin.",
     items: {
+      resortPool: "Tatil Köyü Tarzı Havuz",
+      landscapedGardens: "Peyzajlı Bahçeler",
+      socialLounges: "Sosyal Alanlar",
+      childrenPlayArea: "Çocuk Oyun Alanı",
+      secureParking: "Güvenli Otopark",
+      conciergeServices: "Konsiyerj Hizmetleri",
+      retailConveniences: "Perakende Kolaylıkları",
+      fitnessCenter: "Fitness Merkezi",
       seaView: "Deniz Manzarası",
       swimmingPools: "Yüzme Havuzları ve Aquapark",
       security: "24 Saat Güvenlik ve Kameralar",
