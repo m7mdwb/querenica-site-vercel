@@ -5,6 +5,8 @@ import { Inter } from "next/font/google"
 import { LanguageProvider } from "@/lib/i18n/context"
 import { defaultMetadata } from "./metadata-config"
 import Script from "next/script"
+import { Analytics } from "@vercel/analytics/next" // Import Analytics from @vercel/analytics/next
+import { Suspense } from "react"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -75,11 +77,12 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-
-        <LanguageProvider>{children}</LanguageProvider>
-
+        <Suspense fallback={null}>
+          <LanguageProvider>{children}</LanguageProvider>
+        </Suspense>
         {/* Add Speed Insights using Script tag instead of component */}
         <Script src="https://vercel.com/speed-insights/script.js" strategy="afterInteractive" data-sd-client="next" />
+        <Analytics /> {/* Add the Analytics component here */}
       </body>
     </html>
   )

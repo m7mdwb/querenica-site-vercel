@@ -1,5 +1,17 @@
 import { NextResponse } from "next/server"
 
+// Handles ordinary browser visits (GET) so the route is recognised as an API handler,
+// not as a React page component.
+export async function GET() {
+  return NextResponse.json(
+    {
+      message: "Zapier test-webhook endpoint. Send a POST request to trigger the test payload.",
+      ok: true,
+    },
+    { status: 200 },
+  )
+}
+
 export async function POST() {
   try {
     const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL

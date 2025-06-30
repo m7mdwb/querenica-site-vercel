@@ -13,9 +13,12 @@ export async function GET() {
     let cachedData = null
 
     try {
-      cachedData = getCachedData<{ apiKey: string; success: boolean }>(CACHE_KEY, CACHE_OPTIONS)
+      // Await the getCachedData call to ensure the promise is resolved/rejected
+      cachedData = await getCachedData<{ apiKey: string; success: boolean }>(CACHE_KEY, CACHE_OPTIONS)
     } catch (cacheError) {
-      console.error("Cache error:", cacheError)
+      // Ensure cacheError is an Error object for consistent logging
+      const err = cacheError instanceof Error ? cacheError : new Error(String(cacheError))
+      console.error("Cache error during retrieval:", err.message)
       // Continue execution even if cache fails
     }
 
@@ -50,9 +53,12 @@ export async function GET() {
 
     // Store in cache (but don't let cache errors break the response)
     try {
-      cacheData(CACHE_KEY, responseData, CACHE_OPTIONS)
+      // Await the cacheData call to ensure the promise is resolved/rejected
+      await cacheData(CACHE_KEY, responseData, CACHE_OPTIONS)
     } catch (cacheError) {
-      console.error("Failed to cache API key:", cacheError)
+      // Ensure cacheError is an Error object for consistent logging
+      const err = cacheError instanceof Error ? cacheError : new Error(String(cacheError))
+      console.error("Failed to cache API key:", err.message)
       // Continue execution even if cache fails
     }
 
@@ -63,13 +69,15 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error("Error in map-key API route:", error)
+    // Catch any unexpected errors and ensure they are logged as Error objects
+    const err = error instanceof Error ? error : new Error(String(error))
+    console.error("Error in map-key API route:", err)
 
     // Return a more detailed error response
     return NextResponse.json(
       {
         error: "Failed to retrieve API key",
-        message: error instanceof Error ? error.message : "Unknown error occurred",
+        message: err.message,
         success: false,
       },
       {
