@@ -43,7 +43,7 @@ const projects: Project[] = [{
     name: "La Isla",
     url: "https://laislacyprus.com",
     status: "coming-soon",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://lf8lg0kk2ixnghtm.public.blob.vercel-storage.com/LaIslaVillas-Dzlxg7000ZFB7q1aXyMuHNfsWxiNPs.webp",
 },
 ]
 export function ProjectCarousel() {
