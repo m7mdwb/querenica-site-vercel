@@ -28,11 +28,18 @@ export const thankYouTranslations = {
       visitDovecGroup: "Visit Dovec Group",
     },
     discoverMore: {
-      title: "Discover More of Querencia",
+      title: "View Our Other Projects",
       exploreResidences: "Explore Residences",
       exploreGallery: "Explore Gallery",
       virtualTour: "360° Virtual Tour",
       backToHome: "Back to Home",
+    },
+    thankYou: {
+      viewOtherProjects: "View Other Projects",
+    },
+    projects: {
+      live: "Live",
+      comingSoon: "Coming Soon",
     },
     projectDescriptions: {
       laCasalia: "Luxury villas with private pools and panoramic sea views.",
@@ -74,11 +81,18 @@ export const thankYouTranslations = {
       visitDovecGroup: "Dovec Group'u Ziyaret Et",
     },
     discoverMore: {
-      title: "Querencia Hakkında Daha Fazlasını Keşfedin",
+      title: "Diğer Projelerimizi Görüntüle",
       exploreResidences: "Rezidansları Keşfet",
       exploreGallery: "Galeriyi Keşfet",
       virtualTour: "360° Sanal Tur",
       backToHome: "Ana Sayfaya Dön",
+    },
+    thankYou: {
+      viewOtherProjects: "Diğer Projeleri Görüntüle",
+    },
+    projects: {
+      live: "Canlı",
+      comingSoon: "Çok Yakında",
     },
     projectDescriptions: {
       laCasalia: "Özel havuzlu ve panoramik deniz manzaralı lüks villalar.",
@@ -120,11 +134,18 @@ export const thankYouTranslations = {
       visitDovecGroup: "Besuchen Sie Dovec Group",
     },
     discoverMore: {
-      title: "Entdecken Sie mehr von Querencia",
+      title: "Unsere anderen Projekte ansehen",
       exploreResidences: "Residenzen erkunden",
       exploreGallery: "Galerie erkunden",
       virtualTour: "360° Virtuelle Tour",
       backToHome: "Zurück zur Startseite",
+    },
+    thankYou: {
+      viewOtherProjects: "Andere Projekte ansehen",
+    },
+    projects: {
+      live: "Live",
+      comingSoon: "Kommt Bald",
     },
     projectDescriptions: {
       laCasalia: "Luxusvillen mit privaten Pools und Panorama-Meerblick.",
@@ -166,11 +187,18 @@ export const thankYouTranslations = {
       visitDovecGroup: "Посетить Dovec Group",
     },
     discoverMore: {
-      title: "Узнайте Больше о Querencia",
+      viewOtherProjects: "Посмотреть другие наши проекты",
       exploreResidences: "Изучить Резиденции",
       exploreGallery: "Изучить Галерею",
       virtualTour: "360° Виртуальный Тур",
       backToHome: "Вернуться на Главную",
+    },
+    thankYou:{
+      viewOtherProjects: "Посмотреть другие наши проекты",
+    },
+    projects: {
+      live: "В работе",
+      comingSoon: "Скоро в продаже",
     },
     projectDescriptions: {
       laCasalia: "Роскошные виллы с частными бассейнами и панорамным видом на море.",

@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useLanguage } from "@/lib/i18n/context"
 import { thankYouTranslations } from "@/lib/i18n/thank-you-translations"
 import "./thank-you.css"
-
+import { ProjectCarousel } from "@/components/project-carousel"
 export default function ThankYouClientPage() {
   const { language } = useLanguage()
   const t = thankYouTranslations[language as keyof typeof thankYouTranslations] || thankYouTranslations.en
@@ -220,43 +220,8 @@ export default function ThankYouClientPage() {
         </div>
         */}
 
-        <div className="mx-auto mt-12 max-w-3xl text-center md:mt-20 fade-in-delay-3">
-          <h2 className="mb-6 text-2xl font-light tracking-wider text-[#1a1a1a] md:text-3xl">
-            {t.discoverMore?.title}
-          </h2>
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-            <Button
-              asChild
-              variant="outline"
-              className="border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors px-6 py-2.5 text-sm md:text-base"
-            >
-              <Link href={`/${language}#residences`}>{t.discoverMore?.exploreResidences}</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors px-6 py-2.5 text-sm md:text-base"
-            >
-              <Link href={`/${language}#gallery`}>{t.discoverMore?.exploreGallery}</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors px-6 py-2.5 text-sm md:text-base"
-            >
-              <Link href={`/${language}#virtual-tour`}>{t.discoverMore?.virtualTour}</Link>
-            </Button>
-            <Button
-              asChild
-              className="bg-[#2c4051] text-white shadow hover:bg-[#3a526a] transition-colors px-6 py-2.5 text-sm md:text-base"
-            >
-              <Link href={`/${language}`}>
-                <Home className="mr-2 h-4 w-4" />
-                {t.discoverMore?.backToHome}
-              </Link>
-            </Button>
-          </div>
-        </div>
+        
+        <ProjectCarousel />
       </div>
       <Footer />
     </main>
