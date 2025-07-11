@@ -36,8 +36,8 @@ const projects: Project[] = [{
 {
     name: "Natalux",
     url: "https://nataluxcyprus.com",
-    status: "coming-soon",
-    image: "/placeholder.svg?height=200&width=300",
+    status: "live",
+    image: "https://agzuppqphn2cpw1y.public.blob.vercel-storage.com/NataluxHeroSection.webp",
 },
 {
     name: "La Isla",
