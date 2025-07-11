@@ -17,7 +17,7 @@ const projects: Project[] = [{
     url: "https://courtyardplatinum.com",
     status: "live",
     image:
-        "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Hero%20Section/querencia-hero-section-PSfKHchhEjIfGpDkXDJBFkE6boXMqE.webp",
+        "https://emjxtcn2pcqsrsav.public.blob.vercel-storage.com/gallery/Day/Day-4-Kp2LSkFt7AYPZCz6yEqMc8cvt1CImQ.webp",
 },
 {
     name: "D-Point",
