@@ -34,8 +34,8 @@ const projects: Project[] = [{
         "https://emjxtcn2pcqsrsav.public.blob.vercel-storage.com/gallery/Day/Day-1-0tIqJBr6LJCTzy3AlzPA5dwfYsoFEH.webp",
 },
 {
-    name: "Natalux",
-    url: "https://nataluxcyprus.com",
+    name: "Natulux",
+    url: "https://natuluxcyprus.com",
     status: "live",
     image: "https://agzuppqphn2cpw1y.public.blob.vercel-storage.com/NataluxHeroSection.webp",
 },
