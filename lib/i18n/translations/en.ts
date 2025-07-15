@@ -247,4 +247,17 @@ export const en = {
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
   },
+    mobileApp: {
+    stayConnected: "STAY CONNECTED",
+    dovecLife: "Döveç Life",
+    mobileApp: "Mobile App",
+    description:
+      "Experience seamless property management and exclusive resident services with the Döveç Life mobile app. Stay connected to your luxury lifestyle wherever you are.",
+    feature1: "Property management and maintenance requests",
+    feature2: "Exclusive services and concierge",
+    feature3: "Community updates and event notifications",
+    feature4: "Secure access to building amenities",
+    downloadOn: "Download on the",
+    getItOn: "Get it on",
+  },
 }

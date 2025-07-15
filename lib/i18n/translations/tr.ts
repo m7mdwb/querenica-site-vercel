@@ -247,4 +247,17 @@ export const tr = {
     privacyPolicy: "Gizlilik Politikası",
     termsOfService: "Kullanım Koşulları",
   },
+    mobileApp: {
+    stayConnected: "BAĞLANTI KURUN",
+    dovecLife: "Döveç Life",
+    mobileApp: "Mobil Uygulama",
+    description:
+      "Döveç Life mobil uygulaması ile sorunsuz mülk yönetimi ve özel sakin hizmetlerini deneyimleyin. Nerede olursanız olun lüks yaşam tarzınızla bağlantıda kalın.",
+    feature1: "Mülk yönetimi ve bakım talepleri",
+    feature2: "Özel hizmetleri ve konsiyerj",
+    feature3: "Topluluk güncellemeleri ve etkinlik bildirimleri",
+    feature4: "Bina olanaklarına güvenli erişim",
+    downloadOn: "İndir",
+    getItOn: "Edinin",
+  },
 }

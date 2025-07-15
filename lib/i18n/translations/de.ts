@@ -249,4 +249,17 @@ export const de = {
     privacyPolicy: "Datenschutzrichtlinie",
     termsOfService: "Nutzungsbedingungen",
   },
+    mobileApp: {
+    stayConnected: "VERBUNDEN BLEIBEN",
+    dovecLife: "Döveç Life",
+    mobileApp: "Mobile App",
+    description:
+      "Erleben Sie nahtlose Immobilienverwaltung und exklusive Bewohnerservices mit der Döveç Life Mobile App. Bleiben Sie überall mit Ihrem luxuriösen Lebensstil verbunden.",
+    feature1: "Immobilienverwaltung und Wartungsanfragen",
+    feature2: "Exklusive Bewohnerservices und Concierge",
+    feature3: "Community-Updates und Veranstaltungsbenachrichtigungen",
+    feature4: "Sicherer Zugang zu Gebäudeeinrichtungen",
+    downloadOn: "Laden Sie herunter auf",
+    getItOn: "Holen Sie es sich auf",
+  },
 }
