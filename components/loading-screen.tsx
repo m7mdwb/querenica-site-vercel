@@ -17,28 +17,27 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
   const { language } = useLanguage()
 
   useEffect(() => {
-    const randomLoadingTime = Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000
-    const effectiveLoadingTime = minimumLoadingTime || randomLoadingTime
+    const loadingTime = 3000 // Fixed 3 seconds
 
     let progressInterval: NodeJS.Timeout
-    let minimumTimeTimeout: NodeJS.Timeout
+    let loadingTimeout: NodeJS.Timeout
     let messageInterval: NodeJS.Timeout
-    let forceCompleteTimeout: NodeJS.Timeout
 
     // Get translated messages based on current language
-    const messages = loadingTranslations[language]?.messages || loadingTranslations.en.messages
+    const messages =
+      loadingTranslations[language as keyof typeof loadingTranslations]?.messages || loadingTranslations.en.messages
 
     let messageIndex = 0
     setLoadingMessage(messages[0]) // Set initial message
     messageInterval = setInterval(() => {
       messageIndex = (messageIndex + 1) % messages.length
       setLoadingMessage(messages[messageIndex])
-    }, 2000)
+    }, 1000) // Change message every second
 
-    const progressDuration = effectiveLoadingTime * 0.95 // Let progress complete a bit closer to the end
+    // Progress animation
     const steps = 100
     const increment = 100 / steps
-    const intervalTime = Math.max(20, progressDuration / steps) // Ensure interval isn't too fast
+    const intervalTime = loadingTime / steps
 
     progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -50,117 +49,88 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
       })
     }, intervalTime)
 
-    minimumTimeTimeout = setTimeout(() => {
-      setProgress(100) // Ensure progress is 100%
-      setIsFadingOut(true)
-      if (onLoadingComplete) {
-        setTimeout(onLoadingComplete, 1000) // Match fadeout duration (1000ms)
-      }
-    }, effectiveLoadingTime)
-
-    // Force complete after 10 seconds as a fallback
-    forceCompleteTimeout = setTimeout(() => {
+    // Complete loading after 3 seconds
+    loadingTimeout = setTimeout(() => {
       setProgress(100)
       setIsFadingOut(true)
       if (onLoadingComplete) {
-        setTimeout(onLoadingComplete, 1000)
+        setTimeout(onLoadingComplete, 800) // Fade out duration
       }
-    }, 10000)
+    }, loadingTime)
 
     return () => {
       clearInterval(progressInterval)
-      clearTimeout(minimumTimeTimeout)
+      clearTimeout(loadingTimeout)
       clearInterval(messageInterval)
-      clearTimeout(forceCompleteTimeout)
     }
-  }, [minimumLoadingTime, onLoadingComplete, language])
+  }, [onLoadingComplete, language])
 
   return (
     <div
       className={cn(
-        "loading-screen fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#2c4051] transition-opacity duration-1000 ease-in-out overflow-hidden",
+        "loading-screen fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out overflow-hidden",
+        "bg-primary backdrop-blur-xl",
         isFadingOut ? "pointer-events-none opacity-0" : "opacity-100",
       )}
     >
-      {/* Three floating hollow circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Large circle */}
-        <div
-          className="absolute rounded-full border border-[#c9a77c]/20"
-          style={{
-            width: "600px",
-            height: "600px",
-            left: "calc(50% - 300px)",
-            top: "calc(50% - 350px)",
-            animation: "floatCircle1 15s infinite ease-in-out",
-          }}
-        />
+      {/* Full Screen Glassmorphism Background */}
+      <div className="absolute inset-0 backdrop-blur-2xl bg-gradient-to-br from-white/5 via-white/3 to-white/5 overflow-hidden pointer-events-none">
+        {/* Subtle matte color blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute w-96 h-96 bg-blue-500/5 blur-3xl animate-[constellationMove_20s_ease-in-out_infinite] top-[10%] left-[10%]" />
+          <div className="absolute w-80 h-80 bg-amber-500/4 blur-3xl animate-[constellationMove_25s_ease-in-out_infinite_reverse] top-[20%] right-[15%]" />
+          <div className="absolute w-72 h-72 bg-purple-500/3 blur-3xl animate-[constellationMove_18s_ease-in-out_infinite_1s] bottom-[20%] left-[20%]" />
+          <div className="absolute w-88 h-88 bg-cyan-500/3 blur-3xl animate-[constellationMove_22s_ease-in-out_infinite_2s] bottom-[15%] right-[20%]" />
+          <div className="absolute w-64 h-64 bg-indigo-500/4 blur-3xl animate-[constellationMove_16s_ease-in-out_infinite_1.5s] top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2" />
+        </div>
 
-        {/* Medium circle */}
-        <div
-          className="absolute rounded-full border border-[#c9a77c]/15"
-          style={{
-            width: "500px",
-            height: "500px",
-            left: "calc(50% - 350px)",
-            top: "calc(50% - 150px)",
-            animation: "floatCircle2 18s infinite ease-in-out",
-          }}
-        />
-
-        {/* Small-medium circle */}
-        <div
-          className="absolute rounded-full border border-[#c9a77c]/25"
-          style={{
-            width: "450px",
-            height: "450px",
-            left: "calc(50% + 50px)",
-            top: "calc(50% - 100px)",
-            animation: "floatCircle3 12s infinite ease-in-out",
-          }}
-        />
+        {/* Glassmorphism overlay pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/2 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_70%)]" />
       </div>
 
-      {/* Logo container with increased size */}
-      <div className="relative flex flex-col items-center justify-center w-full max-w-[85vw] sm:max-w-sm md:max-w-md">
-        {/* Logo with increased size */}
-        <div className="mb-10 sm:mb-12 w-[55%] min-w-[180px] max-w-[280px] relative mx-auto">
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/light_logo_querencia-c1yecf3hxKXUjzc7t4YQdMAwsbiC97.png"
-            alt="Querencia"
-            className="w-full h-auto transition-all duration-700 animate-fadeIn"
-            onError={(e) => {
-              // Fallback if image fails to load
-              e.currentTarget.style.opacity = "0"
-            }}
-          />
+      {/* Main Content */}
+      <div className="relative flex flex-col items-center justify-center w-full max-w-2xl px-8 animate-[fadeInUp_1s_ease-out] z-10">
+        {/* Logo Section */}
+        <div className="mb-24 w-72 max-w-[90vw] relative mx-auto">
+          <div className="relative">
+            {/* Matte backdrop */}
+            <div className="absolute inset-0 bg-amber-500/6 blur-2xl animate-[elegantPulse_6s_ease-in-out_infinite]" />
+
+            <img
+              src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/querencia_logo_full.png"
+              alt="Querencia"
+              className="w-full h-auto relative z-10 transition-all duration-1000 opacity-90"
+              onError={(e) => {
+                e.currentTarget.style.opacity = "0"
+              }}
+            />
+          </div>
         </div>
 
-        {/* Elegant progress bar */}
-        <div
-          className="w-32 sm:w-40 h-[2px] mb-5 sm:mb-6 overflow-hidden relative mx-auto animate-fadeIn"
-          style={{ animationDelay: "0.4s" }}
-        >
-          <div className="absolute inset-0 bg-[#c9a77c]/20 rounded-full"></div> {/* Bar track */}
-          <div
-            className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#c9a77c]/70 via-[#c9a77c] to-[#c9a77c]/70 rounded-full"
-            style={{
-              width: `${progress}%`,
-              backgroundSize: "200% 100%", // For shimmer
-              animation: progress < 100 ? "shimmer 2.5s infinite linear" : "none", // Stop shimmer at 100%
-              transition: "width 0.2s linear", // Smooth progress update
-            }}
-          ></div>
+        {/* Progress Section */}
+        <div className="w-full max-w-xs mb-20 mx-auto">
+          {/* Simple Progress Bar */}
+          <div className="relative mb-6">
+            <div className="h-0.5 bg-white/10 backdrop-blur-sm rounded-full overflow-hidden">
+              <div
+                className="h-full bg-amber-500/80 rounded-full transition-all duration-700 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Progress Text */}
+          <div className="text-center mb-8">
+            <div className="text-white/90 text-lg font-light tracking-[0.2em] mb-2">{Math.round(progress)}%</div>
+            <div className="w-8 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto" />
+          </div>
         </div>
 
-        {/* Loading text with changing messages */}
-        <div
-          className="flex flex-col items-center w-full text-center animate-fadeIn"
-          style={{ animationDelay: "0.6s" }}
-        >
+        {/* Loading Message */}
+        <div className="text-center">
           <p
-            className="text-[#c9a77c] text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] uppercase font-light min-h-[1.5em] sm:min-h-[1.75em] text-center w-full"
-            style={{ animation: "textFade 2s infinite ease-in-out" }}
+            className="text-white/80 text-sm font-light tracking-[0.3em] uppercase transition-all duration-1000 min-h-[1.2em]"
             key={loadingMessage}
           >
             {loadingMessage}

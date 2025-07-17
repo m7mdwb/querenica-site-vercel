@@ -1,294 +1,391 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect, useTransition } from "react"
-import { useInView } from "react-intersection-observer"
-import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Mail, PhoneIcon, MapPin } from "lucide-react"
-import { PhoneInput } from "react-international-phone"
-import "react-international-phone/style.css"
+import { useState, useEffect } from "react"
+import { MapPin, Phone, Mail, Send, Star } from "lucide-react"
 import { useLanguage } from "@/lib/i18n/context"
-import { submitContactForm } from "@/lib/form-actions"
+import { countryCodes } from "@/lib/country-codes"
 
 export default function ContactSection() {
-  const router = useRouter()
-  const { t, currentLanguage } = useLanguage()
-  const { ref, inView } = useInView({
-    threshold: 0.3,
-    triggerOnce: true,
-  })
-
-  const [formState, setFormState] = useState({
+  const { t, language } = useLanguage()
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "+90",
     message: "",
-    requestCatalog: true,
   })
-
-  // Use useTransition for handling the server action
-  const [isPending, startTransition] = useTransition()
-  const [formError, setFormError] = useState<string | null>(null)
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [selectedCountryCode, setSelectedCountryCode] = useState("+90")
+  const [formStatus, setFormStatus] = useState<null | "success" | "error" | "loading">(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const requestedFromOtherSection = window.localStorage.getItem("requestCatalogFromResidences") === "true"
-      if (requestedFromOtherSection) {
-        setFormState((prev) => ({ ...prev, requestCatalog: true }))
-        window.localStorage.removeItem("requestCatalogFromResidences")
-      }
-    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 },
+    )
+
+    const section = document.getElementById("contact")
+    if (section) observer.observe(section)
+
+    return () => observer.disconnect()
   }, [])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target
-    setFormState((prev) => ({ ...prev, [id]: value }))
-    setFormError(null) // Clear any previous errors when user makes changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handlePhoneChange = (phone: string) => {
-    setFormState((prev) => ({ ...prev, phone }))
-    setFormError(null)
-  }
+  const handlePhoneChange = (e) => {
+    const input = e.target.value
+    setPhoneNumber(input)
 
-  const handleCheckboxChange = (checked: boolean | "indeterminate") => {
-    if (typeof checked === "boolean") {
-      setFormState((prev) => ({ ...prev, requestCatalog: checked }))
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setFormError(null)
-
-    // Prepare form data
-    const formData = {
-      ...formState,
-      language: currentLanguage,
-      submittedAt: new Date().toISOString(),
-      source: "website_contact_form",
-    }
-
-    // Use startTransition to handle the server action
-    startTransition(async () => {
-      try {
-        // Submit form data to our server action
-        const result = await submitContactForm(formData)
-
-        if (result.success) {
-          // Handle successful submission
-          if (formState.requestCatalog && typeof window !== "undefined") {
-            window.localStorage.setItem("catalogRequestedOnSubmit", "true")
-          }
-
-          if (typeof window !== "undefined") {
-            sessionStorage.setItem("showThankYouPageLoading", "true")
-          }
-
-          // Replace this line:
-          // router.push(`/${currentLanguage}/thank-you`)
-
-          // With this more robust redirect logic:
-          const getCurrentLanguage = () => {
-            // Try to get language from the current URL path
-            if (typeof window !== "undefined") {
-              const pathSegments = window.location.pathname.split("/")
-              const langFromPath = pathSegments[1]
-              if (["en", "tr", "de", "ru"].includes(langFromPath)) {
-                return langFromPath
-              }
-            }
-            // Fallback to currentLanguage from context, then to 'en'
-            return currentLanguage || "en"
-          }
-
-          const language = getCurrentLanguage()
-          router.push(`/${language}/thank-you`)
-        } else {
-          // Handle error
-          setFormError(result.message || t("contact.form.errorGeneric"))
-        }
-      } catch (error) {
-        console.error("Form submission error:", error)
-        setFormError(t("contact.form.errorGeneric"))
+    // Auto-detect country code
+    let detectedCode = selectedCountryCode
+    for (const country of countryCodes) {
+      if (input.startsWith(country.code)) {
+        detectedCode = country.code
+        break
       }
-    })
+    }
+    setSelectedCountryCode(detectedCode)
+  }
+
+  const handleCountryCodeChange = (e) => {
+    setSelectedCountryCode(e.target.value)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setFormStatus("loading")
+
+    try {
+      const fullPhoneNumber = `${selectedCountryCode}${phoneNumber}`
+
+      const submissionData = {
+        name: formData.name,
+        email: formData.email,
+        phone: fullPhoneNumber,
+        message: formData.message,
+        language: language,
+        submittedAt: new Date().toISOString(),
+      }
+
+      // Send to webhook
+      const response = await fetch("/api/webhook/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submissionData),
+      })
+
+      if (response.ok) {
+        setFormStatus("success")
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+        })
+        setPhoneNumber("")
+        setSelectedCountryCode("+90")
+
+        // Redirect to thank you page after a short delay
+        setTimeout(() => {
+          window.location.href = "/thank-you"
+        }, 1500)
+      } else {
+        throw new Error("Failed to submit form")
+      }
+    } catch (error) {
+      console.error("Form submission error:", error)
+      setFormStatus("error")
+
+      // Reset error status after 5 seconds
+      setTimeout(() => {
+        setFormStatus(null)
+      }, 5000)
+    }
   }
 
   return (
-    <section ref={ref} id="contact" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
-      <div className="container mx-auto px-4">
-        <h2 className="mb-12 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:mb-16 md:text-5xl">
-          {t("contact.title")}
-        </h2>
+    <section id="contact" className="py-32 bg-gradient-to-b from-alabaster to-parchment relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <span className="text-secondary text-sm uppercase tracking-[0.4em] font-light mb-4 block">
+            {t("contact.connectWithUs")}
+          </span>
+          <h2 className="text-5xl md:text-6xl font-light text-primary mb-6 tracking-tight">
+            {t("contact.inquireWithin").split(" ")[0]}
+            <span className="block font-serif italic text-secondary" style={{ fontFamily: "var(--font-bodoni)" }}>
+              {t("contact.inquireWithin").split(" ").slice(1).join(" ")}
+            </span>
+          </h2>
+          <p className="text-lg text-slate-grey max-w-3xl mx-auto leading-relaxed">{t("contact.introText")}</p>
+          <div className="w-24 h-0.5 bg-gradient-to-r from-secondary to-accent mx-auto mt-8"></div>
+        </div>
 
-        <div className="mx-auto max-w-4xl">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
             <div
-              className={cn(
-                "transition-all duration-1000",
-                inView ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0",
-              )}
+              className={`bg-parchment/95 backdrop-blur-sm border border-secondary/20 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:shadow-secondary/20 transition-all duration-700 ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+              }`}
+              style={{ transitionDelay: "200ms" }}
             >
-              <form
-                id="contact-form"
-                className="space-y-5 rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 md:p-8 md:space-y-6 hover:shadow-xl"
-                onSubmit={handleSubmit}
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium text-[#333]">
-                    {t("contact.form.fullName")}
-                  </Label>
-                  <Input
+              {formStatus === "success" && (
+                <div className="mb-6 p-4 bg-green-50 text-green-700 rounded-xl border border-green-200">
+                  <div className="flex items-center">
+                    <Star className="w-5 h-5 mr-2 text-green-600" />
+                    {t("contact.successMessage")}
+                  </div>
+                </div>
+              )}
+
+              {formStatus === "error" && (
+                <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl border border-red-200">
+                  {t("contact.errorMessage")}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-primary mb-2">
+                    {t("contact.fullName")} <span className="text-secondary">*</span>
+                  </label>
+                  <input
+                    type="text"
                     id="name"
-                    value={formState.name}
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
-                    placeholder={t("contact.form.fullNamePlaceholder")}
-                    className="border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
                     required
+                    disabled={formStatus === "loading"}
+                    placeholder={t("contact.fullName")}
+                    className="w-full px-4 py-3 border border-secondary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium text-[#333]">
-                    {t("contact.form.email")}
-                  </Label>
-                  <Input
-                    id="email"
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-primary mb-2">
+                    {t("contact.emailAddress")} <span className="text-secondary">*</span>
+                  </label>
+                  <input
                     type="email"
-                    value={formState.email}
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    placeholder={t("contact.form.emailPlaceholder")}
-                    className="border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
                     required
+                    disabled={formStatus === "loading"}
+                    placeholder={t("contact.emailAddress")}
+                    className="w-full px-4 py-3 border border-secondary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-sm font-medium text-[#333]">
-                    {t("contact.form.phone")}
-                  </Label>
-                  <div className="phone-input-container">
-                    <PhoneInput
-                      defaultCountry="tr"
-                      value={formState.phone}
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-primary mb-2">
+                    {t("contact.phoneNumber")} <span className="text-secondary">*</span>
+                  </label>
+                  <div className="flex">
+                    <select
+                      id="country-code"
+                      name="countryCode"
+                      value={selectedCountryCode}
+                      onChange={handleCountryCodeChange}
+                      disabled={formStatus === "loading"}
+                      className="flex-shrink-0 px-4 py-3 border border-r-0 border-secondary/30 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm text-primary disabled:opacity-50"
+                    >
+                      {countryCodes.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.flag} {country.code}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={phoneNumber}
                       onChange={handlePhoneChange}
-                      inputClassName="!w-full !h-10 !border-slate-300 !rounded-md !px-3 !py-2 !text-base focus:!ring-2 focus:!ring-[#c9a77c] focus:!ring-offset-1 focus:!border-[#c9a77c] focus:!outline-none"
                       required
+                      disabled={formStatus === "loading"}
+                      placeholder={t("contact.phoneNumber")}
+                      className="flex-1 px-4 py-3 border border-secondary/30 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1.5">{t("contact.form.phoneExampleIntl")}</p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-sm font-medium text-[#333]">
-                    {t("contact.form.message")}
-                  </Label>
-                  <Textarea
-                    id="message"
-                    value={formState.message}
-                    onChange={handleInputChange}
-                    placeholder={t("contact.form.messagePlaceholder")}
-                    className="min-h-[120px] border-slate-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
-                    required
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2.5 pt-2">
-                  <Checkbox
-                    id="requestCatalog"
-                    checked={formState.requestCatalog}
-                    onCheckedChange={handleCheckboxChange}
-                    className="data-[state=checked]:bg-[#c9a77c] data-[state=checked]:border-[#c9a77c] border-slate-400 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-1"
-                  />
-                  <label
-                    htmlFor="requestCatalog"
-                    className="cursor-pointer text-sm font-medium leading-none text-[#333] peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {t("contact.form.requestCatalog")}
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-primary mb-2">
+                    {t("contact.message")}
                   </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows={5}
+                    disabled={formStatus === "loading"}
+                    placeholder={t("contact.messagePlaceholder")}
+                    className="w-full px-4 py-3 border border-secondary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 resize-none bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
+                  ></textarea>
                 </div>
 
-                {formError && <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">{formError}</div>}
+                <div className="text-sm text-slate-grey italic mb-6 p-4 bg-gradient-to-r from-secondary/5 to-accent/5 rounded-xl border border-secondary/20">
+                  <Star className="w-4 h-4 inline mr-2 text-secondary" />
+                  {t("contact.formNote")}
+                </div>
 
-                <Button
+                <button
                   type="submit"
-                  className="w-full bg-[#2c4051] text-white py-3 text-base hover:bg-[#3a526a] transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#c9a77c] focus-visible:ring-offset-2"
-                  disabled={isPending}
+                  disabled={formStatus === "loading"}
+                  className="group w-full bg-gradient-to-r from-secondary to-accent text-white py-4 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 hover:scale-105 flex items-center justify-center font-medium relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
-                  {isPending ? t("contact.form.sending") : t("contact.form.submitButton")}
-                </Button>
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Send size={18} className="mr-2 relative z-10" />
+                  <span className="relative z-10">
+                    {formStatus === "loading" ? "Sending..." : t("contact.requestInformation")}
+                  </span>
+                </button>
               </form>
             </div>
 
+            {/* Contact Information */}
             <div
-              className={cn(
-                "flex flex-col justify-center transition-all delay-200 duration-1000 md:delay-300",
-                inView ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0",
-              )}
+              className={`bg-parchment/95 backdrop-blur-sm border border-secondary/20 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:shadow-secondary/20 transition-all duration-700 flex flex-col ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+              }`}
+              style={{ transitionDelay: "200ms" }}
             >
-              <div className="rounded-lg bg-white p-6 shadow-lg sm:p-8">
-                <h3 className="mb-5 text-xl font-semibold text-[#1a1a1a] sm:mb-6 sm:text-2xl">
-                  {t("contact.contactDetails.title")}
-                </h3>
-                <div className="space-y-5 sm:space-y-6">
-                  <div className="flex items-start">
-                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#c9a77c]/10 text-[#c9a77c]">
-                      <PhoneIcon className="h-5 w-5" />
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-light text-primary">{t("contact.contactDetails")}</h3>
+                  <div className="flex space-x-1.5">
+                    <a
+                      href="https://www.facebook.com/DovecConstruction"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-7 h-7 rounded-full bg-gradient-to-br from-secondary/10 to-accent/10 flex items-center justify-center text-secondary hover:bg-gradient-to-br hover:from-secondary hover:to-accent hover:text-white transition-all duration-300"
+                      aria-label="Facebook"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                      </svg>
+                    </a>
+                    <a
+                      href="https://www.instagram.com/dovec_group"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-7 h-7 rounded-full bg-gradient-to-br from-secondary/10 to-accent/10 flex items-center justify-center text-secondary hover:bg-gradient-to-br hover:from-secondary hover:to-accent hover:text-white transition-all duration-300"
+                      aria-label="Instagram"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                      </svg>
+                    </a>
+                    <a
+                      href="https://x.com/Dovec_Group"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-7 h-7 rounded-full bg-gradient-to-br from-secondary/10 to-accent/10 flex items-center justify-center text-secondary hover:bg-gradient-to-br hover:from-secondary hover:to-accent hover:text-white transition-all duration-300"
+                      aria-label="Twitter"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+                <div className="space-y-4 flex-grow">
+                  {/* Phone Card */}
+                  <div className="bg-gradient-to-r from-secondary/5 to-accent/5 rounded-xl border border-secondary/20 p-4 flex items-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center flex-shrink-0 mr-4">
+                      <Phone className="text-white" size={18} />
                     </div>
                     <div>
-                      <p className="text-sm text-[#666]">{t("contact.contactDetails.callUs")}</p>
+                      <p className="text-sm text-slate-grey mb-0.5">{t("contact.callUs")}</p>
                       <a
                         href="tel:+905488370015"
-                        className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg"
+                        className="text-lg text-primary hover:text-secondary transition-colors duration-300 font-medium"
                       >
                         +90 548 837 0015
                       </a>
                     </div>
                   </div>
-                  <div className="flex items-start">
-                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#c9a77c]/10 text-[#c9a77c]">
-                      <Mail className="h-5 w-5" />
+
+                  {/* Email Card */}
+                  <div className="bg-gradient-to-r from-secondary/5 to-accent/5 rounded-xl border border-secondary/20 p-4 flex items-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center flex-shrink-0 mr-4">
+                      <Mail className="text-white" size={18} />
                     </div>
                     <div>
-                      <p className="text-sm text-[#666]">{t("contact.contactDetails.emailUs")}</p>
+                      <p className="text-sm text-slate-grey mb-0.5">{t("contact.emailUs")}</p>
                       <a
                         href="mailto:info@dovecgroup.com"
-                        className="text-base text-[#2c4051] hover:text-[#c9a77c] transition-colors duration-300 md:text-lg break-all"
+                        className="text-lg text-primary hover:text-secondary transition-colors duration-300 font-medium"
                       >
                         info@dovecgroup.com
                       </a>
                     </div>
                   </div>
-                  <div className="flex items-start">
-                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#c9a77c]/10 text-[#c9a77c]">
-                      <MapPin className="h-5 w-5" />
+
+                  {/* Address Card */}
+                  <div className="bg-gradient-to-r from-secondary/5 to-accent/5 rounded-xl border border-secondary/20 p-4 flex items-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center flex-shrink-0 mr-4">
+                      <MapPin className="text-white" size={18} />
                     </div>
                     <div>
-                      <p className="text-sm text-[#666]">{t("contact.contactDetails.visitUs")}</p>
-                      <p className="text-base font-medium text-[#2c4051] md:text-lg">
-                        {t("contact.contactDetails.headquarters")}
-                      </p>
-                      <a
-                        href="https://maps.app.goo.gl/Vq7xfep4b49RTescA"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-[#555] hover:text-[#c9a77c] hover:underline transition-colors duration-300"
-                      >
-                        Uluçam Road, No.2, Sakarya, Famagusta, TRNC
-                      </a>
+                      <p className="text-sm text-slate-grey mb-0.5">{t("contact.visitUs")}</p>
+                      <p className="text-primary font-medium mb-0.5">{t("contact.headquarters")}</p>
+                      <p className="text-slate-grey text-sm">{t("contact.address")}</p>
                     </div>
                   </div>
-                  <div className="mt-6 rounded-md bg-slate-50 p-4">
-                    <p className="text-center text-xs text-[#555] md:text-sm whitespace-pre-line">
-                      {t("contact.contactDetails.availability")}
-                    </p>
+                </div>
+                <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl border border-primary/10 p-4 flex items-center mt-6">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center mr-3">
+                    <Star className="text-secondary" size={16} />
+                  </div>
+                  <div>
+                    <p className="text-primary font-medium text-sm">{t("contact.premiumServiceTitle")}</p>
+                    <p className="text-slate-grey text-xs">{t("contact.premiumServiceDesc")}</p>
                   </div>
                 </div>
               </div>

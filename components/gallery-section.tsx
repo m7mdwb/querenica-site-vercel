@@ -1,34 +1,56 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect, useCallback, useRef } from "react"
-import { useInView } from "react-intersection-observer"
-import { cn } from "@/lib/utils"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { X, ChevronLeft, ChevronRight, Download, Eye } from "lucide-react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { ZoomableImage } from "./ui/zoomable-image"
+import { Eye, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
 import { useLanguage } from "@/lib/i18n/context"
 
 export default function GallerySection() {
   const { t } = useLanguage()
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  })
+  const [isVisible, setIsVisible] = useState(false)
+  const [showAllImages, setShowAllImages] = useState(false)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentImage, setCurrentImage] = useState(0)
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false)
-  const [imagesLoaded, setImagesLoaded] = useState(0)
-  const [totalImages, setTotalImages] = useState(0)
-  const galleryRef = useRef<HTMLDivElement>(null)
-  const [isTouchActive, setIsTouchActive] = useState(false)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 },
+    )
 
-  // Expanded gallery with 12 images - now with width and height information
+    const section = document.getElementById("gallery")
+    if (section) observer.observe(section)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (lightboxOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+
+    return () => {
+      document.body.style.overflow = "unset"
+    }
+  }, [lightboxOpen])
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && lightboxOpen) {
+        closeLightbox()
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape)
+    return () => document.removeEventListener("keydown", handleEscape)
+  }, [lightboxOpen])
+
   const galleryImages = [
     {
       src: "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-1-2KGar18rZ8kKbe4VwFivhnCUSGkbMU.webp",
@@ -140,310 +162,160 @@ export default function GallerySection() {
     },
   ]
 
-  // Function to open the image lightbox
-  const openLightbox = (index: number) => {
-    setCurrentImageIndex(index)
-    setSelectedImage(galleryImages[index].src)
-    setIsGalleryOpen(true)
+  const displayedImages = showAllImages ? galleryImages : galleryImages.slice(0, 4)
+
+  const openLightbox = (index) => {
+    setCurrentImage(index)
+    setLightboxOpen(true)
   }
 
-  // Functions to navigate between images in the lightbox
-  const nextImage = useCallback(() => {
-    if (isTouchActive) return // Prevent duplicate triggers on touch devices
-
-    setCurrentImageIndex((prev) => {
-      const next = (prev + 1) % galleryImages.length
-      setSelectedImage(galleryImages[next].src)
-      return next
-    })
-  }, [galleryImages, isTouchActive])
-
-  const prevImage = useCallback(() => {
-    if (isTouchActive) return // Prevent duplicate triggers on touch devices
-
-    setCurrentImageIndex((prev) => {
-      const next = (prev - 1 + galleryImages.length) % galleryImages.length
-      setSelectedImage(galleryImages[next].src)
-      return next
-    })
-  }, [galleryImages, isTouchActive])
-
-  // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isGalleryOpen) return
-
-      if (e.key === "ArrowRight") {
-        nextImage()
-      } else if (e.key === "ArrowLeft") {
-        prevImage()
-      } else if (e.key === "Escape") {
-        setIsGalleryOpen(false)
-        setSelectedImage(null)
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isGalleryOpen, nextImage, prevImage])
-
-  // Function to scroll to contact form and set catalog flag
-  const scrollToContactForm = () => {
-    // Set the global state to indicate catalog request
-    window.localStorage.setItem("requestCatalog", "true")
-
-    // Close the lightbox if it's open
-    if (isGalleryOpen) {
-      setIsGalleryOpen(false)
-      setSelectedImage(null)
-    }
-
-    // Scroll to contact form
-    const contactSection = document.getElementById("contact")
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" })
-
-      // Highlight the form
-      setTimeout(() => {
-        const formElement = document.getElementById("contact-form")
-        if (formElement) {
-          formElement.classList.add("highlight-form")
-          setTimeout(() => {
-            formElement.classList.remove("highlight-form")
-          }, 2000)
-        }
-      }, 500)
-    }
+  const closeLightbox = () => {
+    setLightboxOpen(false)
   }
 
-  // Handle touch events for swiping in the gallery
-  const touchStartX = useRef(0)
-  const touchEndX = useRef(0)
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    setIsTouchActive(true)
+  const nextImage = () => {
+    setCurrentImage((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1))
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX
+  const prevImage = () => {
+    setCurrentImage((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1))
   }
 
-  const handleTouchEnd = () => {
-    if (!isGalleryOpen || !isTouchActive) return
-
-    const difference = touchStartX.current - touchEndX.current
-    const threshold = 50 // Minimum swipe distance
-
-    if (difference > threshold) {
-      // Swiped left, go to next image
-      nextImage()
-    } else if (difference < -threshold) {
-      // Swiped right, go to previous image
-      prevImage()
-    }
-
-    setIsTouchActive(false)
+  const handleViewLarger = () => {
+    setCurrentImage(0)
+    setLightboxOpen(true)
   }
-
-  // Track image loading progress
-  useEffect(() => {
-    setTotalImages(galleryImages.length)
-  }, [galleryImages.length])
-
-  const handleImageLoad = () => {
-    setImagesLoaded((prev) => prev + 1)
-  }
-
-  // Determine how many images to show initially (4 on desktop, 2 on mobile)
-  const initialImageCount = 4
-  const visibleImages = galleryImages.slice(0, initialImageCount)
 
   return (
-    <section ref={ref} id="gallery" className="bg-[#f8f8f8] py-20 md:py-32 scroll-mt-20">
-      <div className="container mx-auto px-4">
-        <h2 className="mb-12 text-center text-3xl font-light tracking-wider text-[#1a1a1a] sm:text-4xl md:mb-16 md:text-5xl">
-          {t("gallery.title")}
-        </h2>
-
-        {/* Gallery Grid with optimized images */}
-        <div ref={galleryRef} className="mb-8">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-2 xl:grid-cols-4">
-            {visibleImages.map((image, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "group relative cursor-pointer overflow-hidden rounded-lg transition-all duration-700",
-                  inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                  { "delay-200": index % 4 === 0 },
-                  { "delay-300": index % 4 === 1 },
-                  { "delay-400": index % 4 === 2 },
-                  { "delay-500": index % 4 === 3 },
-                )}
-                onClick={() => openLightbox(index)}
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={image.src || "/placeholder.svg"}
-                    alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    placeholder="blur"
-                    blurDataURL={image.blurDataURL}
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    priority={index < 4}
-                    onLoad={handleImageLoad}
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/30 group-hover:opacity-100">
-                  <div className="rounded-full bg-white/80 p-2">
-                    <Eye className="h-6 w-6 text-[#2c4051]" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+    <section id="gallery" className="py-32 bg-gradient-to-b from-alabaster to-parchment relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <span className="text-secondary text-sm uppercase tracking-[0.4em] font-light mb-4 block">
+            {t("gallery.visualGallery")}
+          </span>
+          <h2 className="text-5xl md:text-6xl font-light text-primary mb-6 tracking-tight">
+            {t("gallery.exploreQuerencia").split(" ")[0]}
+            <span className="block font-serif italic text-secondary" style={{ fontFamily: "var(--font-bodoni)" }}>
+              {t("gallery.exploreQuerencia").split(" ").slice(1).join(" ")}
+            </span>
+          </h2>
+          <p className="text-lg text-slate-grey max-w-3xl mx-auto leading-relaxed">{t("gallery.introText")}</p>
+          <div className="w-24 h-0.5 bg-gradient-to-r from-secondary to-accent mx-auto mt-8"></div>
         </div>
 
-        {/* View More Button */}
-        <div className="mb-12 flex justify-center">
-          <Button onClick={() => openLightbox(0)} className="group bg-[#2c4051] text-white hover:bg-[#3a526a]">
-            <Eye className="mr-2 h-4 w-4" />
-            {t("gallery.viewGallery")}
-          </Button>
+        {/* Gallery Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {displayedImages.map((image, index) => (
+            <GalleryCard
+              key={image.id || index}
+              image={image}
+              index={index}
+              isVisible={isVisible}
+              onClick={() => openLightbox(index)}
+            />
+          ))}
         </div>
 
-        {/* Catalog Download CTA */}
-        <div className="mt-8 flex flex-col items-center justify-center space-y-4">
-          <h3 className="text-center text-2xl font-light tracking-wider text-[#1a1a1a] sm:text-3xl">
-            {t("gallery.wantToSeeMore")}
-          </h3>
-          <p className="max-w-2xl text-center text-[#666]">{t("gallery.catalogDescription")}</p>
-          <Button size="lg" className="bg-[#c9a77c] text-white hover:bg-[#b89669]" asChild>
-            <Link href="#contact" onClick={scrollToContactForm}>
-              <Download className="mr-2 h-4 w-4" />
-              {t("gallery.downloadCatalog")}
-            </Link>
-          </Button>
+        {/* Action Buttons */}
+        <div className="text-center mt-16">
+          {/* View Larger Button */}
+          <button
+            onClick={handleViewLarger}
+            className="inline-flex items-center bg-gradient-to-r from-secondary to-accent text-white px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-secondary/30 transition-all duration-300 hover:scale-105 relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <Maximize2 size={20} className="mr-3 relative z-10" />
+            <span className="font-medium relative z-10">{t("gallery.viewLarger")}</span>
+          </button>
         </div>
 
-        {/* Gallery Modal Dialog */}
-        <Dialog
-          open={isGalleryOpen}
-          onOpenChange={(open) => {
-            setIsGalleryOpen(open)
-            if (!open) {
-              setSelectedImage(null)
-              setCurrentImageIndex(0)
-            }
-          }}
-        >
-          <DialogContent className="max-h-[90vh] max-w-5xl border-none bg-transparent p-0 shadow-none [&>button]:hidden">
-            <button
-              onClick={() => {
-                setIsGalleryOpen(false)
-                setSelectedImage(null)
-              }}
-              className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 p-2 text-white shadow-md transition-all hover:bg-black/80 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
-              aria-label={t("common.close")}
+        {/* Lightbox Modal */}
+        {lightboxOpen && (
+          <div
+            className="fixed inset-0 bg-primary/90 backdrop-blur-md z-[9999] flex items-center justify-center p-8 pt-24"
+            onClick={closeLightbox}
+          >
+            <div
+              className="relative w-[75vw] max-w-[75vw] bg-parchment rounded-2xl overflow-hidden shadow-2xl z-[10000] aspect-video"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="h-6 w-6" />
-            </button>
-
-            {selectedImage && (
-              <div
-                className="relative"
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
+              {/* Close button */}
+              <button
+                onClick={closeLightbox}
+                className="absolute top-4 right-4 bg-parchment/95 backdrop-blur-sm rounded-xl p-2 text-primary hover:bg-parchment hover:text-secondary transition-all duration-300 shadow-lg hover:shadow-xl border border-secondary/20 z-20"
               >
-                {/* Replace the standard img with our ZoomableImage component */}
-                <ZoomableImage
-                  src={selectedImage}
-                  alt={galleryImages[currentImageIndex].alt}
-                  className="h-auto w-full rounded-lg"
-                  maxZoom={3}
+                <X size={18} />
+              </button>
+
+              {/* Image */}
+              <div className="relative w-full h-full">
+                <Image
+                  src={galleryImages[currentImage].src || "/placeholder.svg"}
+                  alt={galleryImages[currentImage].alt}
+                  fill
+                  className="object-cover"
+                  width={1200}
+                  height={900}
+                  sizes="100vw"
                 />
-
-                {/* Navigation Controls */}
+                {/* Navigation buttons */}
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    prevImage()
-                  }}
-                  className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white md:h-12 md:w-12 gallery-nav-btn"
-                  aria-label="Previous image"
-                  style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-parchment/20 backdrop-blur-sm p-2 rounded-xl text-white hover:bg-parchment/30 transition-all duration-300"
                 >
-                  <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
+                  <ChevronLeft size={20} />
                 </button>
-
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    nextImage()
-                  }}
-                  className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white md:h-12 md:w-12 gallery-nav-btn"
-                  aria-label="Next image"
-                  style={{ WebkitTapHighlightColor: "transparent" }} // Prevent tap highlight on mobile
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-parchment/20 backdrop-blur-sm p-2 rounded-xl text-white hover:bg-parchment/30 transition-all duration-300"
                 >
-                  <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
+                  <ChevronRight size={20} />
                 </button>
-
-                {/* Horizontal Thumbnail Navigation */}
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center px-4 py-2 gallery-thumbnail-scroll">
-                  <div className="flex space-x-2 max-w-full overflow-x-auto pb-2">
-                    {galleryImages.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setCurrentImageIndex(index)
-                          setSelectedImage(image.src)
-                        }}
-                        className={cn(
-                          "h-12 w-16 flex-shrink-0 overflow-hidden rounded border-2 transition-all md:h-16 md:w-24",
-                          currentImageIndex === index
-                            ? "border-[#c9a77c] opacity-100"
-                            : "border-transparent opacity-60 hover:opacity-100",
-                        )}
-                        aria-label={`View ${image.alt}`}
-                      >
-                        <Image
-                          src={image.src || "/placeholder.svg"}
-                          alt={image.alt}
-                          width={120}
-                          height={90}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Image Counter */}
-                <div className="absolute bottom-24 left-0 right-0 text-center text-white md:bottom-28">
-                  <span className="rounded-full bg-black/50 px-3 py-1 text-sm">
-                    {currentImageIndex + 1} {t("gallery.imageCounter")} {galleryImages.length}
-                  </span>
-                </div>
-
-                {/* Download Catalog Button in Lightbox 
-                <div className="absolute bottom-4 right-4">
-                  <Button size="sm" className="bg-[#c9a77c] text-white hover:bg-[#b89669]" asChild>
-                    <Link href="#contact" onClick={scrollToContactForm}>
-                      <Download className="mr-1 h-3 w-3" />
-                      Get Catalog
-                    </Link>
-                  </Button>
-                </div>*/}
               </div>
-            )}
-          </DialogContent>
-        </Dialog>
+
+              {/* Image counter */}
+              <div className="absolute top-4 left-4 bg-parchment/20 backdrop-blur-sm px-3 py-1 rounded-xl text-white text-sm">
+                {t("gallery.imageCounter", { current: currentImage + 1, total: galleryImages.length })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
+  )
+}
+
+function GalleryCard({ image, index, isVisible, onClick }) {
+  return (
+    <div
+      className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-secondary/20 transition-all duration-700 cursor-pointer transform ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+      }`}
+      style={{
+        transitionDelay: `${index * 200}ms`,
+        aspectRatio: "4/3", // 1200x900 aspect ratio
+      }}
+      onClick={onClick}
+    >
+      <div className="relative w-full h-full overflow-hidden">
+        <Image
+          src={image.src || "/placeholder.svg"}
+          alt={image.alt}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-700"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        {/* View icon overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="bg-parchment/20 backdrop-blur-sm p-4 rounded-full">
+            <Eye size={24} className="text-white" />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

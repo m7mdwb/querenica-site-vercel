@@ -1,257 +1,79 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { cn } from "@/lib/utils"
-import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
+
+import { useState } from "react"
+import Image from "next/image"
 
 interface ZoomableImageProps {
   src: string
   alt: string
   className?: string
-  initialZoom?: number
   maxZoom?: number
-  minZoom?: number
-  zoomStep?: number
-  showControls?: boolean
 }
 
-export function ZoomableImage({
-  src,
-  alt,
-  className,
-  initialZoom = 1,
-  maxZoom = 3,
-  minZoom = 1,
-  zoomStep = 0.5,
-  showControls = true,
-}: ZoomableImageProps) {
-  const [zoom, setZoom] = useState(initialZoom)
+export function ZoomableImage({ src, alt, className = "", maxZoom = 2 }: ZoomableImageProps) {
+  const [scale, setScale] = useState(1)
+  const [panning, setPanning] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
-  const [imageLoaded, setImageLoaded] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const imageRef = useRef<HTMLImageElement>(null)
+  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 })
 
-  // Reset position when zoom is reset to 1
-  useEffect(() => {
-    if (zoom === 1) {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (scale > 1) {
+      setPanning(true)
+      setStartPosition({
+        x: e.clientX - position.x,
+        y: e.clientY - position.y,
+      })
+    }
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (panning) {
+      setPosition({
+        x: e.clientX - startPosition.x,
+        y: e.clientY - startPosition.y,
+      })
+    }
+  }
+
+  const handleMouseUp = () => {
+    setPanning(false)
+  }
+
+  const handleMouseLeave = () => {
+    setPanning(false)
+  }
+
+  const handleClick = () => {
+    if (scale === 1) {
+      setScale(maxZoom)
+    } else {
+      setScale(1)
       setPosition({ x: 0, y: 0 })
     }
-  }, [zoom])
-
-  const zoomIn = () => setZoom((prev) => Math.min(prev + zoomStep, maxZoom))
-  const zoomOut = () => setZoom((prev) => Math.max(prev - zoomStep, minZoom))
-  const resetZoom = () => {
-    setZoom(1)
-    setPosition({ x: 0, y: 0 })
   }
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    if (zoom > 1) {
-      resetZoom()
-    } else {
-      const container = containerRef.current
-      const image = imageRef.current
-      if (!container || !image) return
-
-      const rect = container.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / container.offsetWidth
-      const y = (e.clientY - rect.top) / container.offsetHeight
-
-      const newZoom = Math.min(maxZoom, zoom + zoomStep * 2)
-      setZoom(newZoom)
-
-      const newX = ((0.5 - x) * container.offsetWidth * (newZoom - 1)) / newZoom
-      const newY = ((0.5 - y) * container.offsetHeight * (newZoom - 1)) / newZoom
-      setPosition({ x: newX, y: newY })
-    }
-  }
-
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault()
-    e.deltaY < 0 ? zoomIn() : zoomOut()
-  }
-
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    if (zoom <= 1) return
-
-    setIsDragging(true)
-
-    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
-    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY
-
-    setDragStart({
-      x: clientX - position.x,
-      y: clientY - position.y,
-    })
-  }
-
-  const handleDrag = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging || zoom <= 1) return
-
-    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
-    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY
-
-    const container = containerRef.current
-    if (!container) return
-
-    const maxX = (container.offsetWidth * (zoom - 1)) / (2 * zoom)
-    const maxY = (container.offsetHeight * (zoom - 1)) / (2 * zoom)
-
-    const newX = clientX - dragStart.x
-    const newY = clientY - dragStart.y
-
-    setPosition({
-      x: Math.max(-maxX, Math.min(maxX, newX)),
-      y: Math.max(-maxY, Math.min(maxY, newY)),
-    })
-  }
-
-  const handleDragEnd = () => setIsDragging(false)
-
-  // Handle touch events
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging && zoom > 1) {
-        e.preventDefault()
-      }
-    }
-
-    container.addEventListener("touchmove", handleTouchMove, { passive: false })
-    return () => container.removeEventListener("touchmove", handleTouchMove)
-  }, [isDragging, zoom])
-
-  // Handle pinch to zoom
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    let initialDistance = 0
-    let initialZoomValue = zoom
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        initialDistance = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY,
-        )
-        initialZoomValue = zoom
-      }
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        const currentDistance = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY,
-        )
-
-        if (initialDistance > 0) {
-          const newZoom = Math.max(minZoom, Math.min(maxZoom, initialZoomValue * (currentDistance / initialDistance)))
-          setZoom(newZoom)
-        }
-      }
-    }
-
-    container.addEventListener("touchstart", handleTouchStart)
-    container.addEventListener("touchmove", handleTouchMove, { passive: false })
-
-    return () => {
-      container.removeEventListener("touchstart", handleTouchStart)
-      container.removeEventListener("touchmove", handleTouchMove)
-    }
-  }, [zoom, maxZoom, minZoom])
 
   return (
     <div
-      ref={containerRef}
-      className={cn("relative overflow-hidden select-none", zoom > 1 ? "cursor-move" : "cursor-zoom-in", className)}
-      onDoubleClick={handleDoubleClick}
-      onWheel={handleWheel}
-      onMouseDown={handleDragStart}
-      onMouseMove={handleDrag}
-      onMouseUp={handleDragEnd}
-      onMouseLeave={handleDragEnd}
-      onTouchStart={handleDragStart}
-      onTouchMove={handleDrag}
-      onTouchEnd={handleDragEnd}
+      className={`relative overflow-hidden cursor-zoom-in ${className}`}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
-      <img
-        ref={imageRef}
-        src={src || "/placeholder.svg"}
-        alt={alt}
-        className={cn("transition-opacity duration-300", imageLoaded ? "opacity-100" : "opacity-0")}
+      <div
         style={{
-          transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`,
+          transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
+          transition: panning ? "none" : "transform 0.3s ease-out",
           transformOrigin: "center",
-          transition: isDragging ? "none" : "transform 0.2s ease-out",
           width: "100%",
           height: "100%",
-          objectFit: "contain",
         }}
-        onLoad={() => setImageLoaded(true)}
-        draggable={false}
-      />
-
-      {!imageLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#c9a77c] border-t-transparent"></div>
-        </div>
-      )}
-
-      {showControls && zoom > 1 && (
-        <div className="absolute bottom-4 right-4 flex space-x-2 bg-black/30 rounded-full p-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              zoomOut()
-            }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-            aria-label="Zoom out"
-          >
-            <ZoomOut className="h-4 w-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              resetZoom()
-            }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-            aria-label="Reset zoom"
-          >
-            <RotateCcw className="h-4 w-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              zoomIn()
-            }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-            aria-label="Zoom in"
-            disabled={zoom >= maxZoom}
-          >
-            <ZoomIn className="h-4 w-4" />
-          </button>
-        </div>
-      )}
-
-      {zoom > 1 && (
-        <div className="absolute top-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-          {Math.round(zoom * 100)}%
-        </div>
-      )}
-
-      {zoom === 1 && imageLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-          <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm">Double-click to zoom</div>
-        </div>
-      )}
+      >
+        <Image src={src || "/placeholder.svg"} alt={alt} fill className="object-cover" />
+      </div>
     </div>
   )
 }

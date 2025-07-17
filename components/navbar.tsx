@@ -1,99 +1,38 @@
 "use client"
 
-import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { cn } from "@/lib/utils"
+import Image from "next/image"
 import { Menu, X } from "lucide-react"
-import { LanguageSelector } from "./language-selector"
+import { cn } from "@/lib/utils"
 import { useLanguage } from "@/lib/i18n/context"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { LanguageSelector } from "./language-selector"
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const { t } = useLanguage()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [savedScrollPosition, setSavedScrollPosition] = useState(0)
-  const { t, language } = useLanguage()
+  const [isScrolled, setIsScrolled] = useState(false)
   const navbarRef = useRef<HTMLElement>(null)
   const isNavigatingFromMenu = useRef(false)
-  const pathname = usePathname()
 
-  const shouldShowDarkLogo = isScrolled || isMobileMenuOpen
+  const shouldShowDarkElements = isScrolled || isMobileMenuOpen
 
-  // Check if we're on a language-specific route
-  const isLangRoute = pathname.match(/^\/[a-z]{2}(\/|$)/)
-  const currentLang = isLangRoute ? pathname.split("/")[1] : language
+  // Logo URLs - using the updated Querencia logos
+  const whiteLogoUrl =
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/light_logo_querencia-c1yecf3hxKXUjzc7t4YQdMAwsbiC97.png"
+  const darkLogoUrl =
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dark_logo_querencia-RKneFVNYlNklaf0DSks551nwWQaotI.png"
 
-  const NAV_ITEMS = [
-    { label: t("navbar.home"), href: "#home", path: `/${currentLang}` },
-    { label: t("navbar.about"), href: "#about", path: `/${currentLang}/about` },
-    { label: t("navbar.location"), href: "#location", path: `/${currentLang}/location` },
-    { label: t("navbar.residences"), href: "#residences", path: `/${currentLang}/residences` },
-    { label: t("navbar.amenities"), href: "#amenities", path: `/${currentLang}/amenities` },
-    { label: t("navbar.gallery"), href: "#gallery", path: `/${currentLang}/gallery` },
-    { label: t("navbar.virtualTour"), href: "#virtual-tour", path: `/${currentLang}/virtual-tour` },
-    { label: t("navbar.contact"), href: "#contact", path: `/${currentLang}/contact` },
+  const navLinks = [
+    { name: t("navbar.home"), href: "#home" },
+    { name: t("navbar.about"), href: "#about" },
+    { name: t("navbar.location"), href: "#location" },
+    { name: t("navbar.residences"), href: "#residences" },
+    { name: t("navbar.amenities"), href: "#amenities" },
+    { name: t("navbar.gallery"), href: "#gallery" },
+    { name: t("navbar.virtualTour"), href: "#virtual-tour" },
+    { name: t("navbar.contact"), href: "#contact" },
   ]
 
-  useEffect(() => {
-    // Get scrollbar width once on component mount
-    const getScrollbarWidth = () => {
-      return window.innerWidth - document.documentElement.clientWidth
-    }
-
-    const scrollbarWidth = getScrollbarWidth()
-    const body = document.body
-    const html = document.documentElement
-
-    if (isMobileMenuOpen) {
-      // Save current scroll position before locking
-      const currentScrollY = window.scrollY
-      setSavedScrollPosition(currentScrollY)
-
-      // Apply a class to the body that will be used for CSS transitions
-      body.classList.add("menu-open")
-
-      // Important: Apply these styles synchronously in the correct order
-      // 1. First add padding to compensate for scrollbar (prevents layout shift)
-      if (scrollbarWidth > 0) {
-        body.style.paddingRight = `${scrollbarWidth}px`
-      }
-
-      // 2. Then fix the position and set top (after padding is applied)
-      body.style.position = "fixed"
-      body.style.width = "100%"
-      body.style.top = `-${currentScrollY}px`
-
-      // 3. Finally prevent scrolling
-      html.style.overflow = "hidden"
-      body.style.overflow = "hidden"
-    } else {
-      // Remove styles in the correct order to prevent visual glitches
-      // 1. First remove the menu-open class
-      body.classList.remove("menu-open")
-
-      // 2. Store the current top position before unlocking scroll
-      const scrollY = Number.parseInt(body.style.top || "0") * -1
-
-      // 3. Reset all styles
-      html.style.overflow = ""
-      body.style.overflow = ""
-      body.style.position = ""
-      body.style.width = ""
-      body.style.top = ""
-      body.style.paddingRight = ""
-
-      // 4. Restore scroll position only if not navigating from menu
-      if (!isNavigatingFromMenu.current && savedScrollPosition >= 0) {
-        window.scrollTo(0, scrollY)
-      }
-
-      // Reset the navigation flag
-      isNavigatingFromMenu.current = false
-    }
-  }, [isMobileMenuOpen, savedScrollPosition])
-
-  // Effect for scroll and resize listeners
   useEffect(() => {
     const handleScroll = () => {
       if (!isMobileMenuOpen) {
@@ -114,227 +53,256 @@ export default function Navbar() {
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleResize)
-
-      // Ensure we clean up ALL scroll locking styles if component unmounts
-      document.documentElement.style.overflow = ""
-      document.body.style.overflow = ""
-      document.body.style.position = ""
-      document.body.style.top = ""
-      document.body.style.width = ""
-      document.body.style.paddingRight = ""
-      document.body.classList.remove("menu-open")
     }
   }, [isMobileMenuOpen])
 
-  const scrollToSection = (
-    e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>,
-    href: string,
-  ) => {
-    e.preventDefault()
+  useEffect(() => {
+    const body = document.body
+    const html = document.documentElement
+
+    if (isMobileMenuOpen) {
+      const savedScrollPosition = window.scrollY
+      body.style.position = "fixed"
+      body.style.width = "100%"
+      body.style.top = `-${savedScrollPosition}px`
+      html.style.overflow = "hidden"
+      body.style.overflow = "hidden"
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+      if (scrollbarWidth > 0) {
+        body.style.paddingRight = `${scrollbarWidth}px`
+      }
+    } else {
+      const topStyle = body.style.top
+      if (!isNavigatingFromMenu.current && topStyle) {
+        const scrollYToRestore = Number.parseInt(topStyle.replace("px", ""), 10) * -1
+
+        body.style.position = ""
+        body.style.width = ""
+        body.style.top = ""
+        body.style.paddingRight = ""
+        html.style.overflow = ""
+        body.style.overflow = ""
+
+        if (!isNaN(scrollYToRestore) && scrollYToRestore >= 0) {
+          window.scrollTo(0, scrollYToRestore)
+        }
+      }
+      isNavigatingFromMenu.current = false
+    }
+
+    return () => {
+      html.style.overflow = ""
+      body.style.overflow = ""
+      body.style.position = ""
+      body.style.width = ""
+      body.style.top = ""
+      body.style.paddingRight = ""
+    }
+  }, [isMobileMenuOpen])
+
+  const scrollToSection = (href: string) => {
     isNavigatingFromMenu.current = true
     setIsMobileMenuOpen(false)
 
     setTimeout(() => {
-      const targetId = href.replace("#", "")
-      const element = document.getElementById(targetId)
-      if (element) {
-        const navbar = navbarRef.current
-        const navbarHeight = navbar ? navbar.offsetHeight : 0
-        const offset = navbarHeight + 20
+      const element = document.querySelector(href)
+      if (element && navbarRef.current) {
+        const navbarHeight = navbarRef.current.offsetHeight
         const elementPosition = element.getBoundingClientRect().top + window.scrollY
-        const scrollToPosition = elementPosition - offset
+        const offsetPosition = elementPosition - navbarHeight - 20
 
         window.scrollTo({
-          top: Math.max(0, scrollToPosition),
+          top: offsetPosition,
           behavior: "smooth",
         })
       }
     }, 100)
   }
 
+  const navTextColor = shouldShowDarkElements ? "text-primary hover:text-secondary" : "text-white hover:text-secondary"
+
+  const mobileMenuIconColor = shouldShowDarkElements
+    ? "text-primary hover:text-secondary"
+    : "text-white hover:text-secondary"
+
   return (
     <nav
       ref={navbarRef}
       className={cn(
-        "fixed left-0 right-0 top-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out border-b transition-colors",
         isMobileMenuOpen
-          ? "bg-white shadow-md"
+          ? "bg-white shadow-2xl border-secondary/20"
           : isScrolled
-            ? "bg-white/60 backdrop-blur-md backdrop-saturate-150 border-b border-white/20 shadow-lg"
-            : "bg-transparent",
+            ? "bg-white/80 backdrop-blur-xl shadow-lg border-secondary/20"
+            : "bg-transparent border-transparent",
       )}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 md:h-20 items-center justify-between">
-          {/* Logo - z-index ensures it stays above the mobile menu */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20 md:h-24">
+          {/* Logo */}
           <a
             href="#home"
-            onClick={(e) => scrollToSection(e, "#home")}
-            aria-label="Go to Querencia home section"
-            className="relative z-[60]"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToSection("#home")
+            }}
+            className="relative z-[60] flex-shrink-0"
+            aria-label="Querencia Home"
           >
-            <div className="h-10 w-auto md:h-12 lg:h-14">
-              {/* Light Logo */}
-              <img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/light_logo_querencia-c1yecf3hxKXUjzc7t4YQdMAwsbiC97.png"
-                alt="Querencia Hotel & Residence Light Logo"
+            <div className="h-10 w-auto sm:h-12 md:h-14 transition-all duration-500">
+              {/* White Logo */}
+              <Image
+                src={whiteLogoUrl || "/placeholder.svg"}
+                alt="Querencia Logo Light"
+                width={200}
+                height={60}
                 className={cn(
-                  "h-full w-auto object-contain transition-opacity duration-300",
-                  shouldShowDarkLogo ? "opacity-0 pointer-events-none" : "opacity-100",
+                  "h-full w-auto object-contain transition-opacity duration-500 ease-in-out",
+                  shouldShowDarkElements ? "opacity-0 pointer-events-none" : "opacity-100",
                 )}
+                priority
               />
-              {/* Dark Logo - Absolutely positioned to overlay */}
-              <img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dark_logo_querencia-RKneFVNYlNklaf0DSks551nwWQaotI.png"
-                alt="Querencia Hotel & Residence Dark Logo"
+              {/* Dark Logo */}
+              <Image
+                src={darkLogoUrl || "/placeholder.svg"}
+                alt="Querencia Logo Dark"
+                width={200}
+                height={60}
                 className={cn(
-                  "absolute inset-0 h-full w-auto object-contain transition-opacity duration-300",
-                  shouldShowDarkLogo ? "opacity-100" : "opacity-0 pointer-events-none",
+                  "absolute inset-0 h-full w-auto object-contain transition-opacity duration-500 ease-in-out",
+                  shouldShowDarkElements ? "opacity-100" : "opacity-0 pointer-events-none",
                 )}
               />
             </div>
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center">
-            <ul className="flex space-x-4 lg:space-x-8">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.href}>
-                  {/* Add Link component for SEO with prefetch */}
-                  <Link
-                    href={item.path}
-                    prefetch={false}
-                    onClick={(e) => scrollToSection(e, item.href)}
-                    className={cn(
-                      "text-sm font-light tracking-wide transition-colors hover:text-[#c9a77c]",
-                      isScrolled ? "text-[#2c4051]" : "text-white",
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="ml-4 lg:ml-8">
-              <LanguageSelector isScrolled={isScrolled} />
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToSection(link.href)
+                }}
+                className={cn(
+                  "text-sm font-light tracking-wide transition-all duration-300 relative group font-inter",
+                  navTextColor,
+                )}
+              >
+                {link.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            ))}
+            <div className="ml-4">
+              <LanguageSelector isScrolled={shouldShowDarkElements} className={navTextColor} />
             </div>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className={cn(
-              "z-[60] flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 md:hidden",
-              isMobileMenuOpen
-                ? "bg-slate-100 text-[#2c4051] shadow-md"
-                : isScrolled
-                  ? "bg-white/80 text-[#2c4051] backdrop-blur-sm"
-                  : "bg-white/20 text-white backdrop-blur-sm",
-            )}
-            onClick={() => {
-              isNavigatingFromMenu.current = false
-              setIsMobileMenuOpen(!isMobileMenuOpen)
-            }}
-            aria-label="Toggle menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="md:hidden z-[60]">
+            <button
+              onClick={() => {
+                isNavigatingFromMenu.current = false
+                setIsMobileMenuOpen(!isMobileMenuOpen)
+              }}
+              className={cn(
+                "inline-flex items-center justify-center p-2 rounded-xl focus:outline-none transition-all duration-300 hover:bg-white/10",
+                mobileMenuIconColor,
+              )}
+              aria-expanded={isMobileMenuOpen}
+              aria-label="Toggle main menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="block h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="block h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Navigation Menu - Fixed overlay */}
+      {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-[55] md:hidden transition-opacity duration-300 ease-in-out will-change-transform will-change-opacity",
-          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
+          "fixed inset-0 z-[55] md:hidden transition-transform duration-500 ease-in-out transform",
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full",
         )}
-        style={{
-          overflow: "hidden",
-          width: "100vw",
-          height: "100vh",
-        }}
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        {/* Solid white background for the entire menu */}
         <div className="absolute inset-0 bg-white shadow-2xl"></div>
-
-        {/* Fixed header area with solid background to prevent content from scrolling behind the logo */}
-        <div className="mobile-menu-header"></div>
-
-        {/* Scrollable content area that starts below the fixed header */}
-        <div
-          className="relative h-full w-full overflow-y-auto mobile-menu-scroll mobile-menu-content"
-          style={{
-            overflowX: "hidden",
-            maxWidth: "100vw",
-            willChange: "transform, opacity",
-          }}
-        >
-          <ul className="flex flex-col space-y-5 pt-2">
-            {NAV_ITEMS.map((item, index) => (
+        <div className="h-full w-full overflow-y-auto pt-20 pb-10 px-6">
+          <ul className="flex flex-col space-y-1">
+            {navLinks.map((link, index) => (
               <li
-                key={item.href}
-                className="transform transition-all duration-300 ease-out"
+                key={link.name}
+                className="transform transition-all duration-500 ease-out"
                 style={{
                   opacity: isMobileMenuOpen ? 1 : 0,
-                  transform: isMobileMenuOpen ? "translateX(0)" : "translateX(1rem)",
-                  transitionDelay: isMobileMenuOpen ? `${75 + index * 50}ms` : "0ms",
+                  transform: isMobileMenuOpen ? "translateX(0)" : "translateX(30px)",
+                  transitionDelay: isMobileMenuOpen ? `${100 + index * 75}ms` : "0ms",
                 }}
               >
-                {/* Add Link component for SEO with prefetch */}
-                <Link
-                  href={item.path}
-                  prefetch={false}
-                  onClick={(e) => scrollToSection(e, item.href)}
-                  className="group flex items-center py-2.5 text-lg font-light text-[#2c4051] transition-colors active:text-[#c9a77c]"
-                  style={{ WebkitTapHighlightColor: "transparent" }}
+                <a
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToSection(link.href)
+                  }}
+                  className="block px-4 py-4 rounded-xl text-base font-light text-primary hover:text-secondary hover:bg-alabaster transition-all duration-300 relative group font-inter"
                 >
-                  <span className="relative w-full">
-                    {item.label}
-                    <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-[#c9a77c] transition-all duration-300 group-hover:w-full group-focus:w-full"></span>
-                  </span>
-                </Link>
+                  {link.name}
+                  <span className="absolute bottom-2 left-4 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-8"></span>
+                </a>
               </li>
             ))}
-            {/* Language selector with staggered animation */}
+
+            {/* Language Selector in Mobile Menu */}
             <li
-              className="transform transition-all duration-300 ease-out"
+              className="transform transition-all duration-500 ease-out pt-6 flex justify-center"
               style={{
                 opacity: isMobileMenuOpen ? 1 : 0,
-                transform: isMobileMenuOpen ? "translateX(0)" : "translateX(1rem)",
-                transitionDelay: isMobileMenuOpen ? `${75 + NAV_ITEMS.length * 50}ms` : "0ms",
+                transform: isMobileMenuOpen ? "translateX(0)" : "translateX(30px)",
+                transitionDelay: isMobileMenuOpen ? `${100 + navLinks.length * 75}ms` : "0ms",
               }}
             >
-              <LanguageSelector isMobile mobileMenuOpen={isMobileMenuOpen} />
+              <LanguageSelector
+                isMobile
+                mobileMenuOpen={isMobileMenuOpen}
+                className="text-primary hover:text-secondary"
+              />
+            </li>
+
+            {/* Contact Information */}
+            <li
+              className="transform transition-all duration-500 ease-out pt-8 px-4"
+              style={{
+                opacity: isMobileMenuOpen ? 1 : 0,
+                transform: isMobileMenuOpen ? "translateX(0)" : "translateX(30px)",
+                transitionDelay: isMobileMenuOpen ? `${100 + (navLinks.length + 1) * 75}ms` : "0ms",
+              }}
+            >
+              <div className="border-t border-secondary/20 pt-6">
+                <p className="text-sm font-light text-slate-grey mb-3 font-inter">{t("navbar.getInTouch")}</p>
+                <div className="space-y-2">
+                  <a
+                    href="tel:+905488370015"
+                    className="block text-primary hover:text-secondary transition-colors duration-300 font-inter"
+                  >
+                    +90 548 837 0015
+                  </a>
+                  <a
+                    href="mailto:info@dovecgroup.com"
+                    className="block text-primary hover:text-secondary transition-colors duration-300 font-inter"
+                  >
+                    info@dovecgroup.com
+                  </a>
+                </div>
+              </div>
             </li>
           </ul>
-
-          {/* Contact information at the bottom */}
-          <div className="mt-auto pt-8 px-6 pb-8">
-            <div
-              className="transition-all duration-500 ease-out"
-              style={{
-                opacity: isMobileMenuOpen ? 1 : 0,
-                transform: isMobileMenuOpen ? "translateY(0)" : "translateY(1rem)",
-                transitionDelay: isMobileMenuOpen ? `${75 + (NAV_ITEMS.length + 1) * 50 + 100}ms` : "0ms",
-              }}
-            >
-              <p className="mb-2 text-sm font-light text-[#666]">{t("navbar.getInTouch")}</p>
-              <a
-                href="tel:+905488370015"
-                className="block text-lg text-[#2c4051] hover:text-[#c9a77c] active:text-[#c9a77c]"
-                style={{ WebkitTapHighlightColor: "transparent" }}
-              >
-                +90 548 837 0015
-              </a>
-              <a
-                href="mailto:info@dovecgroup.com"
-                className="block text-lg text-[#2c4051] hover:text-[#c9a77c] active:text-[#c9a77c]"
-                style={{ WebkitTapHighlightColor: "transparent" }}
-              >
-                info@dovecgroup.com
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </nav>

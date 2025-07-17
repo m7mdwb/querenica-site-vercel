@@ -1,160 +1,125 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import { en } from "./translations/en"
-import { tr } from "./translations/tr"
-import { de } from "./translations/de"
-import { ru } from "./translations/ru"
+import type React from "react"
+
+import { createContext, useState, useEffect, useContext, type ReactNode } from "react"
 import { useRouter, usePathname } from "next/navigation"
 
-// Define available languages
-export type Language = "en" | "tr" | "de" | "ru"
-
-// Define translations structure
-export type Translations = typeof en
-
-// Map of language codes to translation objects
-const translations: Record<Language, Translations> = {
-  en,
-  tr,
-  de,
-  ru,
+/* Dynamic loaders for built-in languages */
+const DEFAULT_LOADERS: Record<string, () => Promise<any>> = {
+  en: () => import("./translations/en"),
+  tr: () => import("./translations/tr"),
+  de: () => import("./translations/de"),
+  ru: () => import("./translations/ru"),
 }
 
-// Language names for display
-export const languageNames: Record<Language, string> = {
-  en: "English",
-  tr: "Türkçe",
-  de: "Deutsch",
-  ru: "Русский",
+interface TranslationCtx {
+  /* NEW canonical names */
+  locale: string
+  setLocale: (locale: string) => void
+  t: (key: string, vars?: Record<string, unknown>) => string
+
+  /* LEGACY aliases -- kept for backward-compat */
+  language: string
+  changeLanguage: (locale: string) => void
 }
 
-// Language context type
-interface LanguageContextType {
-  language: Language
-  setLanguage: (lang: Language) => void
-  t: (key: string) => string
-  translations: Translations
-  isLoaded: boolean
-}
+const TranslationContext = createContext<TranslationCtx>({
+  locale: "en",
+  setLocale: () => {},
+  t: (k) => k,
 
-// Create context with default values
-const LanguageContext = createContext<LanguageContextType>({
+  /* legacy */
   language: "en",
-  setLanguage: () => {},
-  t: () => "",
-  translations: en,
-  isLoaded: false,
+  changeLanguage: () => {},
 })
 
-// Provider props
-interface LanguageProviderProps {
+interface ProviderProps {
   children: ReactNode
-  initialLang?: Language
+  defaultLocale?: string
+  loaders?: Record<string, () => Promise<any>>
 }
 
-// Language provider component
-export function LanguageProvider({ children, initialLang }: LanguageProviderProps) {
-  // Initialize with English or initialLang if provided
-  const [language, setLanguageState] = useState<Language>(initialLang || "en")
-  const [isLoaded, setIsLoaded] = useState(initialLang ? true : false)
-  const router = useRouter()
-  const pathname = usePathname()
-
-  // Detect language from URL path
-  useEffect(() => {
-    if (pathname) {
-      const pathLangMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
-      if (pathLangMatch && pathLangMatch[1] in translations) {
-        const pathLang = pathLangMatch[1] as Language
-        if (language !== pathLang) {
-          setLanguageState(pathLang)
-        }
-      }
-    }
-  }, [pathname, language])
-
-  // Load language preference from localStorage on mount if initialLang not provided
-  useEffect(() => {
-    if (!initialLang) {
-      const storedLanguage = localStorage.getItem("language") as Language
-      if (storedLanguage && translations[storedLanguage]) {
-        setLanguageState(storedLanguage)
-      } else {
-        // Try to detect browser language
-        const browserLang = navigator.language.split("-")[0] as Language
-        if (translations[browserLang]) {
-          setLanguageState(browserLang)
-        }
-      }
-      setIsLoaded(true)
-    }
-  }, [initialLang])
-
-  // Update language and save to localStorage
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang)
-    localStorage.setItem("language", lang)
-
-    // Update HTML lang attribute
-    document.documentElement.lang = lang
-
-    // Update URL to reflect language change if we're not already on a language-specific route
-    if (!pathname.startsWith(`/${lang}`)) {
-      // Only navigate if we're changing to a different language
-      if (language !== lang) {
-        // Check if we're on a language route already
-        const currentLangMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
-        if (currentLangMatch) {
-          // Replace current language with new language
-          router.push(pathname.replace(/^\/[a-z]{2}/, `/${lang}`))
-        } else {
-          // Add language to current path
-          router.push(`/${lang}${pathname}`)
-        }
-      }
-    }
-  }
-
-  // Translation function
-  const t = (key: string): string => {
-    // Split the key by dots to access nested properties
-    const keys = key.split(".")
-    let value: any = translations[language]
-
-    // Navigate through the nested properties
-    for (const k of keys) {
-      if (value && typeof value === "object" && k in value) {
-        value = value[k]
-      } else {
-        // If key not found, return the key itself
-        return key
-      }
-    }
-
-    return typeof value === "string" ? value : key
-  }
-
-  return (
-    <LanguageContext.Provider
-      value={{
-        language,
-        setLanguage,
-        t,
-        translations: translations[language],
-        isLoaded,
-      }}
-    >
-      {children}
-    </LanguageContext.Provider>
+/* flattens nested JSON messages into dot-notation keys */
+function flatten(obj: any, prefix = ""): Record<string, string> {
+  return Object.keys(obj).reduce(
+    (acc, key) => {
+      const val = obj[key]
+      const newKey = prefix ? `${prefix}.${key}` : key
+      if (typeof val === "string") acc[newKey] = val
+      else if (val && typeof val === "object") Object.assign(acc, flatten(val, newKey))
+      return acc
+    },
+    {} as Record<string, string>,
   )
 }
 
-// Custom hook to use the language context
-export function useLanguage() {
-  const context = useContext(LanguageContext)
-  if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider")
+export const LanguageProvider: React.FC<ProviderProps> = ({ children, defaultLocale = "en", loaders }) => {
+  const translationLoaders = loaders ?? DEFAULT_LOADERS
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const [locale, setLocaleState] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("locale") ?? defaultLocale
+    }
+    return defaultLocale
+  })
+  const [messages, setMessages] = useState<Record<string, string>>({})
+
+  /* Persist locale & load translations whenever it changes */
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("locale", locale)
+    }
+
+    const load = async () => {
+      const loader = translationLoaders[locale]
+      if (loader) {
+        try {
+          const mod = await loader()
+          setMessages(flatten(mod.default))
+        } catch (err) {
+          console.error("Failed to load translations:", err)
+          setMessages({})
+        }
+      } else {
+        setMessages({})
+      }
+    }
+
+    load()
+  }, [locale, translationLoaders])
+
+  /* simple interpolation helper */
+  const t = (key: string, vars: Record<string, unknown> = {}) => {
+    const template = messages[key] ?? key
+    return Object.keys(vars).reduce((str, v) => str.replaceAll(`{${v}}`, String(vars[v])), template)
   }
-  return context
+
+  const setLocale = (newLocale: string) => {
+    setLocaleState(newLocale)
+    /* optional: refresh current page so Server Components re-render in new locale */
+    router.push(pathname)
+  }
+
+  return (
+    <TranslationContext.Provider
+      value={{
+        /* canonical */
+        locale,
+        setLocale,
+        t,
+
+        /* legacy aliases */
+        language: locale,
+        changeLanguage: setLocale,
+      }}
+    >
+      {children}
+    </TranslationContext.Provider>
+  )
 }
+
+export const useLanguage = () => useContext(TranslationContext)
+export const useTranslation = useLanguage /* legacy alias */

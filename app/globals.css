@@ -2,981 +2,233 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: var(--font-inter), "Inter", sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* Custom utility to hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 210 22% 22%; /* #2c4051 converted to HSL */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 210 22% 22%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --popover-foreground: 210 22% 22%;
+    --primary: 210 22% 22%; /* #2c4051 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 32 25% 69%; /* #c9a77c converted to HSL */
+    --secondary-foreground: 210 22% 22%;
+    --muted: 32 25% 96%; /* Parchment */
+    --muted-foreground: 0 0% 40%; /* Slate grey */
+    --accent: 32 25% 69%;
+    --accent-foreground: 210 22% 22%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --border: 0 0% 87%; /* #dddddd */
+    --input: 0 0% 87%;
+    --ring: 32 25% 69%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-  }
+    --sidebar-background: 32 25% 96%;
+    --sidebar-foreground: 210 22% 22%;
+    --sidebar-primary: 210 22% 22%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 32 25% 96%;
+    --sidebar-accent-foreground: 210 22% 22%;
+    --sidebar-border: 0 0% 87%;
+    --sidebar-ring: 32 25% 69%;
 
+    /* Font Variables */
+    --font-inter: "Inter", sans-serif;
+    --font-playfair: "Playfair Display", serif;
+    --font-dancing: "Dancing Script", cursive;
+
+    /* Custom Color Variables */
+    --navy-main: #2c4051;
+    --navy-light: #8a9bae;
+    --text-light: #e0e0e0;
+    --bronze-accent: #c9a77c;
+  }
+  .dark {
+    --background: 210 22% 22%;
+    --foreground: 0 0% 98%;
+    --card: 210 22% 22%;
+    --card-foreground: 0 0% 98%;
+    --popover: 210 22% 22%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 210 22% 22%;
+    --secondary: 32 25% 69%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 210 22% 15%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 32 25% 69%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 22% 15%;
+    --input: 210 22% 15%;
+    --ring: 32 25% 69%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 210 22% 22%;
+    --sidebar-foreground: 32 25% 96%;
+    --sidebar-primary: 32 25% 69%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 22% 15%;
+    --sidebar-accent-foreground: 32 25% 96%;
+    --sidebar-border: 210 22% 15%;
+    --sidebar-ring: 32 25% 69%;
+  }
+}
+
+@layer base {
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-inter);
   }
 
-  /* Prevent content shift when scrollbar disappears */
-  html {
-    scrollbar-gutter: stable;
+  /* Typography Classes */
+  .font-heading {
+    font-family: var(--font-playfair);
+  }
+
+  .font-decorative {
+    font-family: var(--font-dancing);
+  }
+
+  .font-body {
+    font-family: var(--font-inter);
   }
 }
 
-@keyframes highlight-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(201, 167, 124, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(201, 167, 124, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(201, 167, 124, 0);
-  }
+/* Glass card effect with new colors */
+.glass-card {
+  background: rgba(245, 243, 240, 0.8); /* Parchment with opacity */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 167, 124, 0.2); /* Bronze with opacity */
 }
 
-.highlight-form {
-  animation: highlight-pulse 1.5s ease-out;
-  border-color: #c9a77c;
+/* Updated glass effects with new color palette */
+.glass-navy {
+  background: rgba(44, 64, 81, 0.1); /* Navy with opacity */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(44, 64, 81, 0.2);
 }
 
-/* Loading Screen Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.glass-bronze {
+  background: rgba(201, 167, 124, 0.1); /* Bronze with opacity */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 167, 124, 0.2);
 }
 
-@keyframes scaleUp {
-  from {
-    transform: scale(0.98);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-@keyframes pulse {
+/* New Luxury Loading Animations */
+@keyframes starTwinkle {
   0%,
   100% {
+    opacity: 0.3;
     transform: scale(1);
-    opacity: 0.5;
   }
   50% {
-    transform: scale(1.05);
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes constellationMove {
+  0% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px);
     opacity: 0.8;
   }
-}
-
-/* New animation for abstract elements */
-@keyframes floatElement {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(var(--rotation, 0deg));
-  }
-  25% {
-    transform: translate(10px, -15px) rotate(calc(var(--rotation, 0deg) + 5deg));
-  }
   50% {
-    transform: translate(5px, -25px) rotate(calc(var(--rotation, 0deg) + 10deg));
+    transform: translateY(-5px) translateX(-3px);
+    opacity: 0.6;
   }
   75% {
-    transform: translate(-5px, -10px) rotate(calc(var(--rotation, 0deg) + 5deg));
+    transform: translateY(8px) translateX(-8px);
+    opacity: 0.9;
   }
-}
-
-/* New artistic loading animations */
-@keyframes floatCircle {
-  0%,
   100% {
-    transform: translate(0, 0);
-  }
-  25% {
-    transform: translate(5px, -5px);
-  }
-  50% {
-    transform: translate(0, -10px);
-  }
-  75% {
-    transform: translate(-5px, -5px);
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.4;
   }
 }
 
-@keyframes textFade {
-  0%,
-  100% {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-}
-
-@keyframes lineReveal {
+@keyframes luxuryShimmer {
   0% {
-    width: 0;
-    opacity: 0;
+    transform: translateX(-100%);
   }
   100% {
-    width: 100%;
-    opacity: 1;
-  }
-}
-
-@keyframes cornerFade {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* Elegant Minimalist Loading Animations */
-@keyframes elegantFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes elegantProgress {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
+    transform: translateX(400%);
   }
 }
 
 @keyframes elegantPulse {
   0%,
   100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes elegantRotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes elegantDraw {
-  0% {
-    stroke-dashoffset: 300;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes elegantFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* Project Timeline Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Timeline pulse animation */
-@keyframes pulseDot {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
     opacity: 0.8;
-  }
-  70% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 0;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0;
-  }
-}
-
-/* Hide scrollbar for timeline tabs while keeping functionality */
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
-}
-
-/* Scroll behavior improvements */
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Fallback for browsers that don't support scroll-margin */
-}
-
-/* Default scroll margin for all sections */
-section[id] {
-  scroll-margin-top: 80px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  section[id] {
-    scroll-margin-top: 64px;
-  }
-}
-
-/* Prevent horizontal scrolling on all devices */
-html,
-body {
-  overflow-x: hidden;
-  position: relative;
-  width: 100%;
-}
-
-/* Additional mobile-specific fixes */
-@media (max-width: 767px) {
-  /* Ensure all elements respect container boundaries */
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Fix for potential issues with absolute positioned elements */
-  .container {
-    max-width: 100vw;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  /* Ensure images don't cause overflow */
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Fix for potential table overflow issues */
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-
-/* Fix for iOS Safari momentum scrolling while maintaining smooth scrolling */
-@supports (-webkit-overflow-scrolling: touch) {
-  body {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Fix for any potential overflow in the dialog content */
-.max-w-5xl {
-  max-width: min(5xl, 100vw - 2rem);
-}
-
-/* Add these styles at the end of your globals.css file */
-
-/* Fix for touch device button states */
-@media (hover: none) {
-  button:hover {
-    /* Reset hover states on touch devices */
-    background-color: inherit;
-    color: inherit;
-  }
-
-  /* Specific overrides for navigation buttons */
-  .gallery-navigation-button:hover,
-  .residence-navigation-button:hover {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    color: white !important;
-  }
-
-  /* Apply active styles only during actual press */
-  button:active {
-    transform: scale(0.97);
-  }
-}
-
-/* Prevent double-tap zoom on buttons */
-button {
-  touch-action: manipulation;
-}
-
-/* Improve touch area for small buttons */
-@media (max-width: 768px) {
-  .gallery-thumbnail-button,
-  .residence-navigation-button,
-  .gallery-navigation-button {
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-/* Fix for navigation buttons in residences and gallery sections */
-.residence-nav-btn,
-.gallery-nav-btn {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  user-select: none;
-  transform: translateY(0); /* Prevent bouncing */
-}
-
-/* Fix for residences navigation buttons that stay in 'clicked' state */
-.residence-nav-btn {
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.residence-nav-btn:active {
-  transform: scale(0.95);
-  background-color: #f8f8f8 !important; /* Force original background color */
-  color: #666 !important; /* Force original text color */
-}
-
-/* Fix for gallery navigation buttons that bounce and change color */
-.gallery-nav-btn {
-  transition: transform 0.2s ease;
-  background-color: rgba(0, 0, 0, 0.5) !important; /* Force consistent background */
-  color: white !important; /* Force consistent text color */
-}
-
-.gallery-nav-btn:active {
-  transform: scale(0.95);
-  background-color: rgba(0, 0, 0, 0.5) !important; /* Keep same background on active */
-  color: white !important; /* Keep same text color on active */
-}
-
-/* Prevent hover states from sticking on touch devices */
-@media (hover: none) {
-  .residence-nav-btn:hover,
-  .gallery-nav-btn:hover {
-    background-color: inherit !important;
-    color: inherit !important;
-    transform: translateY(0) !important; /* Prevent any vertical movement */
-  }
-
-  /* Restore specific colors for gallery buttons */
-  .gallery-nav-btn:hover {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    color: white !important;
-  }
-
-  /* Restore specific colors for residence buttons */
-  .residence-nav-btn:hover {
-    background-color: #f8f8f8 !important;
-    color: #666 !important;
-  }
-}
-
-/* Fix for iOS Safari specific issues */
-@supports (-webkit-touch-callout: none) {
-  .residence-nav-btn,
-  .gallery-nav-btn {
-    /* Additional iOS-specific fixes */
-    -webkit-touch-callout: none; /* Disable callout */
-    -webkit-user-select: none; /* Disable selection */
-  }
-}
-
-/* Zoom functionality styles */
-.zoom-controls {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 9999px;
-  padding: 0.25rem;
-  z-index: 50;
-}
-
-.zoom-indicator {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 9999px;
-  z-index: 50;
-}
-
-/* Cursor styles for zoomable images */
-.cursor-zoom-in {
-  cursor: zoom-in;
-}
-
-.cursor-zoom-out {
-  cursor: zoom-out;
-}
-
-.cursor-move {
-  cursor: move;
-}
-
-/* Prevent text selection during drag operations */
-.select-none {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Improve touch handling for zoom controls */
-@media (hover: none) {
-  .zoom-controls button {
-    min-width: 2.5rem;
-    min-height: 2.5rem;
-  }
-}
-
-/* Elegant timeline animations */
-@keyframes pulseDot {
-  0% {
     transform: scale(1);
-    opacity: 0.6;
   }
   50% {
-    transform: scale(1.2);
-    opacity: 0.3;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-}
-
-.timeline-dot-pulse {
-  animation: pulseDot 3s infinite ease-in-out;
-}
-
-/* Staggered animation for timeline items */
-.timeline-item {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.timeline-item-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.timeline-item:nth-child(1) {
-  transition-delay: 0.1s;
-}
-
-.timeline-item:nth-child(2) {
-  transition-delay: 0.3s;
-}
-
-.timeline-item:nth-child(3) {
-  transition-delay: 0.5s;
-}
-
-.timeline-item:nth-child(4) {
-  transition-delay: 0.7s;
-}
-
-.timeline-item:nth-child(5) {
-  transition-delay: 0.9s;
-}
-
-/* Add these styles to your existing globals.css file */
-
-/* Project Details Showcase animations and styling */
-.project-details-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.project-details-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-}
-
-/* Enhanced timeline styling */
-.timeline-dot {
-  position: relative;
-  z-index: 10;
-}
-
-.timeline-dot::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgba(201, 167, 124, 0.2);
-  transform: translate(-50%, -50%);
-  animation: pulse 2s infinite;
-}
-
-/* Mobile timeline specific styles */
-@media (max-width: 767px) {
-  .timeline-section {
-    padding: 1rem 0;
-  }
-
-  /* Ensure the vertical line extends properly */
-  .timeline-section .relative {
-    min-height: 120px;
-  }
-
-  /* Center content in mobile view */
-  .timeline-section .text-center {
-    max-width: 280px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-/* Ensure these base animations from your file are what you want */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1.05);
   }
 }
 
-.animate-fadeIn {
-  /* Utility class if you prefer this over inline style */
-  animation: fadeIn 1s ease-out forwards; /* Adjust duration/easing */
-}
-
-@keyframes pulse {
-  /* Ensure this is the pulse you want for logo frame */
+@keyframes logoGlow {
   0%,
   100% {
-    transform: scale(1);
-    opacity: 0.7;
+    filter: drop-shadow(0 0 20px rgba(201, 167, 124, 0.3));
   }
   50% {
-    transform: scale(1.03);
-    opacity: 1;
+    filter: drop-shadow(0 0 40px rgba(201, 167, 124, 0.6));
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* Make sure floatCircle is defined - used for general background elements */
-@keyframes floatCircle {
+@keyframes progressGlow {
   0%,
   100% {
-    transform: translate(0, 0) rotate(0deg);
+    box-shadow: 0 0 20px rgba(201, 167, 124, 0.4);
   }
-  25% {
-    transform: translate(10px, -15px) rotate(45deg);
-  } /* More movement */
   50% {
-    transform: translate(0px, -25px) rotate(90deg);
-  }
-  75% {
-    transform: translate(-10px, -15px) rotate(135deg);
-  }
-}
-
-@media (max-width: 640px) {
-  /* Responsive floatCircle if needed */
-  @keyframes floatCircle {
-    0%,
-    100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(0px, -15px) rotate(90deg);
-    } /* Simpler for mobile */
-  }
-}
-
-@keyframes textFade {
-  /* For cycling text messages */
-  0% {
-    opacity: 0.3;
-    transform: translateY(3px);
-  }
-  20% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  80% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0.3;
-    transform: translateY(-3px);
-  }
-}
-
-/* Remove or update old specific loading screen CSS like .loading-logo-container if not used.
-   The class .loading-center-container is used in the TSX above.
-   The class .loading-screen is used in the TSX above.
-*/
-
-/* Ensure loading screen elements are properly centered */
-.loading-center-container {
-  /* Applied to the main content block inside loading screen */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-/* Ensure the loading screen is centered in the viewport */
-.loading-screen {
-  /* Applied to the root div of the loading screen */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  width: 100%;
-  overflow: hidden; /* Prevent any potential overflow issues */
-}
-
-/* Add these improved responsive styles for the loading screen */
-
-/* Improved responsive animations */
-@media (max-width: 480px) {
-  /* Smaller devices need less dramatic animations */
-  @keyframes floatCircle {
-    0%,
-    100% {
-      transform: translate(0, 0);
-    }
-    50% {
-      transform: translate(0, -8px);
-    }
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      transform: scale(1);
-      opacity: 0.6;
-    }
-    50% {
-      transform: scale(1.02);
-      opacity: 0.9;
-    }
-  }
-
-  @keyframes textFade {
-    0%,
-    100% {
-      opacity: 0.8;
-      transform: translateY(0);
-    }
-    50% {
-      opacity: 1;
-      transform: translateY(-1px);
-    }
-  }
-}
-
-/* Fix for very small devices */
-@media (max-width: 320px) {
-  .loading-screen img {
-    max-width: 140px; /* Ensure logo isn't too large on very small screens */
-  }
-}
-
-/* Circle-specific animations */
-@keyframes floatCircle1 {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  33% {
-    transform: translate(30px, 25px) rotate(5deg);
-  }
-  66% {
-    transform: translate(-25px, 35px) rotate(-5deg);
-  }
-}
-
-@keyframes floatCircle2 {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  33% {
-    transform: translate(-35px, -20px) rotate(-8deg);
-  }
-  66% {
-    transform: translate(25px, -30px) rotate(8deg);
-  }
-}
-
-@keyframes floatCircle3 {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  33% {
-    transform: translate(25px, 30px) rotate(10deg);
-  }
-  66% {
-    transform: translate(-30px, 20px) rotate(-10deg);
-  }
-}
-
-/* Responsive adjustments for the floating circles */
-@media (max-width: 768px) {
-  @keyframes floatCircle1 {
-    0%,
-    100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(20px, 15px) rotate(3deg);
-    }
-  }
-
-  @keyframes floatCircle2 {
-    0%,
-    100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(-20px, -12px) rotate(-5deg);
-    }
-  }
-
-  @keyframes floatCircle3 {
-    0%,
-    100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(15px, 20px) rotate(5deg);
-    }
-  }
-}
-
-/* Responsive circle sizing */
-@media (max-width: 768px) {
-  .loading-screen .absolute.rounded-full {
-    transform-origin: center;
-    transform: scale(0.7);
-  }
-}
-
-@media (max-width: 480px) {
-  .loading-screen .absolute.rounded-full {
-    transform: scale(0.5);
-  }
-}
-
-/* Prevent layout shifts during mobile menu transitions */
-body.menu-open {
-  /* Prevent any horizontal overflow during menu transitions */
-  overflow-x: hidden !important;
-  /* Ensure smooth transitions */
-  transition: padding-right 0.01s ease;
-}
-
-/* Ensure the mobile menu overlay doesn't cause horizontal overflow */
-.fixed.inset-0 {
-  width: 100vw;
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-/* Prevent horizontal scrolling on all devices during transitions */
-html.overflow-hidden,
-body.overflow-hidden {
-  overflow-x: hidden !important;
-  overscroll-behavior: none;
-}
-
-/* Improve mobile menu transitions */
-@media (max-width: 767px) {
-  .fixed.inset-0 {
-    /* Ensure the overlay is properly contained */
-    left: 0;
-    right: 0;
-    width: 100%;
-  }
-}
-
-/* Mobile menu improvements */
-@media (max-width: 767px) {
-  /* Ensure the mobile menu content doesn't scroll behind the logo */
-  .mobile-menu-content {
-    padding-top: 5rem !important;
-    margin-top: 0 !important;
-  }
-
-  /* Improve scrolling behavior on mobile */
-  .mobile-menu-scroll {
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(201, 167, 124, 0.3) transparent;
-  }
-
-  .mobile-menu-scroll::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .mobile-menu-scroll::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .mobile-menu-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(201, 167, 124, 0.3);
-    border-radius: 20px;
-  }
-}
-
-/* Ensure the fixed header in mobile menu has a solid background */
-.mobile-menu-header {
-  background-color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4rem;
-  z-index: 56;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-/* Prevent any content from showing through the mobile menu header */
-.mobile-menu-header::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: white;
-  z-index: -1;
-}
-
-/* Ensure the mobile menu has proper padding */
-.mobile-menu-content {
-  padding: 5rem 1.5rem 2rem 1.5rem;
-}
-
-/* Ensure the mobile menu items are properly spaced */
-.mobile-menu-content ul {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
-/* Import the phone-input.css file from the correct location */
-@import "./phone-input.css";
-
-/* Thank You Page Animations */
-.fade-in {
-  animation: fadeIn 0.8s ease-in-out forwards;
-  opacity: 0;
-}
-
-.fade-in-delay-1 {
-  animation: fadeIn 0.8s ease-in-out 0.3s forwards;
-  opacity: 0;
-}
-
-.fade-in-delay-2 {
-  animation: fadeIn 0.8s ease-in-out 0.6s forwards;
-  opacity: 0;
-}
-
-.fade-in-delay-3 {
-  animation: fadeIn 0.8s ease-in-out 0.9s forwards;
-  opacity: 0;
-}
-
-.project-card-animation {
-  animation: fadeInUp 0.8s ease-in-out forwards;
-  opacity: 0;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+    box-shadow: 0 0 40px rgba(201, 167, 124, 0.8);
   }
 }
 
 @keyframes fadeInUp {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
