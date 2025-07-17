@@ -284,6 +284,9 @@ export const deTranslations = {
   "thankYou.takeVirtualTour": "Machen Sie einen virtuellen Rundgang",
   "thankYou.takeVirtualTourDesc": "Erleben Sie luxuriöses Wohnen von zu Hause aus",
   "thankYou.viewOtherProjects": "Entdecken Sie unsere anderen Luxusprojekte",
+"projects.live": "Aktuelle Projekte",
+"projects.comingSoon": "Demnächst",
+"thankYou.downloadCatalog": "Katalog ansehen/herunterladen",
 
   // Mobile App
   "mobileApp.stayConnected": "BLEIBEN SIE IN VERBINDUNG",

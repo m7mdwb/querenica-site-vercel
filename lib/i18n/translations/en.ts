@@ -278,6 +278,9 @@ export const enTranslations = {
   "thankYou.takeVirtualTour": "Take a Virtual Tour",
   "thankYou.takeVirtualTourDesc": "Experience luxury living from home",
   "thankYou.viewOtherProjects": "Explore Our Other Luxury Projects",
+  "projects.live": "Live",
+  "projects.comingSoon": "Coming Soon",
+  "thankYou.downloadCatalog": "View/Download Catalog",
 
   // Mobile App
   "mobileApp.stayConnected": "STAY CONNECTED",

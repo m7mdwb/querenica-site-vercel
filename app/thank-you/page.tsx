@@ -19,15 +19,15 @@ export default function ThankYouPage() {
   const getCatalogUrl = () => {
     switch (locale) {
       case "tr":
-        return "https://sites.google.com/view/courtyard-platinum---tr/"
+        return "https://sites.google.com/view/querenciatr/"
       case "en":
-        return "https://sites.google.com/view/catalog-en/"
+        return "https://sites.google.com/u/0/d/1PzQEUZsWPXnQcYaQlyJBHIElD5tv0kpS/preview"
       case "ru":
-        return "https://sites.google.com/view/catalog-ru/"
+        return "https://sites.google.com/u/0/d/1PzQEUZsWPXnQcYaQlyJBHIElD5tv0kpS/preview"
       case "de":
-        return "https://sites.google.com/view/catalog-de/"
+        return "https://sites.google.com/view/querenci/"
       default:
-        return "https://sites.google.com/view/catalog-en/" // fallback to English
+        return "https://sites.google.com/u/0/d/1PzQEUZsWPXnQcYaQlyJBHIElD5tv0kpS/preview" // fallback to English
     }
   }
 

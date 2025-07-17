@@ -279,6 +279,9 @@ export const ruTranslations = {
   "thankYou.takeVirtualTour": "Совершите виртуальный тур",
   "thankYou.takeVirtualTourDesc": "Испытайте роскошную жизнь из дома",
   "thankYou.viewOtherProjects": "Ознакомьтесь с другими нашими элитными проектами",
+"projects.live": "В продаже",
+"projects.comingSoon": "Скоро в продаже",
+"thankYou.downloadCatalog": "Посмотреть/Скачать каталог",
 
   // Mobile App
   "mobileApp.stayConnected": "ОСТАВАЙТЕСЬ НА СВЯЗИ",
