@@ -89,13 +89,13 @@ export default function AboutSection() {
         {/* ----------  Two-column main section ---------- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* Left text column */}
-          <div className="flex flex-col justify-between min-h-[500px] md:min-h-[600px] py-8">
-            <div className="space-y-6">
-              <p className="text-lg leading-relaxed text-foreground/80 font-inter">{t("about.paragraph1")}</p>
+          <div className="flex flex-col justify-between min-h-[500px] md:min-h-[600px] py-12">
+            <div className="space-y-8">
+              <p className="text-xl leading-relaxed text-foreground/80 font-inter">{t("about.paragraph1")}</p>
 
-              <p className="text-lg leading-relaxed text-foreground/80 font-inter">{t("about.paragraph2")}</p>
+              <p className="text-xl leading-relaxed text-foreground/80 font-inter">{t("about.paragraph2")}</p>
 
-              <p className="text-lg leading-relaxed text-foreground/80 font-inter">{t("about.paragraph3")}</p>
+              <p className="text-xl leading-relaxed text-foreground/80 font-inter">{t("about.paragraph3")}</p>
             </div>
 
             <button
@@ -112,7 +112,7 @@ export default function AboutSection() {
                   })
                 }
               }}
-              className="group inline-flex items-center bg-gradient-to-r from-secondary to-accent text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105 font-inter text-sm"
+              className="group inline-flex items-center bg-gradient-to-r from-secondary to-accent text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105 font-inter text-sm w-fit"
             >
               <Download size={20} className="mr-3" />
               <span className="font-medium">{t("about.downloadCatalog")}</span>
