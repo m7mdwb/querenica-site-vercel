@@ -97,7 +97,7 @@ export const ruTranslations = {
   "amenities.conciergeServicesTitle": "Консьерж-сервис",
   "amenities.conciergeServicesDesc": "Круглосуточный консьерж-сервис для помощи в решении любых ваших вопросов.",
   "amenities.retailConveniencesTitle": "Торговые точки",
-  "amenities.retailConveniencesDesc": "Магазины и услуги на территории для вашего ежедневного удобства.",
+  "amenities.retailConveniencesDesc": "Магазины и у��луги на территории для вашего ежедневного удобства.",
   "amenities.fitnessCenterTitle": "Фитнес-центр",
   "amenities.fitnessCenterDesc": "Современный фитнес-центр, оснащенный новейшими тренажерами.",
   "amenities.discoverMoreEnquire": "Узнать больше и отправить запрос",

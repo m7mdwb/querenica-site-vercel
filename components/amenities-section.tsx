@@ -183,7 +183,7 @@ export default function AmenitiesSection() {
     <section id="amenities" className="py-32 bg-gradient-to-b from-alabaster to-parchment relative overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="https://emjxtcn2pcqsrsav.public.blob.vercel-storage.com/gallery/Day/Day-7-LIhweruz23kDjqNxyKpe6Pe1qbavSr.webp"
+          src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-1-2KGar18rZ8kKbe4VwFivhnCUSGkbMU.webp"
           alt="Querencia Luxury Amenities"
           fill
           className="object-cover"
