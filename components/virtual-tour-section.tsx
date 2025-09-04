@@ -28,7 +28,7 @@ export default function VirtualTourSection() {
           <div className="bg-white/95 backdrop-blur-sm border border-platinum-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:shadow-platinum-300/20 transition-all duration-700">
             <div className="relative aspect-video rounded-xl overflow-hidden bg-gradient-to-br from-platinum-100 to-luxury-100">
               <iframe
-                src="https://360.dovecconstruction.com/querencia/"
+                src="https://360.dovecgroup.com/querencia/"
                 className="w-full h-full border-0 rounded-xl"
                 allowFullScreen
                 title="Querencia 360° Virtual Tour"
@@ -67,7 +67,7 @@ export default function VirtualTourSection() {
             {/* Call to Action */}
             <div className="text-center mt-8">
               <button
-                onClick={() => window.open("https://360.dovecconstruction.com/querencia/", "_blank")}
+                onClick={() => window.open("https://360.dovecgroup.com/querencia/", "_blank")}
                 className="inline-flex items-center bg-gradient-to-r from-secondary to-accent text-white px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-secondary/30 transition-all duration-300 hover:scale-105 relative overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
