@@ -191,7 +191,7 @@ export default function AmenitiesSection() {
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(44, 64, 81, 0.8)" }}></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-0">
         {/* Section Header */}
         <div className="text-center mb-20">
           <span
@@ -249,7 +249,7 @@ export default function AmenitiesSection() {
         </div>
 
         {/* Elegant Call to Action */}
-        <div className="text-center mt-24"></div>
+        <div className="text-center mt-24">{/* Placeholder for call to action */}</div>
       </div>
     </section>
   )

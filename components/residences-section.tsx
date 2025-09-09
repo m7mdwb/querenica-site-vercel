@@ -20,6 +20,10 @@ function SafeImage({
 }) {
   const [imgSrc, setImgSrc] = useState(src ?? "/placeholder.svg")
 
+  useEffect(() => {
+    setImgSrc(src ?? "/placeholder.svg")
+  }, [src])
+
   return (
     <Image
       {...rest}
@@ -325,7 +329,7 @@ export default function ResidencesSection() {
         images: [
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-1-VCViOvtwdwRDWwmDbWx99J4WMasbcG.webp",
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-2-cxaT3VPx1uEIzVo2zb8acAhzH67JEZ.webp",
-          "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthousepublic.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-3-xFMyN8Gngn5e3hV8LBLKiS8H5KIXdO.webp",
+          "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-3-xFMyN8Gngn5e3hV8LBLKiS8H5KIXdO.webp",
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-4-34QhkNBJEhgk7c7bxeOoQbgJK18N4o.webp",
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-5-oT1oKWplOIsqMBxXMdNTGzPfYwSawN.webp",
           "https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Residencies/9-%20B-C-D%20Duplex%205%2B1%20Duplex/b-c-d-block-penthouse-duplex-5%2B1-6-pl1KDWafYh4A7yu473XlZYRpoRfdpN.webp",
@@ -468,14 +472,22 @@ export default function ResidencesSection() {
                   {selectedResidence.images.length > 1 && (
                     <>
                       <button
-                        onClick={handlePrevModalImage}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handlePrevModalImage()
+                        }}
                         className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-lg text-white hover:bg-white/30 transition-opacity duration-300"
                         aria-label="Previous image"
                       >
                         <ChevronLeft size={20} />
                       </button>
                       <button
-                        onClick={handleNextModalImage}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handleNextModalImage()
+                        }}
                         className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-lg text-white hover:bg-white/30 transition-opacity duration-300"
                         aria-label="Next image"
                       >
@@ -489,7 +501,11 @@ export default function ResidencesSection() {
                       {selectedResidence.images.map((_, i) => (
                         <button
                           key={i}
-                          onClick={() => setCurrentModalImageIndex(i)}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setCurrentModalImageIndex(i)
+                          }}
                           className={`w-2 h-2 rounded-full transition-colors ${
                             i === currentModalImageIndex ? "bg-white" : "bg-white/50"
                           }`}
@@ -617,14 +633,20 @@ function ResidenceCard({ residence, index, isVisible, onClick, t }) {
         {residence.images.length > 1 && (
           <>
             <button
-              onClick={prevImage}
+              onClick={(e) => {
+                e.stopPropagation()
+                prevImage(e)
+              }}
               className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               aria-label="Previous image"
             >
               <ChevronLeft size={16} className="text-white" />
             </button>
             <button
-              onClick={nextImage}
+              onClick={(e) => {
+                e.stopPropagation()
+                nextImage(e)
+              }}
               className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               aria-label="Next image"
             >

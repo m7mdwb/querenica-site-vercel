@@ -276,7 +276,7 @@ export default function GallerySection() {
 
               {/* Image counter */}
               <div className="absolute top-4 left-4 bg-parchment/20 backdrop-blur-sm px-3 py-1 rounded-xl text-white text-sm">
-                {t("gallery.imageCounter", { current: currentImage + 1, total: galleryImages.length })}
+                {currentImage + 1} / {galleryImages.length}
               </div>
             </div>
           </div>
