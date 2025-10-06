@@ -98,7 +98,7 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
             <div className="absolute inset-0 bg-amber-500/6 blur-2xl animate-[elegantPulse_6s_ease-in-out_infinite]" />
 
             <img
-              src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/querencia_logo_full.png"
+              src="/images/design-mode/querencia_logo_full.png"
               alt="Querencia"
               className="w-full h-auto relative z-10 transition-all duration-1000 opacity-90"
               onError={(e) => {

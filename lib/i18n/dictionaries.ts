@@ -1,23 +1,20 @@
-import "server-only"
+import type { Locale } from "./config"
+import en from "./translations/en"
+import tr from "./translations/tr"
+import de from "./translations/de"
+import ru from "./translations/ru"
+import pl from "./translations/pl"
 
-/**
- * Lazy-load the translation object for the requested locale.
- * If a locale is not found, we fall back to English.
- */
-const loaders = {
-  en: () => import("./translations/en").then((m) => m.default),
-  tr: () => import("./translations/tr").then((m) => m.default),
-  de: () => import("./translations/de").then((m) => m.default),
-  ru: () => import("./translations/ru").then((m) => m.default),
-} as const
+const dictionaries = {
+  en,
+  tr,
+  de,
+  ru,
+  pl,
+}
 
-export type SupportedLocale = keyof typeof loaders
+export type Dictionary = typeof en
 
-/**
- * getDictionary loads and returns the flattened dictionary for a locale.
- * Usage: const dict = await getDictionary('tr')
- */
-export async function getDictionary(locale: SupportedLocale | string): Promise<Record<string, string>> {
-  const loader = loaders[locale as SupportedLocale] ?? loaders.en // fallback to English
-  return loader()
+export async function getDictionary(locale: Locale): Promise<Dictionary> {
+  return dictionaries[locale]
 }

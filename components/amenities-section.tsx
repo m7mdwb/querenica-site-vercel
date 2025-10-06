@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Trees } from "lucide-react"
-import { useLanguage } from "@/lib/i18n/context"
 
-export default function AmenitiesSection() {
-  const { t } = useLanguage()
+interface AmenitiesSectionProps {
+  dict: Record<string, string>
+  locale: string
+}
+
+export default function AmenitiesSection({ dict }: AmenitiesSectionProps) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -183,39 +186,28 @@ export default function AmenitiesSection() {
     <section id="amenities" className="py-32 bg-gradient-to-b from-alabaster to-parchment relative overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="https://8k9skxif1sms4ctv.public.blob.vercel-storage.com/Exterior/querencia-exterior-1-2KGar18rZ8kKbe4VwFivhnCUSGkbMU.webp"
+          src="/images/design-mode/querencia-exterior-1.webp"
           alt="Querencia Luxury Amenities"
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: "rgba(44, 64, 81, 0.8)" }}></div>
+        <div className="absolute inset-0 bg-primary/80"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-0">
-        {/* Section Header */}
         <div className="text-center mb-20">
-          <span
-            className="text-sm uppercase tracking-[0.4em] font-light mb-4 block font-inter"
-            style={{ color: "#c9a77c" }}
-          >
-            {t("amenities.premiumAmenities")}
+          <span className="text-secondary text-sm uppercase tracking-[0.4em] font-light mb-4 block font-inter">
+            {dict["amenities.premiumAmenities"]}
           </span>
           <h2 className="text-5xl md:text-6xl font-light text-white mb-6 tracking-tight font-playfair">
-            {t("amenities.resortStyleLiving").split(" ")[0]}
-            <span className="block font-dancing italic text-4xl md:text-5xl mt-2" style={{ color: "#c9a77c" }}>
-              {t("amenities.resortStyleLiving").split(" ").slice(1).join(" ")}
-            </span>
+            {dict["amenities.resortStyleLiving"]}
           </h2>
-          <p className="text-lg max-w-3xl mx-auto leading-relaxed font-inter" style={{ color: "#e0e0e0" }}>
-            {t("amenities.introText")}
+          <p className="text-lg max-w-3xl mx-auto leading-relaxed font-inter text-white/90">
+            {dict["amenities.introText"]}
           </p>
-          <div
-            className="w-24 h-0.5 mx-auto mt-8"
-            style={{ background: "linear-gradient(to right, #c9a77c, #c9a77c)" }}
-          ></div>
+          <div className="w-24 h-0.5 bg-gradient-to-r from-secondary to-accent mx-auto mt-8"></div>
         </div>
 
-        {/* Amenities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {allAmenities.map((amenity, index) => (
             <div
@@ -229,27 +221,18 @@ export default function AmenitiesSection() {
                 transitionDelay: `${index * 100}ms`,
               }}
             >
-              <div
-                className="w-14 h-14 rounded-xl flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                style={{ backgroundColor: "#c9a77c" }}
-              >
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg bg-secondary">
                 {amenity.icon}
               </div>
-              <h4
-                className="text-lg font-medium text-white mb-3 transition-colors font-playfair"
-                style={{ color: "white" }}
-              >
-                {t(amenity.titleKey)}
+              <h4 className="text-lg font-medium text-white mb-3 transition-colors font-playfair">
+                {dict[amenity.titleKey]}
               </h4>
-              <p className="leading-relaxed text-sm transition-colors font-inter" style={{ color: "#e0e0e0" }}>
-                {t(amenity.descriptionKey)}
+              <p className="leading-relaxed text-sm transition-colors font-inter text-white/80">
+                {dict[amenity.descriptionKey]}
               </p>
             </div>
           ))}
         </div>
-
-        {/* Elegant Call to Action */}
-        <div className="text-center mt-24">{/* Placeholder for call to action */}</div>
       </div>
     </section>
   )

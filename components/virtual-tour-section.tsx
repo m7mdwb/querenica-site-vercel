@@ -1,25 +1,23 @@
 "use client"
 
-import { useLanguage } from "@/lib/i18n/context"
+interface VirtualTourSectionProps {
+  dict: Record<string, string>
+  locale: string
+}
 
-export default function VirtualTourSection() {
-  const { t } = useLanguage()
-
+export default function VirtualTourSection({ dict }: VirtualTourSectionProps) {
   return (
     <section id="virtual-tour" className="py-32 bg-gradient-to-b from-platinum-100 to-white relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-0">
         {/* Section Header */}
         <div className="text-center mb-20">
           <span className="text-secondary text-sm uppercase tracking-[0.4em] font-light mb-4 block">
-            {t("virtualTour.virtualExperience")}
+            {dict["virtualTour.virtualExperience"]}
           </span>
           <h2 className="text-5xl md:text-6xl font-light text-primary mb-6 tracking-tight">
-            {t("virtualTour.immerseYourself").split(" ")[0]}
-            <span className="block font-serif italic text-secondary" style={{ fontFamily: "var(--font-bodoni)" }}>
-              {t("virtualTour.immerseYourself").split(" ").slice(1).join(" ")}
-            </span>
+            {dict["virtualTour.immerseYourself"]}
           </h2>
-          <p className="text-lg text-platinum-600 max-w-3xl mx-auto leading-relaxed">{t("virtualTour.introText")}</p>
+          <p className="text-lg text-platinum-600 max-w-3xl mx-auto leading-relaxed">{dict["virtualTour.introText"]}</p>
           <div className="w-24 h-0.5 bg-gradient-to-r from-secondary to-accent mx-auto mt-8"></div>
         </div>
 
@@ -34,35 +32,7 @@ export default function VirtualTourSection() {
                 title="Querencia 360° Virtual Tour"
                 loading="lazy"
               />
-
-              {/* Loading overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-none">
-                <div className="text-center text-primary">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center mb-4 mx-auto">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-white"
-                    >
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polygon points="10,8 16,12 10,16 10,8"></polygon>
-                    </svg>
-                  </div>
-                  <p className="text-lg font-medium mb-2">{t("virtualTour.tourTitle")}</p>
-                  <p className="text-sm text-platinum-600">{t("virtualTour.tourSubtitle")}</p>
-                </div>
-              </div>
             </div>
-
-            {/* Tour Information */}
-            
 
             {/* Call to Action */}
             <div className="text-center mt-8">
@@ -87,7 +57,7 @@ export default function VirtualTourSection() {
                   <polyline points="10,17 15,12 10,7"></polyline>
                   <line x1="15" x2="3" y1="12" y2="12"></line>
                 </svg>
-                <span className="font-medium relative z-10">{t("virtualTour.openFullScreenTour")}</span>
+                <span className="font-medium relative z-10">{dict["virtualTour.openFullScreenTour"]}</span>
               </button>
             </div>
           </div>

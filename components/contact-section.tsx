@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { MapPin, Phone, Mail, Send, Star } from "lucide-react"
-import { useLanguage } from "@/lib/i18n/context"
 import { countryCodes } from "@/lib/country-codes"
 
-export default function ContactSection() {
-  const { t, language } = useLanguage()
+interface ContactSectionProps {
+  dict: Record<string, string>
+  locale: string
+}
+
+export default function ContactSection({ dict, locale }: ContactSectionProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,16 +36,15 @@ export default function ContactSection() {
     return () => observer.disconnect()
   }, [])
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handlePhoneChange = (e) => {
+  const handlePhoneChange = (e: any) => {
     const input = e.target.value
     setPhoneNumber(input)
 
-    // Auto-detect country code
     let detectedCode = selectedCountryCode
     for (const country of countryCodes) {
       if (input.startsWith(country.code)) {
@@ -53,11 +55,11 @@ export default function ContactSection() {
     setSelectedCountryCode(detectedCode)
   }
 
-  const handleCountryCodeChange = (e) => {
+  const handleCountryCodeChange = (e: any) => {
     setSelectedCountryCode(e.target.value)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     setFormStatus("loading")
 
@@ -69,11 +71,10 @@ export default function ContactSection() {
         email: formData.email,
         phone: fullPhoneNumber,
         message: formData.message,
-        language: language,
+        language: locale,
         submittedAt: new Date().toISOString(),
       }
 
-      // Send to webhook
       const response = await fetch("/api/webhook/contact", {
         method: "POST",
         headers: {
@@ -84,7 +85,6 @@ export default function ContactSection() {
 
       if (response.ok) {
         setFormStatus("success")
-        // Reset form
         setFormData({
           name: "",
           email: "",
@@ -93,9 +93,8 @@ export default function ContactSection() {
         setPhoneNumber("")
         setSelectedCountryCode("+90")
 
-        // Redirect to thank you page after a short delay
         setTimeout(() => {
-          window.location.href = "/thank-you"
+          window.location.href = `/${locale}/thank-you`
         }, 1500)
       } else {
         throw new Error("Failed to submit form")
@@ -104,7 +103,6 @@ export default function ContactSection() {
       console.error("Form submission error:", error)
       setFormStatus("error")
 
-      // Reset error status after 5 seconds
       setTimeout(() => {
         setFormStatus(null)
       }, 5000)
@@ -117,15 +115,12 @@ export default function ContactSection() {
         {/* Section Header */}
         <div className="text-center mb-20">
           <span className="text-secondary text-sm uppercase tracking-[0.4em] font-light mb-4 block">
-            {t("contact.connectWithUs")}
+            {dict["contact.connectWithUs"]}
           </span>
           <h2 className="text-5xl md:text-6xl font-light text-primary mb-6 tracking-tight">
-            {t("contact.inquireWithin").split(" ")[0]}
-            <span className="block font-serif italic text-secondary" style={{ fontFamily: "var(--font-bodoni)" }}>
-              {t("contact.inquireWithin").split(" ").slice(1).join(" ")}
-            </span>
+            {dict["contact.inquireWithin"]}
           </h2>
-          <p className="text-lg text-slate-grey max-w-3xl mx-auto leading-relaxed">{t("contact.introText")}</p>
+          <p className="text-lg text-slate-grey max-w-3xl mx-auto leading-relaxed">{dict["contact.introText"]}</p>
           <div className="w-24 h-0.5 bg-gradient-to-r from-secondary to-accent mx-auto mt-8"></div>
         </div>
 
@@ -142,21 +137,21 @@ export default function ContactSection() {
                 <div className="mb-6 p-4 bg-green-50 text-green-700 rounded-xl border border-green-200">
                   <div className="flex items-center">
                     <Star className="w-5 h-5 mr-2 text-green-600" />
-                    {t("contact.successMessage")}
+                    {dict["contact.successMessage"]}
                   </div>
                 </div>
               )}
 
               {formStatus === "error" && (
                 <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl border border-red-200">
-                  {t("contact.errorMessage")}
+                  {dict["contact.errorMessage"]}
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-primary mb-2">
-                    {t("contact.fullName")} <span className="text-secondary">*</span>
+                    {dict["contact.fullName"]} <span className="text-secondary">*</span>
                   </label>
                   <input
                     type="text"
@@ -166,14 +161,14 @@ export default function ContactSection() {
                     onChange={handleInputChange}
                     required
                     disabled={formStatus === "loading"}
-                    placeholder={t("contact.fullName")}
+                    placeholder={dict["contact.fullName"]}
                     className="w-full px-4 py-3 border border-secondary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-primary mb-2">
-                    {t("contact.emailAddress")} <span className="text-secondary">*</span>
+                    {dict["contact.emailAddress"]} <span className="text-secondary">*</span>
                   </label>
                   <input
                     type="email"
@@ -183,14 +178,14 @@ export default function ContactSection() {
                     onChange={handleInputChange}
                     required
                     disabled={formStatus === "loading"}
-                    placeholder={t("contact.emailAddress")}
+                    placeholder={dict["contact.emailAddress"]}
                     className="w-full px-4 py-3 border border-secondary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-primary mb-2">
-                    {t("contact.phoneNumber")} <span className="text-secondary">*</span>
+                    {dict["contact.phoneNumber"]} <span className="text-secondary">*</span>
                   </label>
                   <div className="flex">
                     <select
@@ -215,7 +210,7 @@ export default function ContactSection() {
                       onChange={handlePhoneChange}
                       required
                       disabled={formStatus === "loading"}
-                      placeholder={t("contact.phoneNumber")}
+                      placeholder={dict["contact.phoneNumber"]}
                       className="flex-1 px-4 py-3 border border-secondary/30 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                     />
                   </div>
@@ -223,7 +218,7 @@ export default function ContactSection() {
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-primary mb-2">
-                    {t("contact.message")}
+                    {dict["contact.message"]}
                   </label>
                   <textarea
                     id="message"
@@ -232,14 +227,14 @@ export default function ContactSection() {
                     onChange={handleInputChange}
                     rows={5}
                     disabled={formStatus === "loading"}
-                    placeholder={t("contact.messagePlaceholder")}
+                    placeholder={dict["contact.messagePlaceholder"]}
                     className="w-full px-4 py-3 border border-secondary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all duration-300 resize-none bg-alabaster/80 backdrop-blur-sm disabled:opacity-50"
                   ></textarea>
                 </div>
 
                 <div className="text-sm text-slate-grey italic mb-6 p-4 bg-gradient-to-r from-secondary/5 to-accent/5 rounded-xl border border-secondary/20">
                   <Star className="w-4 h-4 inline mr-2 text-secondary" />
-                  {t("contact.formNote")}
+                  {dict["contact.formNote"]}
                 </div>
 
                 <button
@@ -250,7 +245,7 @@ export default function ContactSection() {
                   <div className="absolute inset-0 bg-gradient-to-r from-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <Send size={18} className="mr-2 relative z-10" />
                   <span className="relative z-10">
-                    {formStatus === "loading" ? "Sending..." : t("contact.requestInformation")}
+                    {formStatus === "loading" ? "Sending..." : dict["contact.requestInformation"]}
                   </span>
                 </button>
               </form>
@@ -265,7 +260,7 @@ export default function ContactSection() {
             >
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-light text-primary">{t("contact.contactDetails")}</h3>
+                  <h3 className="text-2xl font-light text-primary">{dict["contact.contactDetails"]}</h3>
                   <div className="flex space-x-1.5">
                     <a
                       href="https://www.facebook.com/DovecConstruction"
@@ -341,7 +336,7 @@ export default function ContactSection() {
                       <Phone className="text-white" size={18} />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-grey mb-0.5">{t("contact.callUs")}</p>
+                      <p className="text-sm text-slate-grey mb-0.5">{dict["contact.callUs"]}</p>
                       <a
                         href="tel:+905488370015"
                         className="text-lg text-primary hover:text-secondary transition-colors duration-300 font-medium"
@@ -357,7 +352,7 @@ export default function ContactSection() {
                       <Mail className="text-white" size={18} />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-grey mb-0.5">{t("contact.emailUs")}</p>
+                      <p className="text-sm text-slate-grey mb-0.5">{dict["contact.emailUs"]}</p>
                       <a
                         href="mailto:info@dovecgroup.com"
                         className="text-lg text-primary hover:text-secondary transition-colors duration-300 font-medium"
@@ -373,9 +368,9 @@ export default function ContactSection() {
                       <MapPin className="text-white" size={18} />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-grey mb-0.5">{t("contact.visitUs")}</p>
-                      <p className="text-primary font-medium mb-0.5">{t("contact.headquarters")}</p>
-                      <p className="text-slate-grey text-sm">{t("contact.address")}</p>
+                      <p className="text-sm text-slate-grey mb-0.5">{dict["contact.visitUs"]}</p>
+                      <p className="text-primary font-medium mb-0.5">{dict["contact.headquarters"]}</p>
+                      <p className="text-slate-grey text-sm">{dict["contact.address"]}</p>
                     </div>
                   </div>
                 </div>
@@ -384,8 +379,8 @@ export default function ContactSection() {
                     <Star className="text-secondary" size={16} />
                   </div>
                   <div>
-                    <p className="text-primary font-medium text-sm">{t("contact.premiumServiceTitle")}</p>
-                    <p className="text-slate-grey text-xs">{t("contact.premiumServiceDesc")}</p>
+                    <p className="text-primary font-medium text-sm">{dict["contact.premiumServiceTitle"]}</p>
+                    <p className="text-slate-grey text-xs">{dict["contact.premiumServiceDesc"]}</p>
                   </div>
                 </div>
               </div>

@@ -1,30 +1,38 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { cn } from "@/lib/utils"
-import { useLanguage } from "@/lib/i18n/context"
+import { usePathname, useRouter } from "next/navigation"
 import { Globe, ChevronDown } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { locales, localeNames, localeFlags, type Locale } from "@/lib/i18n/config"
 
 interface LanguageSelectorProps {
+  currentLocale: Locale
   isScrolled?: boolean
   isMobile?: boolean
   mobileMenuOpen?: boolean
   className?: string
 }
 
-export function LanguageSelector({ isScrolled, isMobile, mobileMenuOpen, className }: LanguageSelectorProps) {
+export function LanguageSelector({
+  currentLocale,
+  isScrolled,
+  isMobile,
+  mobileMenuOpen,
+  className,
+}: LanguageSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const { language, changeLanguage } = useLanguage()
+  const pathname = usePathname()
+  const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const languages = [
-    { code: "en", name: "English", flag: "🇺🇸" },
-    { code: "tr", name: "Türkçe", flag: "🇹🇷" },
-    { code: "de", name: "Deutsch", flag: "🇩🇪" }, // Added German
-    { code: "ru", name: "Русский", flag: "🇷🇺" },
-  ]
+  const languages = locales.map((code) => ({
+    code,
+    name: localeNames[code],
+    flag: localeFlags[code],
+  }))
 
-  const currentLanguage = languages.find((lang) => lang.code === language) || languages[0]
+  const currentLanguage = languages.find((lang) => lang.code === currentLocale) || languages[0]
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,12 +47,23 @@ export function LanguageSelector({ isScrolled, isMobile, mobileMenuOpen, classNa
     }
   }, [])
 
-  // Close dropdown when mobile menu closes
   useEffect(() => {
     if (isMobile && !mobileMenuOpen) {
       setIsOpen(false)
     }
   }, [isMobile, mobileMenuOpen])
+
+  const changeLanguage = (newLocale: Locale) => {
+    // Set cookie for preference
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`
+
+    // Get the current path without locale
+    const pathWithoutLocale = pathname.replace(`/${currentLocale}`, "") || ""
+
+    // Navigate to new locale
+    router.push(`/${newLocale}${pathWithoutLocale}`)
+    setIsOpen(false)
+  }
 
   if (isMobile) {
     return (
@@ -64,20 +83,17 @@ export function LanguageSelector({ isScrolled, isMobile, mobileMenuOpen, classNa
 
         <div
           className={cn(
-            "absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-platinum-200 overflow-hidden transition-all duration-300 origin-top",
+            "absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-platinum-200 overflow-hidden transition-all duration-300 origin-top z-50",
             isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none",
           )}
         >
           {languages.map((lang) => (
             <button
               key={lang.code}
-              onClick={() => {
-                changeLanguage(lang.code)
-                setIsOpen(false)
-              }}
+              onClick={() => changeLanguage(lang.code)}
               className={cn(
                 "w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-luxury-50 transition-colors duration-200",
-                lang.code === language ? "text-secondary bg-luxury-50" : "text-primary",
+                lang.code === currentLocale ? "text-secondary bg-luxury-50" : "text-primary",
               )}
             >
               <span className="text-lg">{lang.flag}</span>
@@ -95,6 +111,7 @@ export function LanguageSelector({ isScrolled, isMobile, mobileMenuOpen, classNa
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-white/10",
+          isScrolled ? "text-primary" : "text-white",
           className,
         )}
         aria-expanded={isOpen}
@@ -106,20 +123,17 @@ export function LanguageSelector({ isScrolled, isMobile, mobileMenuOpen, classNa
 
       <div
         className={cn(
-          "absolute right-0 top-full mt-2 min-w-[140px] bg-white rounded-xl shadow-xl border border-platinum-200 overflow-hidden transition-all duration-300 origin-top-right",
+          "absolute right-0 top-full mt-2 min-w-[140px] bg-white rounded-xl shadow-xl border border-platinum-200 overflow-hidden transition-all duration-300 origin-top-right z-50",
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none",
         )}
       >
         {languages.map((lang) => (
           <button
             key={lang.code}
-            onClick={() => {
-              changeLanguage(lang.code)
-              setIsOpen(false)
-            }}
+            onClick={() => changeLanguage(lang.code)}
             className={cn(
               "w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-luxury-50 transition-colors duration-200",
-              lang.code === language ? "text-secondary bg-luxury-50" : "text-primary",
+              lang.code === currentLocale ? "text-secondary bg-luxury-50" : "text-primary",
             )}
           >
             <span>{lang.flag}</span>

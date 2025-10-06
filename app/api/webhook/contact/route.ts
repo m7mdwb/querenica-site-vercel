@@ -23,26 +23,34 @@ export async function POST(request: NextRequest) {
       lead_type: "Contact Form Inquiry",
     }
 
-    // Send to Zapier webhook (replace with your actual Zapier webhook URL)
+    // Send to Zapier webhook
     const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL
 
     if (zapierWebhookUrl) {
-      const zapierResponse = await fetch(zapierWebhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(webhookData),
-      })
+      try {
+        const zapierResponse = await fetch(zapierWebhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(webhookData),
+        })
 
-      if (!zapierResponse.ok) {
-        console.error("Failed to send to Zapier:", zapierResponse.statusText)
+        if (!zapierResponse.ok) {
+          console.error("Failed to send to Zapier:", zapierResponse.statusText)
+          // Log the response text for debugging
+          const errorText = await zapierResponse.text()
+          console.error("Zapier error response:", errorText)
+        } else {
+          console.log("Successfully sent to Zapier")
+        }
+      } catch (zapierError) {
+        console.error("Error sending to Zapier:", zapierError)
         // Continue processing even if Zapier fails
       }
+    } else {
+      console.warn("ZAPIER_WEBHOOK_URL environment variable is not set")
     }
-
-    // You can also send to additional webhooks or services here
-    // For example, a backup webhook or direct CRM integration
 
     return NextResponse.json({
       success: true,

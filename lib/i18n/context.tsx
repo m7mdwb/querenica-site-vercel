@@ -11,6 +11,7 @@ const DEFAULT_LOADERS: Record<string, () => Promise<any>> = {
   tr: () => import("./translations/tr"),
   de: () => import("./translations/de"),
   ru: () => import("./translations/ru"),
+  pl: () => import("./translations/pl"),
 }
 
 interface TranslationCtx {

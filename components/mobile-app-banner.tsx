@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { useLanguage } from "@/lib/i18n/context"
 
-export default function MobileAppBanner() {
-  const { t } = useLanguage()
+interface MobileAppBannerProps {
+  dict: Record<string, string>
+  locale: string
+}
+
+export default function MobileAppBanner({ dict }: MobileAppBannerProps) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -48,16 +51,16 @@ export default function MobileAppBanner() {
             {/* Section Header */}
             <div className="mb-8">
               <span className="text-secondary text-sm uppercase tracking-[0.4em] font-light mb-4 block">
-                {t("mobileApp.stayConnected")}
+                {dict["mobileApp.stayConnected"]}
               </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight font-heading">
-                {t("mobileApp.dovecLife")}
+                {dict["mobileApp.dovecLife"]}
                 <span className="block font-accent text-secondary text-3xl md:text-4xl lg:text-5xl mt-2">
-                  {t("mobileApp.mobileApp")}
+                  {dict["mobileApp.mobileApp"]}
                 </span>
               </h2>
               <p className="text-lg text-primary-foreground/90 leading-relaxed max-w-xl">
-                {t("mobileApp.description")}
+                {dict["mobileApp.description"]}
               </p>
             </div>
 
@@ -65,10 +68,10 @@ export default function MobileAppBanner() {
             <div className="mb-8">
               <ul className="space-y-4">
                 {[
-                  t("mobileApp.feature1"),
-                  t("mobileApp.feature2"),
-                  t("mobileApp.feature3"),
-                  t("mobileApp.feature4"),
+                  dict["mobileApp.feature1"],
+                  dict["mobileApp.feature2"],
+                  dict["mobileApp.feature3"],
+                  dict["mobileApp.feature4"],
                 ].map((feature, index) => (
                   <li key={index} className="flex items-start">
                     <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
@@ -95,7 +98,7 @@ export default function MobileAppBanner() {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <div className="text-xs opacity-80">{t("mobileApp.downloadOn")}</div>
+                  <div className="text-xs opacity-80">{dict["mobileApp.downloadOn"]}</div>
                   <div className="text-lg font-semibold">App Store</div>
                 </div>
               </a>
@@ -113,7 +116,7 @@ export default function MobileAppBanner() {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <div className="text-xs opacity-80">{t("mobileApp.getItOn")}</div>
+                  <div className="text-xs opacity-80">{dict["mobileApp.getItOn"]}</div>
                   <div className="text-lg font-semibold">Google Play</div>
                 </div>
               </a>
@@ -132,7 +135,7 @@ export default function MobileAppBanner() {
               {/* Mobile App Image */}
               <div className="relative">
                 <Image
-                  src="https://6dl41kzeo3znzd1m.public.blob.vercel-storage.com/MockUpMobile.webp"
+                  src="/images/design-mode/MockUpMobileApp.webp"
                   alt="Döveç Life Mobile App Interface"
                   width={600}
                   height={400}

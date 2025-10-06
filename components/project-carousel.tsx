@@ -1,49 +1,47 @@
 "use client"
 
 import { useEffect, useRef, useCallback, useState } from "react"
-import { useLanguage } from "@/lib/i18n/context"
 import Link from "next/link"
 import Image from "next/image"
+
+interface ProjectCarouselProps {
+  dict: Record<string, string>
+}
 
 const projects = [
   {
     name: "Courtyard Platinum",
     url: "https://courtyardplatinum.com",
     status: "live",
-    image:
-      "https://lf8lg0kk2ixnghtm.public.blob.vercel-storage.com/Courtyard%20Platinum.webp",
+    image: "https://bpee586anmliawyw.public.blob.vercel-storage.com/courtyardPlatinumHero.webp",
   },
   {
     name: "D-Point",
     url: "https://dpointcyprus.com",
     status: "live",
-    image:
-      "https://lf8lg0kk2ixnghtm.public.blob.vercel-storage.com/Project/hero-section/hero-section-d-point-Rf2nDmKvGZPPe99nSj3fa83IhkyAKy.webp",
+    image: "https://j1nxv1ac2l7kqckz.public.blob.vercel-storage.com/dpointHeroSection.webp",
   },
   {
     name: "La Casalia",
     url: "https://lacasaliacyprus.com",
     status: "live",
-    image:
-      "https://emjxtcn2pcqsrsav.public.blob.vercel-storage.com/gallery/Day/Day-1-0tIqJBr6LJCTzy3AlzPA5dwfYsoFEH.webp",
+    image: "https://5kut59tby5yv02dk.public.blob.vercel-storage.com/laCasaliaHero.jpg",
   },
   {
     name: "Natulux",
     url: "https://natuluxcyprus.com",
     status: "live",
-    image:
-      "https://lf8lg0kk2ixnghtm.public.blob.vercel-storage.com/NataluxHeroSection-BQjlgUiZyoFdW3xrVmIDjcMN4KbQDz.webp",
+    image: "https://futnnrv6gcfa7ssb.public.blob.vercel-storage.com/NataluxHeroSection.webp",
   },
   {
     name: "La Isla",
-    url: "https://laislaproject.com",
-    status: "coming-soon",
-    image: "https://lf8lg0kk2ixnghtm.public.blob.vercel-storage.com/LaIslaVillas-Dzlxg7000ZFB7q1aXyMuHNfsWxiNPs.webp",
+    url: "https://laislacyprus.com",
+    status: "live",
+    image: "https://c7c0pdbziiwdjdwd.public.blob.vercel-storage.com/la-isla-hero.webp",
   },
 ]
 
-export default function ProjectCarousel() {
-  const { t } = useLanguage()
+export default function ProjectCarousel({ dict }: ProjectCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const animationFrameId = useRef<number | null>(null)
   const currentScrollPosition = useRef<number>(0)
@@ -105,7 +103,7 @@ export default function ProjectCarousel() {
 
   return (
     <div className="max-w-6xl mx-auto mt-16 text-center">
-      <h2 className="text-3xl font-light text-primary mb-8">{t("thankYou.viewOtherProjects")}</h2>
+      <h2 className="text-3xl font-light text-primary mb-8">{dict["thankYou.viewOtherProjects"]}</h2>
       <div
         ref={scrollRef}
         onScroll={handleScroll}
@@ -122,7 +120,7 @@ export default function ProjectCarousel() {
               flex-shrink-0 w-80 h-64 rounded-xl overflow-hidden relative group
               bg-white/80 backdrop-blur-sm border border-platinum-200
               transition-all duration-300 ease-in-out
-              ${activeCardIndex === (index % projects.length) ? "scale-105 shadow-xl shadow-platinum-300/40" : "scale-100 shadow-lg hover:shadow-xl"}
+              ${activeCardIndex === index % projects.length ? "scale-105 shadow-xl shadow-platinum-300/40" : "scale-100 shadow-lg hover:shadow-xl"}
             `}
           >
             <Image
@@ -135,7 +133,7 @@ export default function ProjectCarousel() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent p-4 flex flex-col justify-end text-white">
               <h3 className="text-xl font-semibold mb-1">{project.name}</h3>
               <p className="text-sm opacity-90">
-                {project.status === "live" ? t("projects.live") : t("projects.comingSoon")}
+                {project.status === "live" ? dict["projects.live"] : dict["projects.comingSoon"]}
               </p>
             </div>
           </Link>
