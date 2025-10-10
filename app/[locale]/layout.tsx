@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { getDictionary } from "@/lib/i18n/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
+import ClientLayoutWrapper from "@/components/client-layout-wrapper"
 import "../globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -63,7 +64,9 @@ export default async function LocaleLayout({
         <link rel="alternate" hrefLang="pl" href="https://querencia.com/pl" />
         <link rel="alternate" hrefLang="x-default" href="https://querencia.com/en" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+      </body>
     </html>
   )
 }

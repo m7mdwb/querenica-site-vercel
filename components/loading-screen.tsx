@@ -2,25 +2,23 @@
 
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { useLanguage } from "@/lib/i18n/context"
 import { loadingTranslations } from "@/lib/i18n/loading-translations"
 
-interface LoadingScreenProps {
-  minimumLoadingTime?: number
-  onLoadingComplete?: () => void
-}
-
-export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }: LoadingScreenProps) {
+export default function LoadingScreen() {
   const [progress, setProgress] = useState(0)
-  const [isFadingOut, setIsFadingOut] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState("")
-  const { language } = useLanguage()
+  const [language, setLanguage] = useState("en")
+
+  useEffect(() => {
+    // Get language from localStorage or default to 'en'
+    const savedLanguage = localStorage.getItem("locale") || "en"
+    setLanguage(savedLanguage)
+  }, [])
 
   useEffect(() => {
     const loadingTime = 3000 // Fixed 3 seconds
 
     let progressInterval: NodeJS.Timeout
-    let loadingTimeout: NodeJS.Timeout
     let messageInterval: NodeJS.Timeout
 
     // Get translated messages based on current language
@@ -49,28 +47,17 @@ export default function LoadingScreen({ minimumLoadingTime, onLoadingComplete }:
       })
     }, intervalTime)
 
-    // Complete loading after 3 seconds
-    loadingTimeout = setTimeout(() => {
-      setProgress(100)
-      setIsFadingOut(true)
-      if (onLoadingComplete) {
-        setTimeout(onLoadingComplete, 800) // Fade out duration
-      }
-    }, loadingTime)
-
     return () => {
       clearInterval(progressInterval)
-      clearTimeout(loadingTimeout)
       clearInterval(messageInterval)
     }
-  }, [onLoadingComplete, language])
+  }, [language])
 
   return (
     <div
       className={cn(
-        "loading-screen fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out overflow-hidden",
+        "loading-screen fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden",
         "bg-primary backdrop-blur-xl",
-        isFadingOut ? "pointer-events-none opacity-0" : "opacity-100",
       )}
     >
       {/* Full Screen Glassmorphism Background */}
